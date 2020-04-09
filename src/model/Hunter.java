@@ -2,19 +2,21 @@ package model;
 
 public class Hunter implements Positionable,Comparable<Hunter>{
 	private char symbol;
-	private DIRECTION direction;
+	private int direction;
 	private Floor currentFloor;
+	private int dirContourning;
 	
 	
 	public Hunter(char symbol, Position pos) {
 		this.symbol = symbol;
-		this.direction = DIRECTION.TOP;
+		this.direction = 0;
 		//this.pos = pos;
-		this.currentFloor = new Floor(pos, this);
+		this.currentFloor = new Floor(pos, this,null);
+		this.dirContourning = 0;
 	}
 
 
-	public DIRECTION getDirection() {
+	public int getDirection() {
 		return direction;
 	}
 
@@ -29,7 +31,7 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 	}
 
 
-	public void setDirection(DIRECTION direction) {
+	public void setDirection(int direction) {
 		this.direction = direction;
 	}
 
@@ -41,7 +43,7 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 
 	@Override
 	public Position getPosition() {
-		return this.getCurrentCell().getPos();
+		return this.getCurrentCell().getPosition();
 	}
 
 	
@@ -70,31 +72,31 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 		int row = 0, col = 0;
 		
 		switch(this.direction) {
-			case TOP:
+			case 3:
 				row = -1;
 				break;
-			case TOP_LEFT:
+			case 4:
 				row = -1;
 				col = -1;
 				break;
-			case TOP_RIGHT:
+			case 2:
 				row = -1;
 				col = 1;
 				break;
-			case RIGHT:
+			case 1:
 				col = 1;
 				break;
-			case LEFT:
+			case 5:
 				col = -1;
 				break;
-			case BOTTOM:
+			case 7:
 				row = 1;
 				break;
-			case BOTTOM_LEFT:
+			case 6:
 				row = 1;
 				col = -1;
 				break;
-			case BOTTOM_RIGH:
+			case 8:
 				row = 1;
 				col = 1;
 				break;
@@ -108,6 +110,18 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 		
 		
 	}
+
+
+	public int getDirContourning() {
+		return dirContourning;
+	}
+
+
+	public void setDirContourning(int dirContourning) {
+		this.dirContourning = dirContourning;
+	}
+	
+	
 }
 	
 	

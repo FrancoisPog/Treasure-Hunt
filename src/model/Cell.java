@@ -2,14 +2,30 @@ package model;
 
 public abstract class Cell implements Questionable, Positionable{
 	private Position pos;
+	private CellMatrix matrix;
 	
-	public Cell(Position pos) {
+	public Cell(Position pos,CellMatrix cm) {
 		this.pos = pos;
+		this.matrix = cm;
 	}
 	
-	public Position getPos() {
+	public CellMatrix getMatrix() {
+		return matrix;
+	}
+	
+	public void setMatrix(CellMatrix matrix) {
+		this.matrix = matrix;
+	}
+
+	
+	
+	public Position getPosition() {
 		return pos;
 	}
 
 	public abstract String toString();
+	
+	public boolean isStone() {
+		return false;
+	}
 }

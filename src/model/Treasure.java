@@ -2,15 +2,15 @@ package model;
 
 public class Treasure extends Cell {
 
-	public Treasure(Position pos) {
-		super(pos);
+	public Treasure(Position pos,CellMatrix cm) {
+		super(pos,cm);
 	}
 	
 	
 	@Override
-	public boolean process(Hunter h) {
-		// TODO Auto-generated method stub
-		return false;
+	public void process(Hunter h) {
+		System.out.println(h+" won !");
+		System.exit(0);
 
 	}
 
@@ -20,10 +20,6 @@ public class Treasure extends Cell {
 	}
 
 
-	@Override
-	public Position getPosition() {
-		// TODO Auto-generated method stub
-		return this.getPos();
-	}
+	
 
 }

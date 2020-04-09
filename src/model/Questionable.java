@@ -2,5 +2,5 @@ package model;
 
 public interface Questionable {
 	
-	public boolean process(Hunter h);
+	public void process(Hunter h);
 }
