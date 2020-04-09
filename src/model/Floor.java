@@ -23,11 +23,9 @@ public class Floor extends Cell {
 			h.setDirection(DIRECTION.BOTTOM);
 			return false;
 		}
-		Floor oldCell = (Floor)h.getCurrentCell();
-		oldCell.leave();
+		h.getCurrentCell().leave();
 		
 		this.hunter = h;
-		h.setPosition(this.getPos());
 		h.setCurrentCell(this);
 		this.isFull = true;
 		return true;
@@ -44,6 +42,8 @@ public class Floor extends Cell {
 		this.isFull = false;
 		this.hunter = null;
 	}
+	
+	
 
 	@Override
 	public String toString() {

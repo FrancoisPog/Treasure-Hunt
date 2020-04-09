@@ -27,28 +27,26 @@ public class CellMatrix implements Iterable<Cell> {
 		this.size = size;
 		matrix = new Cell [size][size];
 		
-		boolean wall = false;
+		
 		for(int row = 0 ; row < size ; row++) {
 			for(int col = 0 ; col < size ; col++) {
 				Position curr = new Position(col,row);
 				
 				if(!hunters_tmp.isEmpty() &&  hunters_tmp.first().getPosition().equals(curr)) {
 					Hunter h = hunters_tmp.pollFirst();
-					matrix[col][row] = new Floor(curr,h);
-					wall = false;
-					h.setCurrentCell(matrix[col][row]);
+					matrix[col][row] = h.getCurrentCell();
 					continue;
 				}
 				
 				if(col == 0 || col == size-1 || row == 0 || row == size-1) {
 					matrix[col][row] = new Border(curr);
-					wall = false;
+					
 					continue;
 				}
 				
 				if(curr.equals(t.getPos())) {
 					matrix[col][row] = t;
-					wall = false;
+					
 					continue;
 				}
 				
@@ -57,14 +55,14 @@ public class CellMatrix implements Iterable<Cell> {
 				if( p < 1 ) {
 					if(Math.random()>p) {
 						matrix[col][row] = new Stone(curr);
-						wall = true;
+						
 						continue;
 					}
 				}
 				
 				
 				matrix[col][row] = new Floor(curr,null);
-				wall = false;
+				
 			}
 		}
 		

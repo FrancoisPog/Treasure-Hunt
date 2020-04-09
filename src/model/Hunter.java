@@ -3,15 +3,14 @@ package model;
 public class Hunter implements Positionable,Comparable<Hunter>{
 	private char symbol;
 	private DIRECTION direction;
-	private Position pos;
-	private Cell currentCell;
+	private Floor currentFloor;
 	
 	
-	public Hunter(char symbol,Position pos) {
+	public Hunter(char symbol, Position pos) {
 		this.symbol = symbol;
 		this.direction = DIRECTION.TOP;
-		this.pos = pos;
-		this.currentCell = null;
+		//this.pos = pos;
+		this.currentFloor = new Floor(pos, this);
 	}
 
 
@@ -20,13 +19,13 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 	}
 
 
-	public Cell getCurrentCell() {
-		return currentCell;
+	public Floor getCurrentCell() {
+		return currentFloor;
 	}
 
 
-	public void setCurrentCell(Cell currentCell) {
-		this.currentCell = currentCell;
+	public void setCurrentCell(Floor currentCell) {
+		this.currentFloor = currentCell;
 	}
 
 
@@ -42,12 +41,10 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 
 	@Override
 	public Position getPosition() {
-		return this.pos;
+		return this.getCurrentCell().getPos();
 	}
 
-	public void setPosition(Position pos) {
-		this.pos = pos;
-	}
+	
 	
 	public String toString() {
 		return this.symbol+"";
@@ -106,7 +103,7 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 				break;
 		}
 		
-		mat.get(this.pos.getColumn()+col, this.pos.getRow()+row).process(this);
+		mat.get(this.getPosition().getColumn()+col, this.getPosition().getRow()+row).process(this);
 		
 		
 		
