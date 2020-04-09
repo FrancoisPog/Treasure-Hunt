@@ -25,18 +25,34 @@ public class Floor extends Cell {
 			return;
 		}
 		
+		Position old = h.getPosition();
 		
 		h.getCurrentCell().leave();
 		this.come(h);
 		
+		if(h.getDirContourning()>0) {
+			if(h.getDirContourning() == 1 || h.getDirContourning() == 3) {
+				if(h.getPosition().getColumn() != old.getColumn()) {
+					h.setDirContourning(0);
+				}
+			}else {
+				if(h.getPosition().getRow() != old.getRow()) {
+					h.setDirContourning(0);
+				}
+			}
+		}
+		
+		
+		
 		Position treasure_pos = this.getMatrix().getTreasure().getPosition();
 		
 		
+		//System.out.println("f:"+h.getDirection());
 		
-		//System.out.println(best_pos);
 		
-		h.setDirection(h.getPosition().getBestDirTo(treasure_pos,this.getMatrix(),true));
-		System.out.println("["+h+"] : Avance -> "+h.getDirection());
+		h.setDirection(h.getPosition().getBestDirTo(treasure_pos,this.getMatrix(),false,h.getDirContourning()));
+		
+		//System.out.println("["+h+"] : Avance -> "+h.getDirection());
 	}
 	
 	

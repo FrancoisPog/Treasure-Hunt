@@ -17,7 +17,9 @@ public abstract class Cell implements Questionable, Positionable{
 		this.matrix = matrix;
 	}
 
-	
+	public boolean isEquals(Cell that) {
+		return this.pos.equals(that.getPosition());
+	}
 	
 	public Position getPosition() {
 		return pos;

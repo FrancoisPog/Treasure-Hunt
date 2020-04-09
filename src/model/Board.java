@@ -20,6 +20,7 @@ public class Board {
 	public void init(int size) {
 		for(Hunter h : hunters) {
 			h.move(this.cells);
+			//System.out.println("h : "+h.getPosition()+"|"+h.getDirection()+"/"+h.getDirContourning());
 		}
 	}
 	

@@ -5,6 +5,7 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 	private int direction;
 	private Floor currentFloor;
 	private int dirContourning;
+	private int contourning;
 	
 	
 	public Hunter(char symbol, Position pos) {
@@ -112,6 +113,8 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 	}
 
 
+
+
 	public int getDirContourning() {
 		return dirContourning;
 	}
@@ -121,6 +124,36 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 		this.dirContourning = dirContourning;
 	}
 	
+//	public int getOppositeDir() {
+//		switch(this.direction) {
+//		case 3:
+//			return 7;
+//			
+//		case 4:
+//			return 8;			
+//			
+//		case 2:
+//			return 6;			
+//			
+//		case 1:
+//			return 5;
+//			
+//		case 5:
+//			return 1;
+//		case 7:
+//			return 3;
+//			
+//		case 6:
+//			return 2;		
+//			
+//		case 8:
+//			return 4;
+//			
+//		default : 
+//			return 0;
+//			
+//		}
+//	}
 	
 }
 	

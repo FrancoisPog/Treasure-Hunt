@@ -59,7 +59,7 @@ public class CellMatrix implements Iterable<Cell> {
 					Hunter h = hunters_tmp.pollFirst();
 					matrix[col][row] = h.getCurrentCell();
 					h.getCurrentCell().setMatrix(this);
-					h.setDirection(h.getPosition().getBestDirTo(getTreasure().getPosition(),this,false));
+					h.setDirection(h.getPosition().getBestDirTo(getTreasure().getPosition(),this,false,0));
 					continue;
 				}
 				
@@ -114,7 +114,7 @@ public class CellMatrix implements Iterable<Cell> {
 			if(!get(col-1, row).isStone()) {
 				// Si la case au dessus à droite droite est libre
 				if(!get(col+2, row-1).isStone()) {
-					return 0.85; // mur commence
+					return 0.9; // mur commence
 				}
 				// Sinon
 				return 3;

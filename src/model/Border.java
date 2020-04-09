@@ -39,7 +39,7 @@ public class Border extends Cell {
 				System.err.println("Error");
 				break;
 		}
-		System.out.println("["+h+"] : Bord -> "+h.getDirection());
+		//System.out.println("["+h+"] : Bord -> "+h.getDirection());
 	}
 
 	@Override
