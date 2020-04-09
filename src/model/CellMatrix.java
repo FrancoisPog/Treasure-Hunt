@@ -1,0 +1,232 @@
+package model;
+
+import java.util.Iterator;
+import java.util.TreeSet;
+
+/**
+ * @author francois_pog14
+ */
+public class CellMatrix implements Iterable<Cell> {
+	private Cell [][] matrix;
+	private int size;
+	
+	/**
+	 * Matrix constructor
+	 * @param size 		The matrix size
+	 */
+	public CellMatrix(int size, TreeSet<Hunter> hunters, Treasure treasure) {
+		if(size < 0) {
+			this.matrix = null;
+			return;
+		}
+		
+		@SuppressWarnings("unchecked")
+		TreeSet<Hunter> hunters_tmp = (TreeSet<Hunter>) hunters.clone();
+		Treasure t = treasure;
+		
+		this.size = size;
+		matrix = new Cell [size][size];
+		
+		boolean wall = false;
+		for(int row = 0 ; row < size ; row++) {
+			for(int col = 0 ; col < size ; col++) {
+				Position curr = new Position(col,row);
+				
+				if(!hunters_tmp.isEmpty() &&  hunters_tmp.first().getPosition().equals(curr)) {
+					Hunter h = hunters_tmp.pollFirst();
+					matrix[col][row] = new Floor(curr,h);
+					wall = false;
+					h.setCurrentCell(matrix[col][row]);
+					continue;
+				}
+				
+				if(col == 0 || col == size-1 || row == 0 || row == size-1) {
+					matrix[col][row] = new Border(curr);
+					wall = false;
+					continue;
+				}
+				
+				if(curr.equals(t.getPos())) {
+					matrix[col][row] = t;
+					wall = false;
+					continue;
+				}
+				
+				double p = canBeStone(col, row);
+				//System.out.println(p);
+				if( p < 1 ) {
+					if(Math.random()>p) {
+						matrix[col][row] = new Stone(curr);
+						wall = true;
+						continue;
+					}
+				}
+				
+				
+				matrix[col][row] = new Floor(curr,null);
+				wall = false;
+			}
+		}
+		
+		
+	}
+	
+
+	
+	public double canBeStone(int col, int row) {
+		boolean res = false;
+		// Si bord -> impossible
+		if(col == 1 || col == size-2 || row == 1 || row == size-2 ) {
+			return 1;
+		}
+		
+		// Si topleft ou topright = stone -> exit
+		if(isStone(col-1, row-1) || isStone(col+1, row-1)) {
+			return 2;
+		}
+		
+		
+		// Si cases dessus libre
+		if(!isStone(col,row-1)) {
+			// Si la case à gauche est libre 
+			if(!isStone(col-1, row)) {
+				// Si la case au dessus à droite droite est libre
+				if(!isStone(col+2, row-1)) {
+					return 0.85; // mur commence
+				}
+				// Sinon
+				return 3;
+			}
+			// Si la case à gauche est un rocher
+			if(isStone(col-2, row)) {
+				return 0.5; // mur continue
+			}
+			return 0.5;
+		}
+		
+		// Si case du dessus rocher 
+		
+		if(isStone(col, row-1)) {
+			if(isStone(col-1, row)) {
+				return 4;
+			}
+			
+			if(isStone(col,row-2)) {
+				return 0.3; // mur continue
+			}
+			return 0;
+		}
+		
+		System.out.println("error");
+		return 5;
+	}
+	
+	
+	public boolean isStone(int col, int row) {
+		return matrix[col][row].getClass().getSimpleName().equals("Stone");
+	}
+	
+	
+	/**
+	 * toString method
+	 * @return The string representation of matrix
+	 */
+	public String toString() {
+		if(this.matrix == null) {
+			return "null";
+		}
+		String res = "";
+		int i = 0;
+		for(Cell element : this) {
+			++i;
+			res += element;
+			if(i%this.size == 0) {
+				res+="\n";
+			}
+			
+		}
+		
+		
+		return res;
+	}
+	
+	/**
+	 * Getter for an element of the matrix
+	 * @param row The row index
+	 * @param col The column index
+	 * @return The value of matrix[row][col]
+	 */
+	public Cell get(int col, int row) {
+		if(matrix == null || row >= size || col >= size) {
+			return null;
+		}
+		return matrix[col][row];
+	}
+	
+	public Cell get(Position pos) {
+		return matrix[pos.getColumn()][pos.getRow()];
+	}
+	
+
+	
+	public int size() {
+		return this.size;
+	}
+	
+	
+	
+	
+
+	@Override
+	public Iterator<Cell> iterator() {
+		return new IteratorRow(this) ;
+	}
+	
+	
+	public class IteratorRow implements Iterator<Cell>{
+		private CellMatrix matrix ;
+		private int rowIndex;
+		private int colIndex;
+		
+		/**
+		 * Iterator constructor
+		 * @param mat The matrix used
+		 */
+		public IteratorRow(CellMatrix mat) {
+			this.matrix = mat;
+			rowIndex = 0;
+			colIndex = 0;
+		}
+		
+		/**
+		 * Test if there is an element after the current element
+		 * @return false if is the end of collection, else true
+		 */
+		public boolean hasNext() {
+			if(this.matrix == null) {
+				return false;
+			}
+			return rowIndex < matrix.size;
+		}
+
+		/**
+		 * Return the current value and continue to next element
+		 * @return The current element value
+		 */
+		public Cell next() {
+			if(this.matrix == null || !hasNext()) {
+				return null;
+			}
+			Cell valReturn = this.matrix.get(colIndex, rowIndex);
+			colIndex++;
+			if(colIndex >= matrix.size) {
+				colIndex = 0;
+				rowIndex++;
+			}
+			return valReturn;
+		}
+
+	}
+
+	
+}
