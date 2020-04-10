@@ -17,10 +17,18 @@ public class Board {
 		
 	}
 	
-	public void init(int size) {
+	public void init() {
 		for(Hunter h : hunters) {
 			h.move(this.cells);
 			//System.out.println("h : "+h.getPosition()+"|"+h.getDirection()+"/"+h.getDirContourning());
+		}
+	}
+	
+	public void play() throws InterruptedException {
+		while(this.cells.getTreasure().getWinner() == null) {
+			this.init();
+			Thread.sleep(150);
+			System.out.println(this);
 		}
 	}
 	

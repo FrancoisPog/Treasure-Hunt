@@ -21,18 +21,26 @@ public class Stone extends Cell {
 		
 		if(h.getDirContourning() == 0) {
 			if(h.getPosition().getColumn() == this.getPosition().getColumn()) {
-				if(h.getPosition().getRow() < treasurePos.getRow()) {
-					h.setDirContourning(4);
+//				System.out.println("sw2:"+this.wallSize(2));
+//				System.out.println("sw4:"+this.wallSize(4));
+				int size2 = this.wallSize(2);
+				int size4 = this.wallSize(4);
+				if(size2 > size4 ) {
+					h.setByPassDirection(4);
 				}else {
-					h.setDirContourning(2);
+					h.setByPassDirection(2);
 				}
 			}
 			
 			if(h.getPosition().getRow() == this.getPosition().getRow()){
-				if(h.getPosition().getColumn() < treasurePos.getColumn()) {
-					h.setDirContourning(1);
+//				System.out.println("sw1:"+this.wallSize(1));
+//				System.out.println("sw3:"+this.wallSize(3));
+				int size1 = this.wallSize(1);
+				int size3 = this.wallSize(3);
+				if(size1 < size3) {
+					h.setByPassDirection(1);
 				}else {
-					h.setDirContourning(3);
+					h.setByPassDirection(3);
 				}
 			}
 			
@@ -41,30 +49,30 @@ public class Stone extends Cell {
 				if(h.getPosition().getRow() > this.getPosition().getRow()) { // Haut
 					if(h.getPosition().getColumn() < this.getPosition().getColumn()) { // haut droite
 						if(mat.get(hCol, hRow-1).isStone()) {
-							h.setDirContourning(4);
+							h.setByPassDirection(4);
 						}else {
-							h.setDirContourning(1);
+							h.setByPassDirection(1);
 						}
 					}else { // haut gauche
 						if(mat.get(hCol, hRow-1).isStone()) {
-							h.setDirContourning(2);
+							h.setByPassDirection(2);
 						}else {
-							h.setDirContourning(1);
+							h.setByPassDirection(1);
 						}
 					}
 					
 				}else { // Bas
 					if(h.getPosition().getColumn() < this.getPosition().getColumn()) { // bas droite
 						if(mat.get(hCol, hRow+1).isStone()) {
-							h.setDirContourning(4);
+							h.setByPassDirection(4);
 						}else {
-							h.setDirContourning(3);
+							h.setByPassDirection(3);
 						}
 					}else { // bas gauche
 						if(mat.get(hCol, hRow+1).isStone()) {
-							h.setDirContourning(2);
+							h.setByPassDirection(2);
 						}else {
-							h.setDirContourning(3);
+							h.setByPassDirection(3);
 						}
 					}
 				}
@@ -93,7 +101,55 @@ public class Stone extends Cell {
 	public boolean isStone() {
 		return true;
 	}
-
+	
+	public int wallSize(int dir){
+		int i,j;
+		switch(dir) {
+			case 1 :
+				i = -1;
+				j = 0;
+				break;
+			case 2 : 
+				i = 0;
+				j = -1;
+				break;
+			case 3 : 
+				i = 1;
+				j = 0;
+				break;
+			case 4 : 
+				i = 0;
+				j = 1;
+				break;
+			default : 
+				i = 0;
+				j = 0;
+				break;
+		}
+		
+		while(this.getMatrix().get(this.getPosition().getColumn()+j, this.getPosition().getRow() +i).isStone()) {
+			switch(dir) {
+				case 1 :
+					i--;
+					continue;
+				case 2 : 
+					j--;
+					continue;
+				case 3 : 
+					i++;
+					continue;
+				case 4 : 
+					j++;
+					continue;
+			}
+		}
+		if(dir%2 == 0) {
+			return Math.abs(j)-1;
+		}
+		
+		return Math.abs(i)-1;
+		
+	}
 
 	
 

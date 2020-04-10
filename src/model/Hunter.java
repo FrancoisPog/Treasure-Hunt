@@ -1,54 +1,75 @@
 package model;
 
+/**
+ * The hunter class
+ * @author francois_pog14
+ *
+ */
 public class Hunter implements Positionable,Comparable<Hunter>{
 	private char symbol;
 	private int direction;
 	private Floor currentFloor;
-	private int dirContourning;
-	private int contourning;
+	private int byPassDirection;
 	
 	
+	/**
+	 * Default constructor
+	 * @param symbol 	The hunter's symbol on display
+	 * @param pos 		The hunter's position
+	 */
 	public Hunter(char symbol, Position pos) {
 		this.symbol = symbol;
 		this.direction = 0;
-		//this.pos = pos;
 		this.currentFloor = new Floor(pos, this,null);
-		this.dirContourning = 0;
+		this.byPassDirection = 0;
 	}
 
-
+	/**
+	 * Getter for the direction
+	 * @return The current direction
+	 */
 	public int getDirection() {
 		return direction;
 	}
 
-
+	/**
+	 * Getter for the current cell
+	 * @return	The current hunter's cell
+	 */
 	public Floor getCurrentCell() {
 		return currentFloor;
 	}
 
-
+	/**
+	 * Setter for the current cell
+	 * @param currentCell	The new current cell
+	 */
 	public void setCurrentCell(Floor currentCell) {
 		this.currentFloor = currentCell;
 	}
 
-
+	/**
+	 * Setter for the direction
+	 * @param direction	The new direction
+	 */
 	public void setDirection(int direction) {
 		this.direction = direction;
 	}
 
-
-	public char getSymbol() {
-		return symbol;
-	}
-
-
+	
+	
+	/**
+	 * Getter for the current hunter's position
+	 */
 	@Override
 	public Position getPosition() {
 		return this.getCurrentCell().getPosition();
 	}
 
 	
-	
+	/**
+	 * Hunter's toString
+	 */
 	public String toString() {
 		return this.symbol+"";
 	}
@@ -68,7 +89,10 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 			
 	}
 	
-	
+	/**
+	 * Execute a move depending the current cell and the current direction
+	 * @param mat The cell matrix where the hunter is
+	 */
 	public void move(CellMatrix mat) {
 		int row = 0, col = 0;
 		
@@ -114,46 +138,22 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 
 
 
-
-	public int getDirContourning() {
-		return dirContourning;
+	/**
+	 * Getter for the bypass direction, when the hunter goes around a wall
+	 * @return The bypass direction (1:TOP, 2:LEFT, 3:BOTTOM, 4:RIGHT or 0:No bypass)
+	 */
+	public int getByPassDirection() {
+		return byPassDirection;
 	}
 
-
-	public void setDirContourning(int dirContourning) {
-		this.dirContourning = dirContourning;
+	/**
+	 * Setter for byPassDirection
+	 * @param byPassDir The new bypass direction
+	 */
+	public void setByPassDirection(int byPassDir) {
+		this.byPassDirection = byPassDir;
 	}
 	
-//	public int getOppositeDir() {
-//		switch(this.direction) {
-//		case 3:
-//			return 7;
-//			
-//		case 4:
-//			return 8;			
-//			
-//		case 2:
-//			return 6;			
-//			
-//		case 1:
-//			return 5;
-//			
-//		case 5:
-//			return 1;
-//		case 7:
-//			return 3;
-//			
-//		case 6:
-//			return 2;		
-//			
-//		case 8:
-//			return 4;
-//			
-//		default : 
-//			return 0;
-//			
-//		}
-//	}
 	
 }
 	

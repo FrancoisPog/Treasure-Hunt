@@ -121,7 +121,7 @@ public class CellMatrix implements Iterable<Cell> {
 			}
 			// Si la case à gauche est un rocher
 			if(get(col-2, row).isStone()) {
-				return 0.5; // mur continue
+				return 0.4; // mur continue
 			}
 			return 0.5;
 		}

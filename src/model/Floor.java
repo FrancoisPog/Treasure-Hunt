@@ -33,11 +33,11 @@ public class Floor extends Cell {
 		if(h.getDirContourning()>0) {
 			if(h.getDirContourning() == 1 || h.getDirContourning() == 3) {
 				if(h.getPosition().getColumn() != old.getColumn()) {
-					h.setDirContourning(0);
+					h.setByPassDirection(0);
 				}
 			}else {
 				if(h.getPosition().getRow() != old.getRow()) {
-					h.setDirContourning(0);
+					h.setByPassDirection(0);
 				}
 			}
 		}
