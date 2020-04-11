@@ -9,7 +9,7 @@ package model;
  * </ul>
  * <p>When a Treasure is queried by a hunter, it brings the hunter on, and he win.</p>
  * @see model.Cell
- * @see model.CellMatrix
+ * @see model.Board
  * 
  * @author François Poguet
  */
@@ -21,7 +21,7 @@ public class Treasure extends Cell {
 	 * @param pos	The cell position
 	 * @param cm	The matrix 
 	 */
-	public Treasure(Position pos,CellMatrix cm) {
+	public Treasure(Position pos,Board cm) {
 		super(pos,cm);
 		this.winner = null;
 	}

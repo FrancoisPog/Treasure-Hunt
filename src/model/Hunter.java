@@ -109,7 +109,7 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 	 * Execute a move depending the current cell and the current direction
 	 * @param mat The cell matrix where the hunter is
 	 */
-	public void move(CellMatrix mat) {
+	public void move(Board mat) {
 		int row = 0, col = 0;
 		
 		switch(this.direction) {

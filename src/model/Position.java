@@ -83,7 +83,7 @@ public class Position implements Comparable<Position>{
 	 * @param bypassDir			The current bypass direction of hunter
 	 * @return					The best direction
 	 */
-	public int getBestDirTo(Position that, CellMatrix mat, boolean careAboutStone, int bypassDir) {
+	public int getBestDirTo(Position that, Board mat, boolean careAboutStone, int bypassDir) {
 		int[][] allowedPos = {{2,3,4},{4,5,6},{6,7,8},{1,2,8}};
 		
 		Position best_pos = null;

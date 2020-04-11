@@ -18,14 +18,14 @@ package model;
  */
 public abstract class Cell implements Questionable, Positionable{
 	private Position pos;
-	private CellMatrix matrix;
+	private Board matrix;
 	
 	/**
 	 * Default constructor 
 	 * @param pos	The position (it will keep the same all its life)
 	 * @param cm	Its matrix
 	 */
-	public Cell(Position pos,CellMatrix cm) {
+	public Cell(Position pos,Board cm) {
 		this.pos = pos;
 		this.matrix = cm;
 	}
@@ -34,7 +34,7 @@ public abstract class Cell implements Questionable, Positionable{
 	 * Getter for its matrix
 	 * @return Its matrix
 	 */
-	public CellMatrix getMatrix() {
+	public Board getMatrix() {
 		return matrix;
 	}
 	
@@ -42,7 +42,7 @@ public abstract class Cell implements Questionable, Positionable{
 	 * Setter for its matrix
 	 * @param matrix The new matrix
 	 */
-	public void setMatrix(CellMatrix matrix) {
+	public void setMatrix(Board matrix) {
 		this.matrix = matrix;
 	}
 

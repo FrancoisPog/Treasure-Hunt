@@ -4,7 +4,7 @@ package model;
  * <p><strong>Stone</strong> is the class representing a stone cell on the matrix .<p>
  * <p>When a stone is queried by a hunter, it give to the hunter a bypass direction to go around the wall and get closer to the treasure</p>
  * @see model.Cell
- * @see model.CellMatrix
+ * @see model.Board
  * 
  * @author François Poguet
  */
@@ -15,7 +15,7 @@ public class Stone extends Cell {
 	 * @param pos	The stone position
 	 * @param cm	The matrix
 	 */
-	public Stone(Position pos,CellMatrix cm) {
+	public Stone(Position pos,Board cm) {
 		super(pos,cm);
 	}
 	
@@ -24,6 +24,7 @@ public class Stone extends Cell {
 	/**
 	 * Redirects the hunter who queried
 	 */
+	@SuppressWarnings("unused")
 	@Override
 	public void process(Hunter h) {
 		int hCol = h.getPosition().getColumn();
@@ -33,7 +34,7 @@ public class Stone extends Cell {
 		
 		
 		Position treasurePos = this.getMatrix().getTreasure().getPosition();
-		CellMatrix mat = this.getMatrix();
+		Board mat = this.getMatrix();
 		
 		
 		if(h.getByPassDirection() == 0) {

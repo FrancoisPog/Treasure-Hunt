@@ -9,7 +9,7 @@ package model;
  * </ul>
  * <p>When a Floor is queried by a hunter, it bring the hunter on if the floor is free, and redirects him to get closer to the treasure</p>
  * @see model.Cell
- * @see model.CellMatrix
+ * @see model.Board
  * 
  * @author François Poguet
  */
@@ -18,7 +18,7 @@ public class Floor extends Cell {
 	private Hunter hunter;
 	
 	
-	public Floor(Position pos, Hunter hunter,CellMatrix cm) {
+	public Floor(Position pos, Hunter hunter,Board cm) {
 		super(pos,cm);
 		this.isFull = false;
 		
@@ -46,7 +46,7 @@ public class Floor extends Cell {
 		h.getCurrentCell().leave();
 		this.come(h);
 		
-		if(h.getByPassDirection()>0) {
+		if(h.getByPassDirection() > 0) {
 			if(h.getByPassDirection() == 1 || h.getByPassDirection() == 3) {
 				if(h.getPosition().getColumn() != old.getColumn()) {
 					h.setByPassDirection(0);
@@ -62,13 +62,8 @@ public class Floor extends Cell {
 		
 		Position treasure_pos = this.getMatrix().getTreasure().getPosition();
 		
-		
-		//System.out.println("f:"+h.getDirection());
-		
-		
 		h.setDirection(h.getPosition().getBestDirTo(treasure_pos,this.getMatrix(),false,h.getByPassDirection()));
 		
-		//System.out.println("["+h+"] : Avance -> "+h.getDirection());
 	}
 	
 	
