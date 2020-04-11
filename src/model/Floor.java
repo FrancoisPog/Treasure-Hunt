@@ -1,8 +1,22 @@
 package model;
 
+/**
+ * <p><strong>Floor</strong> is the class representing a floor cell on the matrix .<p>
+ * <p>A Floor is characterized by : </p>
+ *  <ul>
+ * 		<li><dt>A state : free or full</dt></li> 
+ * 		<li><dt>A hunter is it full</dt></li>
+ * </ul>
+ * <p>When a Floor is queried by a hunter, it bring the hunter on if the floor is free, and redirects him to get closer to the treasure</p>
+ * @see model.Cell
+ * @see model.CellMatrix
+ * 
+ * @author François Poguet
+ */
 public class Floor extends Cell {
 	private boolean isFull;
 	private Hunter hunter;
+	
 	
 	public Floor(Position pos, Hunter hunter,CellMatrix cm) {
 		super(pos,cm);
@@ -16,7 +30,9 @@ public class Floor extends Cell {
 			this.hunter = null;
 		}
 	}
-	
+	/**
+	 * Get the hunter closer to the treasure
+	 */
 	@Override
 	public void process(Hunter h) {
 		if(isFull) {
@@ -30,8 +46,8 @@ public class Floor extends Cell {
 		h.getCurrentCell().leave();
 		this.come(h);
 		
-		if(h.getDirContourning()>0) {
-			if(h.getDirContourning() == 1 || h.getDirContourning() == 3) {
+		if(h.getByPassDirection()>0) {
+			if(h.getByPassDirection() == 1 || h.getByPassDirection() == 3) {
 				if(h.getPosition().getColumn() != old.getColumn()) {
 					h.setByPassDirection(0);
 				}
@@ -50,7 +66,7 @@ public class Floor extends Cell {
 		//System.out.println("f:"+h.getDirection());
 		
 		
-		h.setDirection(h.getPosition().getBestDirTo(treasure_pos,this.getMatrix(),false,h.getDirContourning()));
+		h.setDirection(h.getPosition().getBestDirTo(treasure_pos,this.getMatrix(),false,h.getByPassDirection()));
 		
 		//System.out.println("["+h+"] : Avance -> "+h.getDirection());
 	}

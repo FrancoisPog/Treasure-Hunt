@@ -1,12 +1,29 @@
 package model;
 
+/**
+ * <p><strong>Stone</strong> is the class representing a stone cell on the matrix .<p>
+ * <p>When a stone is queried by a hunter, it give to the hunter a bypass direction to go around the wall and get closer to the treasure</p>
+ * @see model.Cell
+ * @see model.CellMatrix
+ * 
+ * @author François Poguet
+ */
 public class Stone extends Cell {
 
+	/**
+	 * Default stone constructor
+	 * @param pos	The stone position
+	 * @param cm	The matrix
+	 */
 	public Stone(Position pos,CellMatrix cm) {
 		super(pos,cm);
 	}
 	
 	
+	
+	/**
+	 * Redirects the hunter who queried
+	 */
 	@Override
 	public void process(Hunter h) {
 		int hCol = h.getPosition().getColumn();
@@ -17,12 +34,10 @@ public class Stone extends Cell {
 		
 		Position treasurePos = this.getMatrix().getTreasure().getPosition();
 		CellMatrix mat = this.getMatrix();
-		//Position old = h.getPosition();
 		
-		if(h.getDirContourning() == 0) {
+		
+		if(h.getByPassDirection() == 0) {
 			if(h.getPosition().getColumn() == this.getPosition().getColumn()) {
-//				System.out.println("sw2:"+this.wallSize(2));
-//				System.out.println("sw4:"+this.wallSize(4));
 				int size2 = this.wallSize(2);
 				int size4 = this.wallSize(4);
 				if(size2 > size4 ) {
@@ -33,8 +48,6 @@ public class Stone extends Cell {
 			}
 			
 			if(h.getPosition().getRow() == this.getPosition().getRow()){
-//				System.out.println("sw1:"+this.wallSize(1));
-//				System.out.println("sw3:"+this.wallSize(3));
 				int size1 = this.wallSize(1);
 				int size3 = this.wallSize(3);
 				if(size1 < size3) {
@@ -81,7 +94,7 @@ public class Stone extends Cell {
 		
 		
 		
-		h.setDirection(h.getPosition().getBestDirTo(treasurePos, this.getMatrix(),true,h.getDirContourning()));
+		h.setDirection(h.getPosition().getBestDirTo(treasurePos, this.getMatrix(),true,h.getByPassDirection()));
 		
 		//System.out.println("["+h+"] : Mur -> "+h.getDirection());
 		
@@ -102,6 +115,11 @@ public class Stone extends Cell {
 		return true;
 	}
 	
+	/**
+	 * Compute the number of stone cell from this cell in a given direction
+	 * @param dir	The direction
+	 * @return		The wall size
+	 */
 	public int wallSize(int dir){
 		int i,j;
 		switch(dir) {

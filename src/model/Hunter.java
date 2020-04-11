@@ -1,9 +1,24 @@
 package model;
 
 /**
- * The hunter class
- * @author francois_pog14
- *
+ * <p><strong>Hunter</strong> is the class representing players.</p>.
+ * <p>A hunter is characterized by : </p>
+ * <ul>
+ * 		<li><dt>A symbol</dt>
+ * 			<dd>- The hunter appearance on display</dd></li> 
+ * 		<li><dt>A direction</dt>
+ * 			<dd>- The direction followed by the hunter</dd></li>
+ * 		<li><dt>His current floor cell</dt>
+ * 			<dd>- The currents cell where is the hunter</dd></li>
+ * 		<li><dt>His bypass direction (only when he goes around a wall)</dt>
+ * 			<dd>- The bypass direction to go around a wall</dd></li>
+ * </ul>
+ * <p>The <strong>hunter</strong> will be led by his successive floor cells to find the best way to go towards the treasure.</p>
+ * <p>The <strong> bypass direction</strong> is used to hold direction when he goes around a wall.<p>
+ * <p>The hunter class implements the <strong>Positionable</strong> interface.
+ * @see model.Positionable
+ * 
+ * @author François Poguet
  */
 public class Hunter implements Positionable,Comparable<Hunter>{
 	private char symbol;
@@ -60,6 +75,7 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 	
 	/**
 	 * Getter for the current hunter's position
+	 * @return The hunter's position
 	 */
 	@Override
 	public Position getPosition() {
@@ -75,17 +91,17 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 	}
 
 
+	
+	/**
+	 * Compare the hunter with an other by their position
+	 * @param that The other hunter 
+	 */
 	@Override
 	public int compareTo(Hunter that) {
 		if(that == null) {
 			return 1;
 		}
-		int res = this.getPosition().getRow() - that.getPosition().getRow();
-		if(res != 0) {
-			return res;
-		}
-		
-		return this.getPosition().getColumn() - that.getPosition().getColumn();
+		return this.getPosition().compareTo(that.getPosition());
 			
 	}
 	

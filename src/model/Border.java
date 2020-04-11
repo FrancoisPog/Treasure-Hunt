@@ -1,5 +1,15 @@
 package model;
 
+
+/**
+ * <p><strong>Border</strong> is the class representing a cell on the matrix extremities.<p>
+ * <p>When a border is queried by a hunter, it change is direction for the opposite.</p>
+ * @see model.Cell
+ * @see model.CellMatrix
+ * 
+ * 
+ * @author François Poguet
+ */
 public class Border extends Cell {
 
 	public Border(Position pos,CellMatrix cm) {
