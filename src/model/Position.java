@@ -30,7 +30,7 @@ public class Position implements Comparable<Position>{
 	}
 	
 	/**
-	 * Compute the distance to another position
+	 * Compute the distance to adjacent position
 	 * @param that	The other position
 	 * @return 		The distance
 	 */
