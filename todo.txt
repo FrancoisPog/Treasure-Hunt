@@ -1,0 +1,2 @@
+- gerer cas avec resor aligné avec mur
+- gerer le cas ou le joueur ne peut pas sortir d'un mur, place deja prise, revoir la sortie de bypass

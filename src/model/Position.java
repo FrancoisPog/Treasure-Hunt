@@ -34,8 +34,8 @@ public class Position implements Comparable<Position>{
 	 * @param that	The other position
 	 * @return 		The distance
 	 */
-	public int getDistanceTo(Position that) {
-		return (that.column-this.column)*(that.column-this.column)+(that.row-this.row)*(that.row-this.row);
+	public double getDistanceTo(Position that) {
+		return Math.sqrt((that.column-this.column)*(that.column-this.column)+(that.row-this.row)*(that.row-this.row));
 	}
 	
 	/**
@@ -87,7 +87,7 @@ public class Position implements Comparable<Position>{
 		int[][] allowedPos = {{2,3,4},{4,5,6},{6,7,8},{1,2,8}};
 		
 		Position best_pos = null;
-		int dist_min = 9999999;
+		double dist_min = 9999999;
 
 		for(int i = -1 ; i <= 1 ; ++i) {
 			for(int j = -1 ; j <= 1; ++j) {
@@ -109,7 +109,7 @@ public class Position implements Comparable<Position>{
 				}
 				
 				// keep the best direction
-				int dist_curr = curr.getDistanceTo(that);
+				double dist_curr = curr.getDistanceTo(that);
 				if(dist_curr < dist_min) {
 					dist_min = dist_curr;
 					best_pos = curr;

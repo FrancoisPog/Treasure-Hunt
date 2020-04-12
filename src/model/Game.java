@@ -45,9 +45,12 @@ public class Game {
 	 */
 	public void play() throws InterruptedException {
 		while(this.board.getTreasure().getWinner() == null) {
-			this.execute();
-			Thread.sleep(150);
-			System.out.println(board);
+			//while(true) {
+				this.execute();
+				Thread.sleep(150);
+				System.out.println(board);
+			//}
+			
 		}
 	}
 	

@@ -138,14 +138,14 @@ public class Board {
 			if(!get(col-1, row).isStone()) {
 				// if the top-right cell is free
 				if(!get(col+2, row-1).isStone()) {
-					return 0.9; // wall begin
+					return 0.8; // wall begin
 				}
 				// else
 				return 1;
 			}
 			// if the left left cell is stone
 			if(get(col-2, row).isStone()) {
-				return 0.4; // wall continue
+				return 0.35; // wall continue
 			}
 			return 0.5; // Wall continue (second stone in wall)
 		}
@@ -160,7 +160,7 @@ public class Board {
 			
 			// if the top top cell is stone
 			if(get(col, row-2).isStone()) {
-				return 0.3; // wall continue
+				return 0.35; // wall continue
 			}
 			return 0; // Wall continue (mandatory)
 		}
@@ -169,7 +169,28 @@ public class Board {
 		return 1;
 	}
 	
-	
+	public Cell getCellInDir(Position pos,int dir) {
+		switch(dir) {
+			case 1 : 
+				return this.get(pos.getColumn()+1, pos.getRow());
+			case 2 : 
+				return this.get(pos.getColumn()+1, pos.getRow()-1);
+			case 3 : 
+				return this.get(pos.getColumn(), pos.getRow()-1);
+			case 4 : 
+				return this.get(pos.getColumn()-1, pos.getRow()-1);
+			case 5 : 
+				return this.get(pos.getColumn()-1, pos.getRow());
+			case 6 : 
+				return this.get(pos.getColumn()-1, pos.getRow()+1);
+			case 7 : 
+				return this.get(pos.getColumn(), pos.getRow()+1);
+			case 8 : 
+				return this.get(pos.getColumn()+1, pos.getRow()+1);
+			default : 
+				return null;
+		}
+	}
 	
 	
 	

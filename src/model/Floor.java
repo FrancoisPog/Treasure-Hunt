@@ -37,7 +37,8 @@ public class Floor extends Cell {
 	public void process(Hunter h) {
 		if(isFull) {
 			h.setDirection(1 + (int)(Math.random()*8));
-			System.out.println("["+h+"] : Case occupée -> "+h.getDirection());
+			h.setByPassDirection(0);
+			//System.out.println("["+h+"] : Case occupée -> "+h.getDirection());
 			return;
 		}
 		
@@ -50,10 +51,12 @@ public class Floor extends Cell {
 			if(h.getByPassDirection() == 1 || h.getByPassDirection() == 3) {
 				if(h.getPosition().getColumn() != old.getColumn()) {
 					h.setByPassDirection(0);
+					//System.out.println("reset");
 				}
 			}else {
 				if(h.getPosition().getRow() != old.getRow()) {
 					h.setByPassDirection(0);
+					//System.out.println("reset");
 				}
 			}
 		}

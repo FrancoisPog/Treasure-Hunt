@@ -5,15 +5,15 @@ import java.util.Iterator;
 
 
 /**
- * <p>The <strong>Matrix<strong> is a ourself made collection to represent a square two dimensions array</p>
+ * <p>The <strong>Matrix</strong> is a ourself made collection to represent a square two dimensions array</p>
  * <p>A Matrix is characterized by : </p>
  * <ul>
- * 		<li><dt>An ArrayList of ArrayList of type <em>T</em></dt></li>
- * 		<li><dt>A size</dt></li>
+ * 		<li>An ArrayList of ArrayList of type <em>T</em></li>
+ * 		<li>A size</li>
  * </ul>
  * 
  * @param <T> The generic type used
- * @see java.lang.iterable
+ * @see java.lang.Iterable
  * @author François Poguet
  */
 public class Matrix<T> implements Iterable<T>{

@@ -24,91 +24,201 @@ public class Stone extends Cell {
 	/**
 	 * Redirects the hunter who queried
 	 */
-	@SuppressWarnings("unused")
+	//@SuppressWarnings("unused")
 	@Override
 	public void process(Hunter h) {
 		int hCol = h.getPosition().getColumn();
 		int hRow = h.getPosition().getRow();
-		int sCol = h.getPosition().getColumn();
-		int sRow = h.getPosition().getRow();
+		int sCol = this.getPosition().getColumn();
+		int sRow = this.getPosition().getRow();
 		
 		
 		Position treasurePos = this.getMatrix().getTreasure().getPosition();
 		Board mat = this.getMatrix();
 		
+		// if bypass the wall isn't the best direction to get closer to the treasure
+		if(!mat.getCellInDir(h.getPosition(), h.getPosition().getBestDirTo(treasurePos, mat, false, 0)).isStone()) {
+			h.setDirection(h.getPosition().getBestDirTo(treasurePos, mat, false, 0));
+			return;
+		}
 		
-		if(h.getByPassDirection() == 0) {
-			if(h.getPosition().getColumn() == this.getPosition().getColumn()) {
-				int size2 = this.wallSize(2);
-				int size4 = this.wallSize(4);
-				if(size2 > size4 ) {
-					h.setByPassDirection(4);
-				}else {
-					h.setByPassDirection(2);
-				}
+		// if the hunter is already bypassing
+		if(h.getByPassDirection() != 0) {
+			h.setDirection(h.getPosition().getBestDirTo(treasurePos, this.getMatrix(),true,h.getByPassDirection()));
+			return;
+		}
+		
+		int size1 = this.wallSize(1);
+		int size2 = this.wallSize(2);
+		int size3 = this.wallSize(3);
+		int size4 = this.wallSize(4);
+		
+		// Front
+		if(hCol == sCol) {
+			if(size2 > size4 ) {
+				h.setByPassDirection(4);
+			}else {
+				h.setByPassDirection(2);
 			}
-			
-			if(h.getPosition().getRow() == this.getPosition().getRow()){
-				int size1 = this.wallSize(1);
-				int size3 = this.wallSize(3);
-				if(size1 < size3) {
-					h.setByPassDirection(1);
-				}else {
-					h.setByPassDirection(3);
-				}
+		}
+		if(hRow == sRow){
+			if(size1 < size3) {
+				h.setByPassDirection(1);
+			}else {
+				h.setByPassDirection(3);
 			}
-			
-			// Diagonales
-			if(h.getPosition().getColumn() != this.getPosition().getColumn() && h.getPosition().getRow() != this.getPosition().getRow()) {
-				if(h.getPosition().getRow() > this.getPosition().getRow()) { // Haut
-					if(h.getPosition().getColumn() < this.getPosition().getColumn()) { // haut droite
-						if(mat.get(hCol, hRow-1).isStone()) {
+		}
+		
+		// Diagonals
+		if(hCol != sCol && hRow != sRow) {
+			if(hRow > sRow) { // TOP
+				if(hCol < sCol) { // TOP RIGHT
+					if(this.wallIsVertical()) { // TOP RIGHT H
+						if(treasurePos.getColumn() == sCol) {
+							h.setByPassDirection(1);
+						}else {
+							if(size1 + 1 > size3 - 1) {
+								if(mat.get(hCol+1, hRow).isStone()) {
+									h.setByPassDirection(3);
+								}else{
+									h.setByPassDirection(4);
+								}
+									
+							} else {
+								h.setByPassDirection(1);
+							}
+						}
+					}else { // TOP RIGHT V
+						if(treasurePos.getRow() == sRow) {
 							h.setByPassDirection(4);
 						}else {
-							h.setByPassDirection(1);
-						}
-					}else { // haut gauche
-						if(mat.get(hCol, hRow-1).isStone()) {
-							h.setByPassDirection(2);
-						}else {
-							h.setByPassDirection(1);
+							if(size2 - 1 < size4 + 1) {
+								if(mat.get(hCol, hRow-1).isStone()) {
+									h.setByPassDirection(2);
+								}else{
+									h.setByPassDirection(1);
+								}
+									
+							}else {
+								h.setByPassDirection(4);
+							}
 						}
 					}
-					
-				}else { // Bas
-					if(h.getPosition().getColumn() < this.getPosition().getColumn()) { // bas droite
-						if(mat.get(hCol, hRow+1).isStone()) {
-							h.setByPassDirection(4);
+				}else { // TOP LEFT
+					if(this.wallIsVertical()) { // TOP LEFT V
+						if(treasurePos.getColumn() == sCol) {
+							h.setByPassDirection(1);
 						}else {
-							h.setByPassDirection(3);
+							if(size1 + 1 > size3 - 1) {
+								if(mat.get(hCol-1, hRow).isStone()) {
+									h.setByPassDirection(3);
+								}else{
+									h.setByPassDirection(2);
+								}
+									
+							}else {
+								h.setByPassDirection(1);
+							}
 						}
-					}else { // bas gauche
-						if(mat.get(hCol, hRow+1).isStone()) {
+					} else { // TOP LEFT H
+						if(treasurePos.getRow() == sRow) {
 							h.setByPassDirection(2);
 						}else {
+							if(size2 + 1 > size4 - 1) {
+								if(mat.get(hCol, hRow-1).isStone()) {
+									h.setByPassDirection(4);
+								}else{
+									h.setByPassDirection(1);
+								}
+									
+							}else {
+								h.setByPassDirection(2);
+							}
+						}
+					}
+				}
+				
+			}else { //BOTTOM
+				if(hCol < sCol) { // BOTTOM RIGHT
+					if(this.wallIsVertical()) { // BOTTOM RIGHT V
+						if(treasurePos.getColumn() == sCol) {
 							h.setByPassDirection(3);
+						}else {
+							if(size3 + 1 > size1 - 1) {
+								if(mat.get(hCol+1, hRow).isStone()) {
+									h.setByPassDirection(1);
+								}else{
+									h.setByPassDirection(4);
+								}
+									
+							} else {
+								h.setByPassDirection(3);
+							}
+						}
+					}else{ // BOTTOM RIGHT H
+						if(treasurePos.getRow() == sRow) {
+							h.setByPassDirection(4);
+						}else {
+							if(size2 - 1 < size4 + 1) {
+								if(mat.get(hCol, hRow+1).isStone()) {
+									h.setByPassDirection(2);
+								}else{
+									h.setByPassDirection(3);
+								}
+									
+							}else {
+								h.setByPassDirection(4);
+							}
+						}
+					}
+				}else { // BOTTOM LEFT
+					if(this.wallIsVertical()) { // BOTTOM LEFT V
+						if(treasurePos.getColumn() == sCol) {
+							h.setByPassDirection(3);
+						}else {
+							if(size3 + 1 > size1 - 1) {
+								if(mat.get(hCol-1, hRow).isStone()) {
+									h.setByPassDirection(1);
+								}else{
+									h.setByPassDirection(2);
+								}
+									
+							} else {
+								h.setByPassDirection(3);
+							}
+						}
+					}else { // BOTTOM LEFT H
+						if(treasurePos.getRow() == sRow) {
+							h.setByPassDirection(2);
+						}else {
+							if(size2 + 1 > size4 - 1) {
+								if(mat.get(hCol, hRow+1).isStone()) {
+									h.setByPassDirection(4);
+								}else{
+									h.setByPassDirection(3);
+								}
+									
+							}else {
+								h.setByPassDirection(2);
+							}
 						}
 					}
 				}
 			}
 		}
-		
-		
-		
+
 		h.setDirection(h.getPosition().getBestDirTo(treasurePos, this.getMatrix(),true,h.getByPassDirection()));
 		
-		//System.out.println("["+h+"] : Mur -> "+h.getDirection());
+		//System.out.println("["+h+"] : Mur -> "+h.getDirection()+"bp:"+h.getByPassDirection());
 		
-		
-		
-		
-		return;
 	}
 
 	@Override
 	public String toString() {
 		return " # ";
 	}
+	
+	
 
 
 	@Override
@@ -161,13 +271,20 @@ public class Stone extends Cell {
 					j++;
 					continue;
 			}
+			//System.out.println("dd");
 		}
+		//System.out.println("r");
 		if(dir%2 == 0) {
 			return Math.abs(j)-1;
 		}
 		
 		return Math.abs(i)-1;
 		
+	}
+	
+	
+	public boolean wallIsVertical() {
+		return (this.wallSize(1) > 0 || this.wallSize(3) > 0);
 	}
 
 	
