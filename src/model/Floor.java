@@ -37,25 +37,25 @@ public class Floor extends Cell {
 	public void process(Hunter h) {
 		if(isFull) {
 			h.setDirection(1 + (int)(Math.random()*8));
-			h.setByPassDirection(0);
+			h.setBypassDirection(0);
 			//System.out.println("["+h+"] : Case occupée -> "+h.getDirection());
 			return;
 		}
 		
 		Position old = h.getPosition();
 		
-		h.getCurrentCell().leave();
+		h.getCurrentFloor().leave();
 		this.come(h);
 		
-		if(h.getByPassDirection() > 0) {
-			if(h.getByPassDirection() == 1 || h.getByPassDirection() == 3) {
+		if(h.getBypassDirection() > 0) {
+			if(h.getBypassDirection() == 1 || h.getBypassDirection() == 3) {
 				if(h.getPosition().getColumn() != old.getColumn()) {
-					h.setByPassDirection(0);
+					h.setBypassDirection(0);
 					//System.out.println("reset");
 				}
 			}else {
 				if(h.getPosition().getRow() != old.getRow()) {
-					h.setByPassDirection(0);
+					h.setBypassDirection(0);
 					//System.out.println("reset");
 				}
 			}
@@ -63,9 +63,9 @@ public class Floor extends Cell {
 		
 		
 		
-		Position treasure_pos = this.getMatrix().getTreasure().getPosition();
+		Position treasure_pos = this.getBoard().getTreasure().getPosition();
 		
-		h.setDirection(h.getPosition().getBestDirTo(treasure_pos,this.getMatrix(),false,h.getByPassDirection()));
+		h.setDirection(h.getPosition().getBestDirTo(treasure_pos,this.getBoard(),false,h.getBypassDirection()));
 		
 	}
 	
@@ -82,7 +82,7 @@ public class Floor extends Cell {
 	
 	public void come(Hunter h) {
 		this.hunter = h;
-		h.setCurrentCell(this);
+		h.setCurrentFloor(this);
 		this.isFull = true;
 	}
 	

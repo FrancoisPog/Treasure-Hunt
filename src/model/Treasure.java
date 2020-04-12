@@ -36,7 +36,7 @@ public class Treasure extends Cell {
 		if(this.winner != null) {
 			return;
 		}
-		h.getCurrentCell().leave();
+		h.getCurrentFloor().leave();
 		this.winner = h;
 
 	}
@@ -59,6 +59,10 @@ public class Treasure extends Cell {
 	 */
 	public Hunter getWinner() {
 		return this.winner;
+	}
+	
+	public boolean isFound() {
+		return this.isFound();
 	}
 	
 

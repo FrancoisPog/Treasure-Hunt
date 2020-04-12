@@ -33,8 +33,8 @@ public class Stone extends Cell {
 		int sRow = this.getPosition().getRow();
 		
 		
-		Position treasurePos = this.getMatrix().getTreasure().getPosition();
-		Board mat = this.getMatrix();
+		Position treasurePos = this.getBoard().getTreasure().getPosition();
+		Board mat = this.getBoard();
 		
 		// if bypass the wall isn't the best direction to get closer to the treasure
 		if(!mat.getCellInDir(h.getPosition(), h.getPosition().getBestDirTo(treasurePos, mat, false, 0)).isStone()) {
@@ -43,8 +43,8 @@ public class Stone extends Cell {
 		}
 		
 		// if the hunter is already bypassing
-		if(h.getByPassDirection() != 0) {
-			h.setDirection(h.getPosition().getBestDirTo(treasurePos, this.getMatrix(),true,h.getByPassDirection()));
+		if(h.getBypassDirection() != 0) {
+			h.setDirection(h.getPosition().getBestDirTo(treasurePos, this.getBoard(),true,h.getBypassDirection()));
 			return;
 		}
 		
@@ -56,16 +56,16 @@ public class Stone extends Cell {
 		// Front
 		if(hCol == sCol) {
 			if(size2 > size4 ) {
-				h.setByPassDirection(4);
+				h.setBypassDirection(4);
 			}else {
-				h.setByPassDirection(2);
+				h.setBypassDirection(2);
 			}
 		}
 		if(hRow == sRow){
 			if(size1 < size3) {
-				h.setByPassDirection(1);
+				h.setBypassDirection(1);
 			}else {
-				h.setByPassDirection(3);
+				h.setBypassDirection(3);
 			}
 		}
 		
@@ -75,64 +75,64 @@ public class Stone extends Cell {
 				if(hCol < sCol) { // TOP RIGHT
 					if(this.wallIsVertical()) { // TOP RIGHT H
 						if(treasurePos.getColumn() == sCol) {
-							h.setByPassDirection(1);
+							h.setBypassDirection(1);
 						}else {
 							if(size1 + 1 > size3 - 1) {
 								if(mat.get(hCol+1, hRow).isStone()) {
-									h.setByPassDirection(3);
+									h.setBypassDirection(3);
 								}else{
-									h.setByPassDirection(4);
+									h.setBypassDirection(4);
 								}
 									
 							} else {
-								h.setByPassDirection(1);
+								h.setBypassDirection(1);
 							}
 						}
 					}else { // TOP RIGHT V
 						if(treasurePos.getRow() == sRow) {
-							h.setByPassDirection(4);
+							h.setBypassDirection(4);
 						}else {
 							if(size2 - 1 < size4 + 1) {
 								if(mat.get(hCol, hRow-1).isStone()) {
-									h.setByPassDirection(2);
+									h.setBypassDirection(2);
 								}else{
-									h.setByPassDirection(1);
+									h.setBypassDirection(1);
 								}
 									
 							}else {
-								h.setByPassDirection(4);
+								h.setBypassDirection(4);
 							}
 						}
 					}
 				}else { // TOP LEFT
 					if(this.wallIsVertical()) { // TOP LEFT V
 						if(treasurePos.getColumn() == sCol) {
-							h.setByPassDirection(1);
+							h.setBypassDirection(1);
 						}else {
 							if(size1 + 1 > size3 - 1) {
 								if(mat.get(hCol-1, hRow).isStone()) {
-									h.setByPassDirection(3);
+									h.setBypassDirection(3);
 								}else{
-									h.setByPassDirection(2);
+									h.setBypassDirection(2);
 								}
 									
 							}else {
-								h.setByPassDirection(1);
+								h.setBypassDirection(1);
 							}
 						}
 					} else { // TOP LEFT H
 						if(treasurePos.getRow() == sRow) {
-							h.setByPassDirection(2);
+							h.setBypassDirection(2);
 						}else {
 							if(size2 + 1 > size4 - 1) {
 								if(mat.get(hCol, hRow-1).isStone()) {
-									h.setByPassDirection(4);
+									h.setBypassDirection(4);
 								}else{
-									h.setByPassDirection(1);
+									h.setBypassDirection(1);
 								}
 									
 							}else {
-								h.setByPassDirection(2);
+								h.setBypassDirection(2);
 							}
 						}
 					}
@@ -142,64 +142,64 @@ public class Stone extends Cell {
 				if(hCol < sCol) { // BOTTOM RIGHT
 					if(this.wallIsVertical()) { // BOTTOM RIGHT V
 						if(treasurePos.getColumn() == sCol) {
-							h.setByPassDirection(3);
+							h.setBypassDirection(3);
 						}else {
 							if(size3 + 1 > size1 - 1) {
 								if(mat.get(hCol+1, hRow).isStone()) {
-									h.setByPassDirection(1);
+									h.setBypassDirection(1);
 								}else{
-									h.setByPassDirection(4);
+									h.setBypassDirection(4);
 								}
 									
 							} else {
-								h.setByPassDirection(3);
+								h.setBypassDirection(3);
 							}
 						}
 					}else{ // BOTTOM RIGHT H
 						if(treasurePos.getRow() == sRow) {
-							h.setByPassDirection(4);
+							h.setBypassDirection(4);
 						}else {
 							if(size2 - 1 < size4 + 1) {
 								if(mat.get(hCol, hRow+1).isStone()) {
-									h.setByPassDirection(2);
+									h.setBypassDirection(2);
 								}else{
-									h.setByPassDirection(3);
+									h.setBypassDirection(3);
 								}
 									
 							}else {
-								h.setByPassDirection(4);
+								h.setBypassDirection(4);
 							}
 						}
 					}
 				}else { // BOTTOM LEFT
 					if(this.wallIsVertical()) { // BOTTOM LEFT V
 						if(treasurePos.getColumn() == sCol) {
-							h.setByPassDirection(3);
+							h.setBypassDirection(3);
 						}else {
 							if(size3 + 1 > size1 - 1) {
 								if(mat.get(hCol-1, hRow).isStone()) {
-									h.setByPassDirection(1);
+									h.setBypassDirection(1);
 								}else{
-									h.setByPassDirection(2);
+									h.setBypassDirection(2);
 								}
 									
 							} else {
-								h.setByPassDirection(3);
+								h.setBypassDirection(3);
 							}
 						}
 					}else { // BOTTOM LEFT H
 						if(treasurePos.getRow() == sRow) {
-							h.setByPassDirection(2);
+							h.setBypassDirection(2);
 						}else {
 							if(size2 + 1 > size4 - 1) {
 								if(mat.get(hCol, hRow+1).isStone()) {
-									h.setByPassDirection(4);
+									h.setBypassDirection(4);
 								}else{
-									h.setByPassDirection(3);
+									h.setBypassDirection(3);
 								}
 									
 							}else {
-								h.setByPassDirection(2);
+								h.setBypassDirection(2);
 							}
 						}
 					}
@@ -207,7 +207,7 @@ public class Stone extends Cell {
 			}
 		}
 
-		h.setDirection(h.getPosition().getBestDirTo(treasurePos, this.getMatrix(),true,h.getByPassDirection()));
+		h.setDirection(h.getPosition().getBestDirTo(treasurePos, this.getBoard(),true,h.getBypassDirection()));
 		
 		//System.out.println("["+h+"] : Mur -> "+h.getDirection()+"bp:"+h.getByPassDirection());
 		
@@ -256,7 +256,7 @@ public class Stone extends Cell {
 				break;
 		}
 		
-		while(this.getMatrix().get(this.getPosition().getColumn()+j, this.getPosition().getRow() +i).isStone()) {
+		while(this.getBoard().get(this.getPosition().getColumn()+j, this.getPosition().getRow() +i).isStone()) {
 			switch(dir) {
 				case 1 :
 					i--;

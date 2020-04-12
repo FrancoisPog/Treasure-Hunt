@@ -36,7 +36,7 @@ public class Game {
 	 */
 	public void execute() {
 		for(Hunter h : hunters) {
-			h.move(this.board);
+			h.move();
 		}
 	}
 	

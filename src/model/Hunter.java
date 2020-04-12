@@ -24,7 +24,7 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 	private char symbol;
 	private int direction;
 	private Floor currentFloor;
-	private int byPassDirection;
+	private int bypassDirection;
 	
 	
 	/**
@@ -36,7 +36,7 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 		this.symbol = symbol;
 		this.direction = 0;
 		this.currentFloor = new Floor(pos, this,null);
-		this.byPassDirection = 0;
+		this.bypassDirection = 0;
 	}
 
 	/**
@@ -48,19 +48,19 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 	}
 
 	/**
-	 * Getter for the current cell
-	 * @return	The current hunter's cell
+	 * Getter for the current floor
+	 * @return	The current hunter's floor
 	 */
-	public Floor getCurrentCell() {
+	public Floor getCurrentFloor() {
 		return currentFloor;
 	}
 
 	/**
-	 * Setter for the current cell
-	 * @param currentCell	The new current cell
+	 * Setter for the current floor
+	 * @param currentFloor	The new current floor
 	 */
-	public void setCurrentCell(Floor currentCell) {
-		this.currentFloor = currentCell;
+	public void setCurrentFloor(Floor currentFloor) {
+		this.currentFloor = currentFloor;
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 	 */
 	@Override
 	public Position getPosition() {
-		return this.getCurrentCell().getPosition();
+		return this.getCurrentFloor().getPosition();
 	}
 
 	
@@ -109,7 +109,8 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 	 * Execute a move depending the current cell and the current direction
 	 * @param mat The cell matrix where the hunter is
 	 */
-	public void move(Board mat) {
+	public void move() {
+		Board mat = this.currentFloor.getBoard();
 		int row = 0, col = 0;
 		
 		switch(this.direction) {
@@ -158,16 +159,16 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 	 * Getter for the bypass direction, when the hunter goes around a wall
 	 * @return The bypass direction (1:TOP, 2:LEFT, 3:BOTTOM, 4:RIGHT or 0:No bypass)
 	 */
-	public int getByPassDirection() {
-		return byPassDirection;
+	public int getBypassDirection() {
+		return bypassDirection;
 	}
 
 	/**
 	 * Setter for byPassDirection
 	 * @param byPassDir The new bypass direction
 	 */
-	public void setByPassDirection(int byPassDir) {
-		this.byPassDirection = byPassDir;
+	public void setBypassDirection(int byPassDir) {
+		this.bypassDirection = byPassDir;
 	}
 	
 	

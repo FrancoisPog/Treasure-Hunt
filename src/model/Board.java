@@ -72,8 +72,8 @@ public class Board {
 				if(!hunters_tmp.isEmpty() &&  hunters_tmp.first().getPosition().equals(curr)) {
 					// Assignment of player at this position
 					Hunter h = hunters_tmp.pollFirst();
-					mat.set(col, row, h.getCurrentCell());
-					h.getCurrentCell().setMatrix(this);
+					mat.set(col, row, h.getCurrentFloor());
+					h.getCurrentFloor().setBoard(this);
 					h.setDirection(h.getPosition().getBestDirTo(getTreasure().getPosition(),this,false,0));
 					continue;
 				}
@@ -138,7 +138,7 @@ public class Board {
 			if(!get(col-1, row).isStone()) {
 				// if the top-right cell is free
 				if(!get(col+2, row-1).isStone()) {
-					return 0.8; // wall begin
+					return 0.75; // wall begin
 				}
 				// else
 				return 1;
@@ -169,6 +169,12 @@ public class Board {
 		return 1;
 	}
 	
+	/**
+	 * Get the adjacent cell from pos in direction of dir
+	 * @param pos	The position
+	 * @param dir	The direction
+	 * @return		The Cell searched
+	 */
 	public Cell getCellInDir(Position pos,int dir) {
 		switch(dir) {
 			case 1 : 
