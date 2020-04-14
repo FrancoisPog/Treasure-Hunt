@@ -1,4 +1,4 @@
-package model;
+package treasure_hunt;
 
 
 /**
@@ -8,13 +8,14 @@ package model;
  * 		<li><dt>A winner : only if a hunter found it</dt></li> 
  * </ul>
  * <p>When a Treasure is queried by a hunter, it brings the hunter on, and he win.</p>
- * @see model.Cell
- * @see model.Board
+ * @see treasure_hunt.Cell
+ * @see treasure_hunt.Board
  * 
  * @author François Poguet
  */
 public class Treasure extends Cell {
 	private Hunter winner; 
+	private boolean isFound;
 	
 	/**
 	 * Default treasure constructor
@@ -24,6 +25,7 @@ public class Treasure extends Cell {
 	public Treasure(Position pos,Board cm) {
 		super(pos,cm);
 		this.winner = null;
+		this.isFound = false;
 	}
 	
 	
@@ -38,7 +40,7 @@ public class Treasure extends Cell {
 		}
 		h.getCurrentFloor().leave();
 		this.winner = h;
-
+		this.isFound = true;
 	}
 
 	@Override
@@ -47,8 +49,8 @@ public class Treasure extends Cell {
 	 * @return The treasure appearance
 	 */
 	public String toString() {
-		if(this.winner != null) {
-			return "|"+this.winner.toString()+"|";
+		if(isFound) {
+			return " "+this.winner.toString()+" ";
 		}
 		return " T ";
 	}
@@ -62,7 +64,7 @@ public class Treasure extends Cell {
 	}
 	
 	public boolean isFound() {
-		return this.isFound();
+		return this.isFound;
 	}
 	
 

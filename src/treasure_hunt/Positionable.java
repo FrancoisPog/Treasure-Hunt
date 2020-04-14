@@ -1,10 +1,10 @@
-package model;
+package treasure_hunt;
 
 /**
  * <p><strong>Positionable</strong> interface<p>
  * <p>This interface is used for object which can be positioned</p>
  * @author François Poguet
- * @see model.Position
+ * @see treasure_hunt.Position
  */
 public interface Positionable {
 	

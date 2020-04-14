@@ -1,4 +1,4 @@
-package model;
+package treasure_hunt;
 
 /**
  * <p><strong>Cell</strong> is an abstract class for different cell type.<p>
@@ -11,8 +11,8 @@ package model;
  * </ul>
  * <p>The cell class implements the <strong>Questionable</strong> interface, so it can be queried by hunters.</p>
  * <p>The cell class implements also the <strong>Positionable</strong> interface.<p>
- * @see model.Positionable 
- * @see model.Questionable
+ * @see treasure_hunt.Positionable 
+ * @see treasure_hunt.Questionable
  * 
  * @author François Poguet
  */

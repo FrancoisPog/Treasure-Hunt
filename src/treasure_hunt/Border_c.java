@@ -1,18 +1,18 @@
-package model;
+package treasure_hunt;
 
 
 /**
- * <p><strong>Border</strong> is the class representing a cell on the matrix extremities.<p>
+ * <p><strong>Border_c</strong> is the class representing a cell on the matrix extremities.<p>
  * <p>When a border is queried by a hunter, it change is direction for the opposite.</p>
- * @see model.Cell
- * @see model.Board
+ * @see treasure_hunt.Cell
+ * @see treasure_hunt.Board
  * 
  * 
  * @author François Poguet
  */
-public class Border extends Cell {
+public class Border_c extends Cell {
 
-	public Border(Position pos,Board cm) {
+	public Border_c(Position pos,Board cm) {
 		super(pos,cm);
 	}
 	

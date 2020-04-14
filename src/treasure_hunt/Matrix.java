@@ -1,4 +1,4 @@
-package model;
+package treasure_hunt;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -96,7 +96,7 @@ public class Matrix<T> implements Iterable<T>{
 	 * 		<li><dt>A column index</dt></li> 
 	 * </ul>
 	 * 
-	 * @see model.Matrix
+	 * @see treasure_hunt.Matrix
 	 * @see java.util.Iterator
 	 * 
 	 * @author François Poguet

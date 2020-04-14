@@ -1,4 +1,4 @@
-package model;
+package treasure_hunt;
 
 /**
  * <p><strong>Floor</strong> is the class representing a floor cell on the matrix .<p>
@@ -8,8 +8,8 @@ package model;
  * 		<li><dt>A hunter is it full</dt></li>
  * </ul>
  * <p>When a Floor is queried by a hunter, it bring the hunter on if the floor is free, and redirects him to get closer to the treasure</p>
- * @see model.Cell
- * @see model.Board
+ * @see treasure_hunt.Cell
+ * @see treasure_hunt.Board
  * 
  * @author François Poguet
  */

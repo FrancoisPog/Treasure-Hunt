@@ -1,4 +1,4 @@
-package model;
+package treasure_hunt;
 
 /**
  * <p><strong>Questionable</strong> interface<p>

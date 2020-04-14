@@ -1,5 +1,6 @@
-package model;
+package treasure_hunt;
 
+import java.util.Scanner;
 import java.util.TreeSet;
 
 /**
@@ -12,8 +13,8 @@ import java.util.TreeSet;
  * 			<dd>- The matrix generated for this game</dd></li>
  * </ul>
  * <p>The Game class is used to manage a game process without worrying about the map and players</p>
- * @see model.Hunter
- * @see model.Board
+ * @see treasure_hunt.Hunter
+ * @see treasure_hunt.Board
  * 
  * @author François Poguet
  */
@@ -36,6 +37,7 @@ public class Game {
 	 */
 	public void execute() {
 		for(Hunter h : hunters) {
+			//System.out.println(h+":"+h.getDirection());
 			h.move();
 		}
 	}
@@ -44,14 +46,15 @@ public class Game {
 	 * Execute the entire game party
 	 */
 	public void play() throws InterruptedException {
+		Scanner sc = new Scanner(System.in);
 		while(this.board.getTreasure().getWinner() == null) {
-			//while(true) {
-				this.execute();
-				Thread.sleep(150);
-				System.out.println(board);
-			//}
+			System.out.println(board);
+			this.execute();
+			Thread.sleep(150);
+			//sc.nextLine();
 			
 		}
+		sc.close();
 	}
 	
 	/**
@@ -61,6 +64,12 @@ public class Game {
 		
 	}
 
+	public Board getBoard() {
+		return this.board;
+	}
 	
+	public TreeSet<Hunter> getHunters(){
+		return this.hunters;
+	}
 	
 }

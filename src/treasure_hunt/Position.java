@@ -1,4 +1,4 @@
-package model;
+package treasure_hunt;
 
 import java.util.Arrays;
 
@@ -10,7 +10,7 @@ import java.util.Arrays;
  * 		<li><dt>A column index</dt></li>
  * </ul>
  * <p>Positions are comparable by order of appearance during row browsing</p>
- * @see model.Positionable
+ * @see treasure_hunt.Positionable
  * @see java.lang.Comparable
  * 
  * @author François Poguet

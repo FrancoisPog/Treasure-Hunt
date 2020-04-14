@@ -1,4 +1,4 @@
-package model;
+package treasure_hunt;
 
 /**
  * <p><strong>Hunter</strong> is the class representing players.</p>.
@@ -16,7 +16,7 @@ package model;
  * <p>The <strong>hunter</strong> will be led by his successive floor cells to find the best way to go towards the treasure.</p>
  * <p>The <strong> bypass direction</strong> is used to hold direction when he goes around a wall.<p>
  * <p>The hunter class implements the <strong>Positionable</strong> interface.
- * @see model.Positionable
+ * @see treasure_hunt.Positionable
  * 
  * @author François Poguet
  */
@@ -109,7 +109,7 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 	 * Execute a move depending the current cell and the current direction
 	 * @param mat The cell matrix where the hunter is
 	 */
-	public void move() {
+	public Position move() {
 		Board mat = this.currentFloor.getBoard();
 		int row = 0, col = 0;
 		
@@ -149,7 +149,7 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 		
 		mat.get(this.getPosition().getColumn()+col, this.getPosition().getRow()+row).process(this);
 		
-		
+		return this.getPosition();
 		
 	}
 

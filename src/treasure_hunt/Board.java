@@ -1,4 +1,4 @@
-package model;
+package treasure_hunt;
 
 import java.util.TreeSet;
 
@@ -12,7 +12,7 @@ import java.util.TreeSet;
  * 			<dd>- The treasure among the cells</dd></li>
  * </ul>
  * <p>The Board class is mainly used to generate the map and display it during the game.</p>
- * @see model.Cell
+ * @see treasure_hunt.Cell
  * 
  * @author François Poguet
  */
@@ -20,13 +20,22 @@ public class Board {
 	private Matrix<Cell> mat;
 	private Treasure treasure;
 	
+	public Board() {
+		mat = null;
+		treasure = null;
+	}
+	
+	public Board(int size, TreeSet<Hunter> hunters, int nbPlayers) {
+		init(size,hunters,nbPlayers);
+	}
+	
 	/**
 	 * Default constructor
 	 * @param size 		The matrix size
 	 * @param hunters 	The empty TreeSet of hunters, it will be filled in this method
 	 * @param nbPlayers	The number of players in the game
 	 */
-	public Board(int size, TreeSet<Hunter> hunters, int nbPlayers) {
+	public void init(int size, TreeSet<Hunter> hunters, int nbPlayers) {
 		if(size < 0) {
 			this.mat = null; // Faire les vérifs
 			return;
@@ -82,7 +91,7 @@ public class Board {
 				if(col == 0 || col == size-1 || row == 0 || row == size-1) {
 					// Assignment of border cell in this position
 					
-					mat.set(col, row, new Border(curr,this));
+					mat.set(col, row, new Border_c(curr,this));
 					
 					continue;
 				}
@@ -234,6 +243,10 @@ public class Board {
 	 */
 	public Treasure getTreasure() {
 		return treasure;
+	}
+	
+	public int size() {
+		return mat.size();
 	}
 
 
