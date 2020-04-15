@@ -5,16 +5,20 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.text.NumberFormat;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.Border;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
+import javax.swing.text.NumberFormatter;
 
 public class GameFrame extends JFrame {
 	
@@ -24,9 +28,16 @@ public class GameFrame extends JFrame {
 	private JButton next;
 	private JButton launch;
 	private boolean isInit;
+	private JFormattedTextField sizeField;
+	private JFormattedTextField players;
+	private JButton up;
 	
 	private JPanel gridPanel;
 	
+	/**
+	 * Game frame constructor
+	 * This constructor build the frame without the grid
+	 */
 	public GameFrame() {
 		super("Treasure Hunt");
 		try {
@@ -51,11 +62,39 @@ public class GameFrame extends JFrame {
 		JButton launch = new JButton("Launch game");
 		this.launch = launch;
 		launch.addActionListener(controller);
+		buttonsPane.add(launch);
+		
 		JButton	nextRoundButton = new JButton("Next round");
 		this.next = nextRoundButton;
 		nextRoundButton.addActionListener(controller);
 		buttonsPane.add(nextRoundButton);
-		buttonsPane.add(launch);
+		
+		
+		
+		NumberFormat number = NumberFormat.getIntegerInstance();
+		number.setGroupingUsed(false);
+		
+		NumberFormatter nbFormatter = new NumberFormatter(number);
+		nbFormatter.setValueClass(Integer.class);
+		nbFormatter.setAllowsInvalid(false);
+		nbFormatter.setMinimum(0);
+		nbFormatter.setMaximum(200);
+		
+		
+	
+		this.sizeField = new JFormattedTextField(nbFormatter);		
+		sizeField.setValue(50);
+		sizeField.setColumns(3);
+		buttonsPane.add(sizeField);
+		
+		this.players = new JFormattedTextField(nbFormatter);
+		players.setValue(3);
+		players.setColumns(2);
+		buttonsPane.add(players);
+		
+		this.up = new JButton("^");
+		up.setSize(10, 5);
+		buttonsPane.add(up);
 		
 		main.add(buttonsPane,"North");
 		
@@ -68,7 +107,10 @@ public class GameFrame extends JFrame {
 	
 	}
 	
-	
+	/**
+	 * Initialize the grid game on the frame
+	 * @param game The current game
+	 */
 	public void initGrid(Game game) {
 		int size = game.getBoard().size();
 		cellLabels = new Matrix<JLabel>(size);
@@ -112,30 +154,55 @@ public class GameFrame extends JFrame {
 				}
 			}
 		}
-		this.revalidate();
+		this.repaint();
 		this.isInit = true;
 	}
+	
 	
 	public boolean isInit() {
 		return this.isInit;
 	}
 	
 	
-	
+	/**
+	 * Getter for the button "next round"
+	 * @return	The "next round" button
+	 */
 	public JButton getNextButton() {
 		return this.next;
 	}
 	
+	/**
+	 * Getter for the button "Launch button"
+	 * @return	The "launch game" button
+	 */
 	public JButton getLaunchButton() {
 		return this.launch;
 	}
 	
+	public JFormattedTextField getSizeLabel() {
+		return this.sizeField;
+	}
+	
+	public JFormattedTextField getPlayersLabel() {
+		return this.players;
+	}
+	
+	/**
+	 * Clear a cell label on the grid
+	 * @param pos	The cell's position
+	 */
 	public void clearFloor(Position pos) {
 		cellLabels.get(pos.getColumn(), pos.getRow()).setText("");
 		cellLabels.get(pos.getColumn(), pos.getRow()).setBackground(Color.gray);
-		this.revalidate();
+//		this.revalidate();
 	}
 	
+	/**
+	 * Update a cell on the grid
+	 * @param pos	The cell position
+	 * @param board	The current board
+	 */
 	public void updateFloor(Position pos, Board board) {
 		Floor curr = (Floor)board.get(pos);
 		
@@ -149,7 +216,7 @@ public class GameFrame extends JFrame {
 			cellLabels.get(treasurePos.getColumn(), treasurePos.getRow()).setText(board.getTreasure().toString());
 			cellLabels.get(treasurePos.getColumn(), treasurePos.getRow()).setBackground(Color.green);
 		}
-		this.revalidate();
+//		this.revalidate();
 	}
 
 }

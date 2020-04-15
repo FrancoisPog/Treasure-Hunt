@@ -12,10 +12,14 @@ public class Controller implements ActionListener{
 	private Game game;
 	private Timer timer;
 	
-	
+	/**
+	 * Controller constructor
+	 * @param frame The frame to control
+	 */
 	public Controller(GameFrame frame) {
 		this.frame = frame;
 		this.game = null;
+		this.timer = null;
 	}
 	
 	
@@ -32,14 +36,23 @@ public class Controller implements ActionListener{
 		
 	}
 	
+	/**
+	 * Init a new game
+	 */
 	public void launchGame() {
 		if(timer != null) {
 			timer.stop();
 		}
-		this.game = new Game(30, 2);
+		
+		int size = (int) frame.getSizeLabel().getValue();
+		int players = (int) frame.getPlayersLabel().getValue();
+		this.game = new Game(size, players);
 		frame.initGrid(game);
 	}
 	
+	/**
+	 * Let the hunter play
+	 */
 	public void playAuto() {
 		ActionListener action = new ActionListener() {
 			
@@ -54,6 +67,9 @@ public class Controller implements ActionListener{
 		
 	}
 	
+	/**
+	 * Execute a game round
+	 */
 	public void executeRound() {
 		if(game.getBoard().getTreasure().isFound()) {
 			timer.stop();
@@ -61,7 +77,6 @@ public class Controller implements ActionListener{
 		}
 		
 		for(Hunter h : game.getHunters()) {
-			System.out.println("yep");
 			frame.clearFloor(h.getPosition()); // A optimiser
 			Position curr = h.move();
 			frame.updateFloor(curr, game.getBoard());

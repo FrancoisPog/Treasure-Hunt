@@ -63,11 +63,19 @@ public class Game {
 	public void result() {
 		
 	}
-
+	
+	/**
+	 * Getter for the board
+	 * @return The game board
+	 */
 	public Board getBoard() {
 		return this.board;
 	}
 	
+	/**
+	 * Getter for the hunters set
+	 * @return	The hunters TreeSet
+	 */
 	public TreeSet<Hunter> getHunters(){
 		return this.hunters;
 	}

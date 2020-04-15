@@ -245,6 +245,10 @@ public class Board {
 		return treasure;
 	}
 	
+	/**
+	 * Getter for the board size
+	 * @return	The board size
+	 */	
 	public int size() {
 		return mat.size();
 	}

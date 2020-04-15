@@ -63,6 +63,10 @@ public class Treasure extends Cell {
 		return this.winner;
 	}
 	
+	/**
+	 * Check if the treasure is found by a hunter
+	 * @return	True if the treasure is found, otherwise false
+	 */
 	public boolean isFound() {
 		return this.isFound;
 	}
