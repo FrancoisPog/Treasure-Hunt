@@ -25,7 +25,7 @@ public class Controller implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == frame.getLaunchButton()) {
+		if(e.getSource() == frame.getNewGameBtn()) {
 			launchGame();
 			return;
 		}
@@ -42,10 +42,11 @@ public class Controller implements ActionListener{
 	public void launchGame() {
 		if(timer != null) {
 			timer.stop();
+			this.timer = null;
 		}
 		
-		int size = (int) frame.getSizeLabel().getValue();
-		int players = (int) frame.getPlayersLabel().getValue();
+		int size = Integer.parseInt(frame.getSizeField().getText());
+		int players = Integer.parseInt(frame.getPlayersField().getText());
 		this.game = new Game(size, players);
 		frame.initGrid(game);
 	}
@@ -62,8 +63,12 @@ public class Controller implements ActionListener{
 				
 			}
 		};
-		timer = new Timer(100,action);
-		timer.start();
+		if(timer == null) {
+			timer = new Timer(100,action);
+			timer.start();
+		}
+		
+		frame.getNextButton().setEnabled(false);
 		
 	}
 	
@@ -73,6 +78,7 @@ public class Controller implements ActionListener{
 	public void executeRound() {
 		if(game.getBoard().getTreasure().isFound()) {
 			timer.stop();
+			this.timer = null;
 			return;
 		}
 		
