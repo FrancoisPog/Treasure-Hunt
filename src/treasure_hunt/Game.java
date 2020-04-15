@@ -1,5 +1,6 @@
 package treasure_hunt;
 
+import java.io.File;
 import java.util.Scanner;
 import java.util.TreeSet;
 
@@ -21,6 +22,12 @@ import java.util.TreeSet;
 public class Game {
 	private TreeSet<Hunter> hunters;
 	private Board board;
+	
+	public Game(File file, int nbPlayers) {
+		this.hunters = new TreeSet<Hunter>();
+		this.board = new Board();
+		this.board.init(file,this.hunters, nbPlayers);
+	}
 	
 	/**
 	 * Default Game constructor

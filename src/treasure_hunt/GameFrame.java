@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,6 +94,11 @@ public class GameFrame extends JFrame {
 		this.buttons.add(nextRoundButton);
 		buttonsPane.add(nextRoundButton);
 		
+		JButton saveBoardButton = new JButton("Save board");
+		saveBoardButton.addActionListener(controller);
+		this.buttons.add(saveBoardButton);
+		buttonsPane.add(saveBoardButton);
+		
 		buttonsPane.add(makeButtonArea("Size settings", "Size :", 10, 200, 10, 3, 50));
 		buttonsPane.add(makeButtonArea("Players settings", "Players : ", 1, 20, 1, 2, 3));
 		return buttonsPane;
@@ -150,6 +156,7 @@ public class GameFrame extends JFrame {
 		this.repaint();
 		this.isInit = true;
 		getNextButton().setEnabled(true);
+
 	}
 	
 	
@@ -172,6 +179,10 @@ public class GameFrame extends JFrame {
 	 */
 	public JButton getNewGameBtn() {
 		return this.buttons.get(0);
+	}
+	
+	public JButton getSaveButton() {
+		return this.buttons.get(2);
 	}
 	
 	/**

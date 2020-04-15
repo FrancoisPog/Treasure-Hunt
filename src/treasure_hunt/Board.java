@@ -1,5 +1,7 @@
 package treasure_hunt;
 
+import java.io.File;
+import java.util.Iterator;
 import java.util.TreeSet;
 
 /**
@@ -16,7 +18,7 @@ import java.util.TreeSet;
  * 
  * @author François Poguet
  */
-public class Board {
+public class Board implements Iterable<Cell> {
 	private Matrix<Cell> mat;
 	private Treasure treasure;
 	
@@ -27,6 +29,30 @@ public class Board {
 	
 	public Board(int size, TreeSet<Hunter> hunters, int nbPlayers) {
 		init(size,hunters,nbPlayers);
+	}
+	
+	public void init(File file,TreeSet<Hunter> hunters, int nbPlayers) {
+		
+		FileManager.openMap(this, file);
+		
+		int c = 'A';
+		while(hunters.size() != nbPlayers) {
+			System.out.println("h");
+			Hunter h = new Hunter((char)c, null);
+			Position pos = null;
+			do {
+				System.out.println("p");
+				pos = Position.randomPos(this.size()-2, 1);
+			}while(!this.get(pos).getClass().getSimpleName().equals("Floor"));
+			
+			Floor floor = (Floor)this.get(pos);
+			floor.come(h);
+			if(hunters.add(h)) {
+				c++;
+			}
+		}
+		
+		
 	}
 	
 	/**
@@ -236,6 +262,10 @@ public class Board {
 		return mat.get(pos.getColumn(), pos.getRow());
 	}
 	
+	public void set(int col, int row, Cell value) {
+		this.mat.set(col, row, value);
+	}
+	
 
 	/**
 	 * Getter for the treasure 
@@ -245,12 +275,26 @@ public class Board {
 		return treasure;
 	}
 	
+	public void setTreasure(Treasure treasure) {
+		this.treasure = treasure;
+	}
+	
+	public void setMatrix(Matrix<Cell> mat) {
+		this.mat = mat;
+	}
+	
 	/**
 	 * Getter for the board size
 	 * @return	The board size
 	 */	
 	public int size() {
 		return mat.size();
+	}
+
+	@Override
+	public Iterator<Cell> iterator() {
+		// TODO Auto-generated method stub
+		return this.mat.iterator();
 	}
 
 

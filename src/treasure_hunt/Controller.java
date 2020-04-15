@@ -2,6 +2,7 @@ package treasure_hunt;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.Timer;
 
@@ -34,6 +35,11 @@ public class Controller implements ActionListener{
 			return;
 		}
 		
+		if(e.getSource() == frame.getSaveButton() && frame.isInit()) {
+			saveBoard();
+			return;
+		}
+		
 	}
 	
 	/**
@@ -44,10 +50,16 @@ public class Controller implements ActionListener{
 			timer.stop();
 			this.timer = null;
 		}
-		
-		int size = Integer.parseInt(frame.getSizeField().getText());
 		int players = Integer.parseInt(frame.getPlayersField().getText());
-		this.game = new Game(size, players);
+		FileManager fm = new FileManager();
+		File file = fm.selectFile(this.frame,'o');
+		this.game = new Game(file,players);
+		
+		
+		
+//		int size = Integer.parseInt(frame.getSizeField().getText());
+//		int players = Integer.parseInt(frame.getPlayersField().getText());
+//		this.game = new Game(size, players);
 		frame.initGrid(game);
 	}
 	
@@ -89,6 +101,12 @@ public class Controller implements ActionListener{
 			
 		}
 				
+	}
+	
+	public void saveBoard() {
+		FileManager fm = new FileManager();
+		File file = fm.selectFile(this.frame,'s');
+		FileManager.saveMap(game.getBoard(), file);
 	}
 
 }
