@@ -1,24 +1,24 @@
 package treasure_hunt;
 
 /**
- * <p><strong>Floor</strong> is the class representing a floor cell on the matrix .<p>
- * <p>A Floor is characterized by : </p>
+ * <p><strong>Floor_c</strong> is the class representing a floor cell on the matrix .<p>
+ * <p>A Floor_c is characterized by : </p>
  *  <ul>
  * 		<li><dt>A state : free or full</dt></li> 
  * 		<li><dt>A hunter is it full</dt></li>
  * </ul>
- * <p>When a Floor is queried by a hunter, it bring the hunter on if the floor is free, and redirects him to get closer to the treasure</p>
+ * <p>When a Floor_c is queried by a hunter, it bring the hunter on if the floor is free, and redirects him to get closer to the treasure</p>
  * @see treasure_hunt.Cell
  * @see treasure_hunt.Board
  * 
  * @author François Poguet
  */
-public class Floor extends Cell {
+public class Floor_c extends Cell {
 	private boolean isFull;
 	private Hunter hunter;
 	
 	
-	public Floor(Position pos, Hunter hunter,Board cm) {
+	public Floor_c(Position pos, Hunter hunter,Board cm) {
 		super(pos,cm);
 		this.isFull = false;
 		
@@ -93,6 +93,10 @@ public class Floor extends Cell {
 			return " "+hunter.toString()+" ";
 		}
 		return " . ";
+	}
+	@Override
+	public byte encode() {
+		return 0;
 	}
 
 	

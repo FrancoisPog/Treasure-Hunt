@@ -7,157 +7,217 @@ import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
+/**
+ * 
+ * @author Francois Poguet
+ *
+ */
 public class FileManager {
 	
-	public FileManager() {
-		
-	}
 	
-	public File selectFile(JFrame parent,char type ) {
+	/**
+	 * Open a dialog window to choose a file
+	 * @param parent	The parent frame
+	 * @param type		The type of window (save/open)
+	 * @return
+	 * @throws Exception 
+	 */
+	public static File selectFile(JFrame parent,char type ) {
 		JFileChooser select = new JFileChooser();
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Map files", "pog");
+		select.addChoosableFileFilter(filter);
+		select.setAcceptAllFileFilterUsed(false);
+		
+		
+		
 		select.setMultiSelectionEnabled(false);
 		select.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		int res = -1;
 		if(type == 'o') {
+			select.setDialogTitle("Open a map");
 			res = select.showOpenDialog(parent);
 		}else {
+			if(type != 's') {
+				System.err.println("[selectFile] : The type must be 'o' or 's'");
+				return null;
+			}
+			select.setDialogTitle("Save a map");
 			res = select.showSaveDialog(parent);
 		}
 		if(res == JFileChooser.APPROVE_OPTION) {
 			File file = select.getSelectedFile();
 			return file;
 		}
+		System.out.println("User canceled operation");
 		return null;
 	}
 	
 	
 	
 	
-	
+	/**
+	 * Save a board to file
+	 * @param board	The board to save
+	 * @param file	The files used
+	 */
 	public static void saveMap(Board board, File file) {
 		DataOutputStream out = null;
 		
 		try {
+			System.out.println("Map saving...");
 			out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		try {
+			
+			// Write size
 			out.writeInt(board.size());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		try {
-			int i = 0;
+			Cell prev = null;
+			int i = -1;
+			
 			for(Cell curr : board) {
-				System.out.println(file.length());
-				System.out.println(i);
-				++i;
-				String cellType = curr.getClass().getSimpleName();
-				if(cellType.equals("Floor")) {
-					out.writeInt(0);
+				if(prev == null || prev.encode() == curr.encode()) {
+					i++;
+					prev = curr;
 					continue;
 				}
 				
-				if(cellType.equals("Border_c")) {
-					out.writeInt(1);	
-					continue;
+				if(i >= 1) {
+					out.writeByte(-128+i+1);
 				}
 				
-				if(cellType.equals("Treasure")) {
-					out.writeInt(2);
-					continue;
-				}
-				
-				if(cellType.equals("Stone")) {
-					out.writeInt(3);
-					continue;
-				}
-				System.out.println("err");
+				out.writeByte(prev.encode());
+				prev = curr;
+				i = 0;
 			}
+			
+			if(i > 0) {
+				if(i >= 1) {
+						out.writeByte(-128+i+1);
+				}
+				out.writeByte(prev.encode());
+			}
+			out.close();
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		try {
-			out.flush();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		System.out.println("Map saved");
 	}
 	
 	
-	public static void openMap(Board board, File file) {
+	/**
+	 * Open a map
+	 * @param board The current board (it will be modified in this method)
+	 * @param file	The files used
+	 * @throws Exception If the file is wrong
+	 */
+	public static int openMap(Board board, File file) throws Exception {
 		DataInputStream in = null;
 		
 		try {
+			System.out.println("Map reading...");
 			in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
 			
 			int size = in.readInt();
+			
+			if(size < 10 || size > 120) {
+				in.close();
+				throw new Exception();
+			}
 			board.setMatrix(new Matrix<Cell>(size));
-			System.out.println(size);
+			
 			int row = 0;
 			int col = 0;
+			
+			
 			for(int i = 0 ; i < size * size ; ++i) {
-				
-				
-				if(i % size == 0 && i != 0) {
+				if(col >= size -1 && row>=size -1) {
+					break;
+				}
+				System.out.println(col+" "+row);
+				if(col  % size == 0 && col != 0) {
 					col = 0;
 					row++;
 				}
 				
-				int read = in.readInt();
-				System.out.println("read : "+read+"col : "+col+" row : "+row+" i : "+i);
+				byte read = in.readByte();
 				
-				if(read == 0) {
-					board.set(col,row,new Floor(new Position(col, row),null,board));
-					col++;
-					continue;
+				int rep = 1;
+				
+				if(read < 0) {
+					rep = ((int)read + 128);
+					if(rep > 121) {
+						in.close();
+						throw new Exception();
+					}
+				}else {
+					if(read > 3) {
+						in.close();
+						throw new Exception();
+					}
+				}
+			
+				
+				if(rep != 1) {
+					read = in.readByte();
+					if(read < 0 || read > 3) {
+						in.close();
+						throw new Exception();
+					}
+						
 				}
 				
-				if(read == 1) {
-					board.set(col,row,new Border_c(new Position(col, row),board));
-					col++;
-					continue;
+				for(int k = 0 ; k < rep ; ++k) {
+					if(col % size == 0 && col != 0) {
+						col = 0;
+						row++;
+					}
+					if(read == 0) {
+						board.set(col,row,new Floor_c(new Position(col, row),null,board));
+						col++;
+						continue;
+					}
+					
+					if(read == 1) {
+						board.set(col,row,new Border_c(new Position(col, row),board));
+						col++;
+						continue;
+					}
+					
+					if(read == 2) {
+						Treasure_c t = new Treasure_c(new Position(col, row),board);
+						board.set(col,row,t);
+						board.setTreasure(t);
+						col++;
+						continue;
+					}
+					
+					if(read == 3) {
+						board.set(col,row,new Stone_c(new Position(col, row),board));
+						col++;
+						continue;
+					}
+					
 				}
-				
-				if(read == 2) {
-					Treasure t = new Treasure(new Position(col, row),board);
-					board.set(col,row,t);
-					board.setTreasure(t);
-					col++;
-					continue;
-				}
-				
-				if(read == 3) {
-					board.set(col,row,new Stone(new Position(col, row),board));
-					col++;
-					continue;
-				}
-				
-				System.out.println("error "+read);
+			
 			}
 			
+			in.close();
+		
 		}catch (EOFException eof) {
-			System.out.println("eof");
+			System.out.println("End of file");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("Bad file");
+			throw new Exception("Bad file");
+
 		}
-//		System.out.println(board);
+		System.out.println("Map done");
 		
-		
+		return 0;
 	}
 	
 	

@@ -23,7 +23,7 @@ package treasure_hunt;
 public class Hunter implements Positionable,Comparable<Hunter>{
 	private char symbol;
 	private int direction;
-	private Floor currentFloor;
+	private Floor_c currentFloor;
 	private int bypassDirection;
 	
 	
@@ -32,10 +32,10 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 	 * @param symbol 	The hunter's symbol on display
 	 * @param pos 		The hunter's position
 	 */
-	public Hunter(char symbol, Position pos) {
+	public Hunter(char symbol, Floor_c currentFloor) {
 		this.symbol = symbol;
 		this.direction = 0;
-		this.currentFloor = new Floor(pos, this,null);
+		this.currentFloor = currentFloor;
 		this.bypassDirection = 0;
 	}
 
@@ -51,7 +51,7 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 	 * Getter for the current floor
 	 * @return	The current hunter's floor
 	 */
-	public Floor getCurrentFloor() {
+	public Floor_c getCurrentFloor() {
 		return currentFloor;
 	}
 
@@ -59,7 +59,7 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 	 * Setter for the current floor
 	 * @param currentFloor	The new current floor
 	 */
-	public void setCurrentFloor(Floor currentFloor) {
+	public void setCurrentFloor(Floor_c currentFloor) {
 		this.currentFloor = currentFloor;
 	}
 
@@ -143,7 +143,7 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 				col = 1;
 				break;
 			default : 
-				System.err.println("Error");
+				System.err.println("Error dir");
 				break;
 		}
 		

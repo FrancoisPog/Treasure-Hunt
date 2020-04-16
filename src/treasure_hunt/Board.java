@@ -20,67 +20,98 @@ import java.util.TreeSet;
  */
 public class Board implements Iterable<Cell> {
 	private Matrix<Cell> mat;
-	private Treasure treasure;
+	private Treasure_c treasure;
 	
-	public Board() {
-		mat = null;
-		treasure = null;
-	}
-	
+	/**
+	 * Constructor creating a random Board
+	 * @param size		The board's size
+	 * @param hunters	The hunters set (empty)
+	 * @param nbPlayers	The number of players to create
+	 */
 	public Board(int size, TreeSet<Hunter> hunters, int nbPlayers) {
-		init(size,hunters,nbPlayers);
+		// Matrix creation
+		mat = new Matrix<Cell>(size);
+		randomMap(hunters,nbPlayers);
 	}
 	
-	public void init(File file,TreeSet<Hunter> hunters, int nbPlayers) {
-		
+	/**
+	 * Create a board from file
+	 * @param file		The board file
+	 * @param hunters	The hunters set (empty)
+	 * @param nbPlayer	The number of players to create
+	 * @throws Exception If the file is wrong
+	 */
+	public Board(File file, TreeSet<Hunter> hunters, int nbPlayers) throws Exception {
 		FileManager.openMap(this, file);
+		setHunters(hunters, nbPlayers);
+	}
+	
+	
+	
+	/**
+	 * Replace hunters on the same board
+	 * @param hunters	The hunters set(empty)
+	 * @param nbPlayers	The number of players
+	 */
+	public void resetMap(TreeSet<Hunter> hunters, int nbPlayers) {
+		this.treasure.reset();
+		setHunters(hunters, nbPlayers);
+		System.out.println("Board done\n---");
 		
+	}
+	
+	/**
+	 * Place hunters on a board
+	 * @param hunters
+	 * @param nbPlayers
+	 */
+	public void setHunters(TreeSet<Hunter> hunters, int nbPlayers) {
 		int c = 'A';
 		while(hunters.size() != nbPlayers) {
-			System.out.println("h");
-			Hunter h = new Hunter((char)c, null);
-			Position pos = null;
+			Hunter h = new Hunter((char)c, null); // Hunter creation
+			Position pos = null;				  	
 			do {
-				System.out.println("p");
-				pos = Position.randomPos(this.size()-2, 1);
-			}while(!this.get(pos).getClass().getSimpleName().equals("Floor"));
+				pos = Position.randomPos(this.size()-2, 1); // random position
+			}while(!this.get(pos).getClass().getSimpleName().equals("Floor_c"));
 			
-			Floor floor = (Floor)this.get(pos);
-			floor.come(h);
+			Floor_c floor = (Floor_c)this.get(pos); // Floor_c creation
+			floor.come(h); // Hunter's floor assignment
+			if(hunters.add(h)) {
+				// Hunter added
+				System.out.println(h.getPosition()+" : Hunter "+(char)c+" | "+hunters.size());
+				c++;
+				h.setDirection(h.getPosition().getBestDirTo(getTreasure().getPosition(),this,false,0));
+			}
+			
+		}
+	}
+	
+	/**
+	 * Fill in the matrix at random
+	 * @param hunters 	The empty TreeSet of hunters, it will be filled in this method
+	 * @param nbPlayers	The number of players in the game
+	 */
+	public void randomMap(TreeSet<Hunter> hunters, int nbPlayers) {
+		System.out.println("Creating new map");
+		int size = size();
+		
+		// Players creation and position assignment (all different), the hunters set is sorted by their positions
+		int c = 'A';
+		while(hunters.size() != nbPlayers) {
+			Hunter h = new Hunter((char)(c), null);
+			Floor_c floor = new Floor_c(Position.randomPos(size-2, 1),h,this);
+			h.setCurrentFloor(floor);
 			if(hunters.add(h)) {
 				c++;
 			}
 		}
 		
-		
-	}
-	
-	/**
-	 * Default constructor
-	 * @param size 		The matrix size
-	 * @param hunters 	The empty TreeSet of hunters, it will be filled in this method
-	 * @param nbPlayers	The number of players in the game
-	 */
-	public void init(int size, TreeSet<Hunter> hunters, int nbPlayers) {
-		if(size < 0) {
-			this.mat = null; // Faire les vérifs
-			return;
-		}
-		
-		// Players creation and position assignment (all different), the hunters set is sorted by their positions
-		int c = 'A';
-		while(hunters.size() != nbPlayers) {
-			if(hunters.add(new Hunter((char)(c), Position.randomPos(size-2, 1)))) {
-				c++;
-			}
-		}
-		
-		// Treasure creation and position assignment ( with different position than hunters)
+		// Treasure_c creation and position assignment ( with different position than hunters)
 		boolean ok = true;
 		treasure = null;
 		do {
 			ok = true;
-			treasure = new Treasure(Position.randomPos(size-2, 1),this);
+			treasure = new Treasure_c(Position.randomPos(size-2, 1),this);
 			
 			for(Hunter h : hunters) {
 				if(h.getPosition().equals(treasure.getPosition())) {
@@ -94,10 +125,6 @@ public class Board implements Iterable<Cell> {
 		TreeSet<Hunter> hunters_tmp = (TreeSet<Hunter>) hunters.clone();
 		
 		
-		
-		// Matrix creation
-		mat = new Matrix<Cell>(size);
-		
 		// Map generation
 		for(int row = 0 ; row < size ; row++) {
 			for(int col = 0 ; col < size ; col++) {
@@ -108,7 +135,7 @@ public class Board implements Iterable<Cell> {
 					// Assignment of player at this position
 					Hunter h = hunters_tmp.pollFirst();
 					mat.set(col, row, h.getCurrentFloor());
-					h.getCurrentFloor().setBoard(this);
+					
 					h.setDirection(h.getPosition().getBestDirTo(getTreasure().getPosition(),this,false,0));
 					continue;
 				}
@@ -125,7 +152,6 @@ public class Board implements Iterable<Cell> {
 				// If the current position is the same than the treasure
 				if(curr.equals(treasure.getPosition())) {
 					// Assignment of treasure in this position
-					
 					mat.set(col, row, treasure);
 					continue;
 				}
@@ -135,7 +161,7 @@ public class Board implements Iterable<Cell> {
 				if( p < 1 ) {
 					if(Math.random()>p) {
 						
-						mat.set(col, row, new Stone(curr,this));
+						mat.set(col, row, new Stone_c(curr,this));
 						
 						continue;
 					}
@@ -143,7 +169,7 @@ public class Board implements Iterable<Cell> {
 				
 				// Else, assignment of a floor cell at this position 
 				
-				mat.set(col, row, new Floor(curr,null,this));
+				mat.set(col, row, new Floor_c(curr,null,this));
 			}
 		}
 	}
@@ -271,16 +297,20 @@ public class Board implements Iterable<Cell> {
 	 * Getter for the treasure 
 	 * @return The treasure
 	 */
-	public Treasure getTreasure() {
+	public Treasure_c getTreasure() {
 		return treasure;
 	}
 	
-	public void setTreasure(Treasure treasure) {
+	public void setTreasure(Treasure_c treasure) {
 		this.treasure = treasure;
 	}
 	
 	public void setMatrix(Matrix<Cell> mat) {
 		this.mat = mat;
+	}
+	
+	public Matrix<Cell> getMatrix() {
+		return this.mat;
 	}
 	
 	/**

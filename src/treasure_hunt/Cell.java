@@ -67,4 +67,10 @@ public abstract class Cell implements Questionable, Positionable{
 	public boolean isStone() {
 		return false;
 	}
+	
+	/**
+	 * Get the number encoding number
+	 * @return The encoding number
+	 */
+	public abstract byte encode();
 }

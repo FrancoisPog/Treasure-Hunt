@@ -117,6 +117,9 @@ public class Position implements Comparable<Position>{
 				
 			}
 		}
+		if(best_pos == null) {
+			return 1;
+		}
 		//System.out.println("best:"+this.getDirectionTo(best_pos));
 		return this.getDirectionTo(best_pos);
 	}

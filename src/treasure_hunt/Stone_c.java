@@ -1,21 +1,21 @@
 package treasure_hunt;
 
 /**
- * <p><strong>Stone</strong> is the class representing a stone cell on the matrix .<p>
+ * <p><strong>Stone_c</strong> is the class representing a stone cell on the matrix .<p>
  * <p>When a stone is queried by a hunter, it give to the hunter a bypass direction to go around the wall and get closer to the treasure</p>
  * @see treasure_hunt.Cell
  * @see treasure_hunt.Board
  * 
  * @author François Poguet
  */
-public class Stone extends Cell {
+public class Stone_c extends Cell {
 
 	/**
 	 * Default stone constructor
 	 * @param pos	The stone position
 	 * @param cm	The matrix
 	 */
-	public Stone(Position pos,Board cm) {
+	public Stone_c(Position pos,Board cm) {
 		super(pos,cm);
 	}
 	
@@ -290,6 +290,13 @@ public class Stone extends Cell {
 	
 	public boolean wallIsVertical() {
 		return (this.wallSize(1) > 0 || this.wallSize(3) > 0);
+	}
+
+
+
+	@Override
+	public byte encode() {
+		return 3;
 	}
 
 	

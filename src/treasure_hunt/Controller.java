@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 
@@ -26,47 +27,65 @@ public class Controller implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == frame.getNewGameBtn()) {
-			launchGame();
+		if(e.getSource() == frame.getButton("new")) {
+			randomMap();
 			return;
 		}
-		if(e.getSource() == frame.getNextButton() && frame.isInit()) {
+		if(e.getSource() == frame.getButton("play_game") && frame.isInit()) {
 			playAuto();
 			return;
 		}
 		
-		if(e.getSource() == frame.getSaveButton() && frame.isInit()) {
+		if(e.getSource() == frame.getButton("save") && frame.isInit()) {
 			saveBoard();
 			return;
 		}
 		
+		if(e.getSource() == frame.getButton("open")) {
+			openBoard();
+			frame.setInit(true);
+			return;
+		}
+		
+		if(e.getSource() == frame.getButton("replay")) {
+			replayBoard();
+			frame.setInit(true);
+		}
 	}
 	
 	/**
-	 * Init a new game
+	 * Get a new random map
 	 */
-	public void launchGame() {
+	public void randomMap() {
+		System.out.println("New random map");
 		if(timer != null) {
 			timer.stop();
 			this.timer = null;
 		}
-		int players = Integer.parseInt(frame.getPlayersField().getText());
-		FileManager fm = new FileManager();
-		File file = fm.selectFile(this.frame,'o');
-		this.game = new Game(file,players);
 		
 		
+		int size = Integer.parseInt(frame.getData("size").getText());
+		int players = Integer.parseInt(frame.getData("players").getText());
 		
-//		int size = Integer.parseInt(frame.getSizeField().getText());
-//		int players = Integer.parseInt(frame.getPlayersField().getText());
-//		this.game = new Game(size, players);
-		frame.initGrid(game);
+		// If same size, just modify the matrix
+		if(this.game != null && size == this.game.getBoard().size()) {
+			System.out.println("(same size)");
+			this.game.randomBoard(players);
+			this.frame.initGrid(game);
+			return;
+		}
+		
+		// If different size, new game
+		
+		this.game = new Game(size, players);
+		this.frame.initGrid(game);
 	}
 	
 	/**
-	 * Let the hunter play
+	 * Play game automatically
 	 */
 	public void playAuto() {
+		System.out.println("Launch Auto Game");
 		ActionListener action = new ActionListener() {
 			
 			@Override
@@ -75,12 +94,14 @@ public class Controller implements ActionListener{
 				
 			}
 		};
+
 		if(timer == null) {
+			System.out.println("Timer set");
 			timer = new Timer(100,action);
 			timer.start();
 		}
-		
-		frame.getNextButton().setEnabled(false);
+
+		frame.getButton("play_game").setEnabled(false);
 		
 	}
 	
@@ -88,6 +109,7 @@ public class Controller implements ActionListener{
 	 * Execute a game round
 	 */
 	public void executeRound() {
+		System.out.println("Round execution");
 		if(game.getBoard().getTreasure().isFound()) {
 			timer.stop();
 			this.timer = null;
@@ -103,10 +125,54 @@ public class Controller implements ActionListener{
 				
 	}
 	
+	/**
+	 * Replay the current map
+	 */
+	public void replayBoard() {
+		if(this.timer != null) {
+			this.timer.stop();
+			this.timer = null;
+		}
+		int players = Integer.parseInt(frame.getData("players").getText());
+		this.game.replayGame(players);
+		frame.initGrid(game);
+	}
+	
+	/**
+	 * Save the current map
+	 */
 	public void saveBoard() {
-		FileManager fm = new FileManager();
-		File file = fm.selectFile(this.frame,'s');
+		File file = FileManager.selectFile(this.frame,'s');
+		if(file == null) {
+			return;
+		}
+		String filePath = file.getPath();
+		int pointIndex = filePath.lastIndexOf('.');
+		if(pointIndex == -1 || !filePath.substring(pointIndex+1).equals("pog")) {
+			filePath += ".pog";
+			file = new File(filePath);
+		}
+		
 		FileManager.saveMap(game.getBoard(), file);
+	}
+	
+	/**
+	 * Open a map
+	 */
+	public void openBoard() {
+		int players = Integer.parseInt(frame.getData("players").getText());
+		File file = FileManager.selectFile(this.frame,'o');
+		if(file == null) {
+			return;
+		}
+		try {
+			this.game = new Game(file,players);
+		}catch(Exception e) {
+			JOptionPane.showMessageDialog(frame, "The chosen file is wrong, please try another one. ", "Something is wrong...", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		frame.setData("size", game.getBoard().size()+"");
+		frame.initGrid(game);
 	}
 
 }

@@ -23,10 +23,16 @@ public class Game {
 	private TreeSet<Hunter> hunters;
 	private Board board;
 	
-	public Game(File file, int nbPlayers) {
+	
+	/**
+	 * Game from file
+	 * @param file
+	 * @param nbPlayers
+	 * @throws Exception If the file is wrong
+	 */
+	public Game(File file, int nbPlayers) throws Exception {
 		this.hunters = new TreeSet<Hunter>();
-		this.board = new Board();
-		this.board.init(file,this.hunters, nbPlayers);
+		this.board = new Board(file,this.hunters, nbPlayers);
 	}
 	
 	/**
@@ -37,6 +43,40 @@ public class Game {
 	public Game(int size, int nbPlayers) {
 		this.hunters = new TreeSet<Hunter>();
 		this.board = new Board(size,hunters,nbPlayers);
+	}
+	
+	
+	/**
+	 * Create a random board
+	 * @param nbPlayers
+	 */
+	public void randomBoard(int nbPlayers) {
+		System.out.println("Removing hunters");
+		removeHunter();
+		board.randomMap(hunters, nbPlayers);
+	}
+	
+	
+	/**
+	 * Replay the same map
+	 * @param nbPlayers
+	 */
+	public void replayGame(int nbPlayers) {
+		
+		removeHunter();
+		this.board.resetMap(hunters, nbPlayers);
+		
+	}
+	
+	/**
+	 * Remove all hunters on the 
+	 */
+	public void removeHunter() {
+		for(Hunter h : hunters) {
+			h.getCurrentFloor().leave();
+		}
+		
+		hunters.clear();
 	}
 	
 	/**
@@ -50,7 +90,7 @@ public class Game {
 	}
 	
 	/**
-	 * Execute the entire game party
+	 * Execute the entire game party in console
 	 */
 	public void play() throws InterruptedException {
 		Scanner sc = new Scanner(System.in);

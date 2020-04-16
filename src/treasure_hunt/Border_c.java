@@ -58,6 +58,12 @@ public class Border_c extends Cell {
 	}
 
 
+	@Override
+	public byte encode() {
+		return 1;
+	}
+
+
 	
 
 	
