@@ -8,7 +8,9 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
@@ -16,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
@@ -28,7 +31,7 @@ public class GameFrame extends JFrame {
 	
 	private Map<String,JTextField> gameData;
 	private Map<String,JButton> buttons;
-	
+	private List<JLabel> playersData;
 	private boolean isInit;
 
 	private JPanel gridPanel;
@@ -41,7 +44,7 @@ public class GameFrame extends JFrame {
 	 */
 	public GameFrame() {
 		super("Treasure Hunt");
-		this.setSize(1100,1000);
+		this.setSize(1400,1000);
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -53,6 +56,7 @@ public class GameFrame extends JFrame {
 		Controller controller = new Controller(this);
 		this.gameData = new HashMap<String,JTextField>();
 		this.buttons = new HashMap<String,JButton>();
+		this.playersData = new ArrayList<JLabel>();
 		
 		// Main container
 		Container main = this.getContentPane();
@@ -63,7 +67,19 @@ public class GameFrame extends JFrame {
 		
 		// Grid pane
 		this.gridPanel = new JPanel();
-		main.add(gridPanel);
+		
+		// Right pane
+		
+		JPanel rightPane = new JPanel();
+		rightPane.setSize(200, 0);
+		rightPane.setMinimumSize(new Dimension(400, 0));
+		
+		// Center pane
+		JSplitPane center = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,gridPanel,rightPane);
+		center.setResizeWeight(0.66);
+		
+		main.add(center);
+		
 		
 		this.revalidate();
 	
@@ -107,6 +123,7 @@ public class GameFrame extends JFrame {
 		
 		buttonsPane.add(makeButtonArea("Size settings", "Size :", 10, 120, 10, 3, 50,"size"));
 		buttonsPane.add(makeButtonArea("Players settings", "Players : ", 1, 20, 1, 2, 3,"players"));
+		buttonsPane.add(makeButtonArea("Timer settings", "Timer : ", 100, 2000, 100, 4, 100,"timer"));
 		return buttonsPane;
 	}
 	
@@ -226,11 +243,19 @@ public class GameFrame extends JFrame {
 			cellLabels.get(pos.getColumn(), pos.getRow()).setBackground(Color.blue);
 		}
 		
-		if(board.getTreasure().isFound()) {
-			Position treasurePos = board.getTreasure().getPosition();
-			cellLabels.get(treasurePos.getColumn(), treasurePos.getRow()).setText(board.getTreasure().toString());
-			cellLabels.get(treasurePos.getColumn(), treasurePos.getRow()).setBackground(Color.yellow);
+		
+	}
+	
+	public void updateTreasure(Treasure_c treasure) {
+		
+		Position treasurePos = treasure.getPosition();
+		if(treasure.isFound()) {
+			cellLabels.get(treasurePos.getColumn(), treasurePos.getRow()).setText(treasure.toString());
+		}else {
+			cellLabels.get(treasurePos.getColumn(), treasurePos.getRow()).setText("");
 		}
+		
+		
 	}
 	
 	

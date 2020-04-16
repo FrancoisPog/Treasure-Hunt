@@ -97,7 +97,8 @@ public class Controller implements ActionListener{
 
 		if(timer == null) {
 			System.out.println("Timer set");
-			timer = new Timer(100,action);
+			int time = Integer.parseInt(frame.getData("timer").getText());
+			timer = new Timer(time,action);
 			timer.start();
 		}
 
@@ -122,6 +123,8 @@ public class Controller implements ActionListener{
 			frame.updateFloor(curr, game.getBoard());
 			
 		}
+		
+		frame.updateTreasure(game.getBoard().getTreasure());
 				
 	}
 	
@@ -133,9 +136,23 @@ public class Controller implements ActionListener{
 			this.timer.stop();
 			this.timer = null;
 		}
+		
+		
+		while(!this.game.getHunters().isEmpty()) {
+			Hunter h = this.game.getHunters().pollFirst();
+			h.getCurrentFloor().leave();
+			frame.clearFloor(h.getCurrentFloor().getPosition());
+		}
+		
 		int players = Integer.parseInt(frame.getData("players").getText());
 		this.game.replayGame(players);
-		frame.initGrid(game);
+		
+		frame.updateTreasure(this.game.getBoard().getTreasure());
+		for(Hunter h : game.getHunters()) {
+			frame.updateFloor(h.getPosition(), game.getBoard());
+		}
+
+		frame.getButton("play_game").setEnabled(true);
 	}
 	
 	/**
