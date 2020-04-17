@@ -49,14 +49,13 @@ public class Board implements Iterable<Cell> {
 	
 	
 	/**
-	 * Replace hunters on the same board
+	 * Replace hunters on the same board and reset the treasure
 	 * @param hunters	The hunters set(empty)
 	 * @param nbPlayers	The number of players
 	 */
 	public void resetMap(TreeSet<Hunter> hunters, int nbPlayers) {
 		this.treasure.reset();
 		setHunters(hunters, nbPlayers);
-		System.out.println("Board done\n---");
 		
 	}
 	
@@ -78,7 +77,7 @@ public class Board implements Iterable<Cell> {
 			floor.come(h); // Hunter's floor assignment
 			if(hunters.add(h)) {
 				// Hunter added
-				System.out.println(h.getPosition()+" : Hunter "+(char)c+" | "+hunters.size());
+//				System.out.println(h.getPosition()+" : Hunter "+(char)c+" | "+hunters.size());
 				c++;
 				h.setDirection(h.getPosition().getBestDirTo(getTreasure().getPosition(),this,false,0));
 			}
@@ -92,7 +91,6 @@ public class Board implements Iterable<Cell> {
 	 * @param nbPlayers	The number of players in the game
 	 */
 	public void randomMap(TreeSet<Hunter> hunters, int nbPlayers) {
-		System.out.println("Creating new map");
 		int size = size();
 		
 		// Players creation and position assignment (all different), the hunters set is sorted by their positions

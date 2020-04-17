@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import javax.swing.Action;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
@@ -12,16 +13,27 @@ public class Controller implements ActionListener{
 	
 	private GameFrame frame;
 	private Game game;
-	private Timer timer;
+	private Clock clock;
 	
 	/**
-	 * Controller constructor
+	 * Controller constructor<br>
+	 * This constructor set the <code>actionListener</code> for the timer
 	 * @param frame The frame to control
 	 */
 	public Controller(GameFrame frame) {
 		this.frame = frame;
 		this.game = null;
-		this.timer = null;
+		
+		ActionListener action = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				executeRound();
+				
+			}
+		};
+		this.clock = new Clock(action);
+		
 	}
 	
 	
@@ -32,7 +44,12 @@ public class Controller implements ActionListener{
 			return;
 		}
 		if(e.getSource() == frame.getButton("play_game") && frame.isInit()) {
-			playAuto();
+			play();
+			return;
+		}
+		
+		if(e.getSource() == frame.getButton("play_round") && frame.isInit()) {
+			executeRound();
 			return;
 		}
 		
@@ -43,33 +60,33 @@ public class Controller implements ActionListener{
 		
 		if(e.getSource() == frame.getButton("open")) {
 			openBoard();
-			frame.setInit(true);
 			return;
 		}
 		
 		if(e.getSource() == frame.getButton("replay")) {
 			replayBoard();
-			frame.setInit(true);
+			return;
+		}
+		
+		if(e.getSource() == frame.getButton("stop")) {
+			stop();
+			return;
 		}
 	}
 	
 	/**
-	 * Get a new random map
+	 * <p>Get a new random map</p>
+	 * <p>If the user keep the same size, only the board is changed, otherwise a new game begin.</p>
 	 */
 	public void randomMap() {
-		System.out.println("New random map");
-		if(timer != null) {
-			timer.stop();
-			this.timer = null;
-		}
-		
+		System.out.println("\n[Board]\trandom map");
+		clock.stop();
 		
 		int size = Integer.parseInt(frame.getData("size").getText());
 		int players = Integer.parseInt(frame.getData("players").getText());
 		
 		// If same size, just modify the matrix
 		if(this.game != null && size == this.game.getBoard().size()) {
-			System.out.println("(same size)");
 			this.game.randomBoard(players);
 			this.frame.initGrid(game);
 			return;
@@ -82,46 +99,52 @@ public class Controller implements ActionListener{
 	}
 	
 	/**
-	 * Play game automatically
+	 * <p>Launch the game play automatically.</p>
+	 * <p>The game is stopped when the treasure is found, or if the user stop the game.</p>
 	 */
-	public void playAuto() {
-		System.out.println("Launch Auto Game");
-		ActionListener action = new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				executeRound();
-				
-			}
-		};
-
-		if(timer == null) {
-			System.out.println("Timer set");
-			int time = Integer.parseInt(frame.getData("timer").getText());
-			timer = new Timer(time,action);
-			timer.start();
-		}
+	public void play() {
+		int time = Integer.parseInt(frame.getData("timer").getText());
+		clock.start(time);
+		System.out.println("[Game]\tlaunch");
+		
 
 		frame.getButton("play_game").setEnabled(false);
-		
+		frame.getButton("stop").setEnabled(true);
+		frame.getButton("play_round").setEnabled(false);
 	}
 	
 	/**
-	 * Execute a game round
+	 * <p>Stop the game when it's playing automatically.</p>
+	 */
+	public void stop() {
+		clock.stop();
+		frame.getButton("play_game").setEnabled(true);
+		frame.getButton("play_round").setEnabled(true);
+		frame.getButton("stop").setEnabled(false);
+	}
+	
+	/**
+	 * <p>Execute a game round</p>
+	 * <p>Each hunter move, and the board is updated.</p>
 	 */
 	public void executeRound() {
-		System.out.println("Round execution");
+		System.out.print(".");
 		if(game.getBoard().getTreasure().isFound()) {
-			timer.stop();
-			this.timer = null;
+			System.out.println("\n[Game]\t end");
+			clock.stop();
+			frame.getButton("stop").setEnabled(false);
+			frame.getButton("play_game").setEnabled(false);
+			frame.getButton("play_round").setEnabled(false);
 			return;
 		}
 		
 		for(Hunter h : game.getHunters()) {
-			frame.clearFloor(h.getPosition()); // A optimiser
+			Position oldPos = h.getPosition();
 			Position curr = h.move();
-			frame.updateFloor(curr, game.getBoard());
-			
+			if(!h.getPosition().equals(oldPos) || game.getBoard().getTreasure().isFound()) {
+				frame.clearFloor(oldPos);
+				frame.updateFloor(curr, game.getBoard());
+			}
 		}
 		
 		frame.updateTreasure(game.getBoard().getTreasure());
@@ -129,15 +152,13 @@ public class Controller implements ActionListener{
 	}
 	
 	/**
-	 * Replay the current map
+	 * <p>Replay the current map.</P>
+	 * <p>The board isn't modify, only hunters are replaced.<p>
 	 */
 	public void replayBoard() {
-		if(this.timer != null) {
-			this.timer.stop();
-			this.timer = null;
-		}
+		clock.stop();
 		
-		
+		System.out.println("[board]\treplay map");
 		while(!this.game.getHunters().isEmpty()) {
 			Hunter h = this.game.getHunters().pollFirst();
 			h.getCurrentFloor().leave();
@@ -153,14 +174,24 @@ public class Controller implements ActionListener{
 		}
 
 		frame.getButton("play_game").setEnabled(true);
+		frame.getButton("play_round").setEnabled(true);
+		frame.getButton("stop").setEnabled(false);
+		System.out.println("[Board]\tready");
 	}
 	
 	/**
-	 * Save the current map
+	 * <p>Save the current map</p>
 	 */
 	public void saveBoard() {
+		clock.stop();
+		frame.getButton("stop").setEnabled(false);
+		frame.getButton("play_game").setEnabled(true);
+		frame.getButton("play_round").setEnabled(true);
+		System.out.println("[Save]\topened");
 		File file = FileManager.selectFile(this.frame,'s');
 		if(file == null) {
+			System.out.println("\n[Open]\tcanceled");
+			frame.getButton("play_game").setEnabled(true);
 			return;
 		}
 		String filePath = file.getPath();
@@ -171,25 +202,75 @@ public class Controller implements ActionListener{
 		}
 		
 		FileManager.saveMap(game.getBoard(), file);
+		System.out.println("[Save]\tmap saved");
+		
 	}
 	
 	/**
-	 * Open a map
+	 * <p>Open a map in a file.</p>
 	 */
-	public void openBoard() {
+	public int openBoard() {
+		clock.stop();
+		if(frame.isInit()) {
+			frame.getButton("stop").setEnabled(false);
+			frame.getButton("play_game").setEnabled(true);
+			frame.getButton("play_round").setEnabled(true);
+		}
+		System.out.println("[Open]\topened");
 		int players = Integer.parseInt(frame.getData("players").getText());
 		File file = FileManager.selectFile(this.frame,'o');
 		if(file == null) {
-			return;
+			System.out.println("[Open]\tcanceled");
+			return 1;
 		}
 		try {
 			this.game = new Game(file,players);
 		}catch(Exception e) {
 			JOptionPane.showMessageDialog(frame, "The chosen file is wrong, please try another one. ", "Something is wrong...", JOptionPane.ERROR_MESSAGE);
-			return;
+			return 1;
 		}
+		System.out.println("[Open]\tfile ok");
 		frame.setData("size", game.getBoard().size()+"");
 		frame.initGrid(game);
+		System.out.println("[Board]\tready");
+		return 0;
+	}
+	
+	
+	/**
+	 * Inner class to manage the time
+	 * @author François Poguet
+	 *
+	 */
+	public class Clock{
+		private Timer timer;
+		private boolean isActive;
+		
+		public Clock(ActionListener action) {
+			timer = new Timer(100, action);
+			isActive = false;
+		}
+		
+		public void start(int delay) {
+			if(isActive) {
+				System.out.println("[Timer]\talready started");
+				return;
+			}
+			System.out.println("\n[Timer]\tstart");
+			timer.setDelay(delay);
+			timer.start();
+			isActive = true;
+		}
+		
+		public void stop() {
+			if(!isActive) {
+				System.out.println("[Timer]\talready stopped");
+				return;
+			}
+			System.out.println("[Timer]\tstop\n");
+			timer.stop();
+			isActive = false;
+		}
 	}
 
 }

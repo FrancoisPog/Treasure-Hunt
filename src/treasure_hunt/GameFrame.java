@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -29,7 +30,7 @@ public class GameFrame extends JFrame {
 	
 	private Matrix<JLabel> cellLabels;
 	
-	private Map<String,JTextField> gameData;
+	private Map<String,JLabel> gameData;
 	private Map<String,JButton> buttons;
 	private List<JLabel> playersData;
 	private boolean isInit;
@@ -47,14 +48,14 @@ public class GameFrame extends JFrame {
 		this.setSize(1400,1000);
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
-		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setMinimumSize(new Dimension(800,200));
 		
 		// Attributes setting 
 		this.isInit = false;
 		cellLabels = null;
 		Controller controller = new Controller(this);
-		this.gameData = new HashMap<String,JTextField>();
+		this.gameData = new HashMap<String,JLabel>();
 		this.buttons = new HashMap<String,JButton>();
 		this.playersData = new ArrayList<JLabel>();
 		
@@ -92,38 +93,79 @@ public class GameFrame extends JFrame {
 	 */
 	public JPanel makeButtonsPane(ActionListener controller) {
 		JPanel buttonsPane = new JPanel();
+		buttonsPane.setLayout(new GridLayout(1,2));
 		
+		JPanel gamePane = new JPanel();
+		gamePane.setLayout(new FlowLayout(FlowLayout.LEFT));
+		
+		JPanel newGamePane = new JPanel();
+		newGamePane.setBorder(new TitledBorder("Random map"));
 		JButton newGame = new JButton("New map");
 		newGame.addActionListener(controller);
 		this.buttons.put("new",newGame);
-		buttonsPane.add(newGame);
+		newGamePane.add(newGame);
 		
+		
+		JPanel manageGamePane = new JPanel();
+		manageGamePane.setBorder(new TitledBorder("Manage game"));
 		JButton	playGame = new JButton("Play");
 		playGame.setEnabled(false);
 		playGame.addActionListener(controller);
 		this.buttons.put("play_game",playGame);
-		buttonsPane.add(playGame);
+		manageGamePane.add(playGame);
 		
-		JButton save = new JButton("Save");
-		save.setEnabled(false);
-		save.addActionListener(controller);
-		this.buttons.put("save",save);
-		buttonsPane.add(save);
+		JButton playRound = new JButton("Round");
+		playRound.setEnabled(false);
+		playRound.addActionListener(controller);
+		this.buttons.put("play_round",playRound);
+		manageGamePane.add(playRound);
 		
-		JButton open = new JButton("Open");
-		open.addActionListener(controller);
-		this.buttons.put("open",open);
-		buttonsPane.add(open);
+		JButton stop = new JButton("Stop");
+		stop.setEnabled(false);
+		stop.addActionListener(controller);
+		this.buttons.put("stop",stop);
+		manageGamePane.add(stop);
 		
 		JButton replay = new JButton("Replay");
 		replay.setEnabled(false);
 		replay.addActionListener(controller);
 		this.buttons.put("replay",replay);
-		buttonsPane.add(replay);
+		manageGamePane.add(replay);
 		
-		buttonsPane.add(makeButtonArea("Size settings", "Size :", 10, 120, 10, 3, 50,"size"));
-		buttonsPane.add(makeButtonArea("Players settings", "Players : ", 1, 20, 1, 2, 3,"players"));
-		buttonsPane.add(makeButtonArea("Timer settings", "Timer : ", 100, 2000, 100, 4, 100,"timer"));
+		
+		JPanel filePane = new JPanel();
+		filePane.setBorder(new TitledBorder("Manage files"));
+		JButton save = new JButton("Save");
+		save.setEnabled(false);
+		save.addActionListener(controller);
+		this.buttons.put("save",save);
+		filePane.add(save);
+		
+		JButton open = new JButton("Open");
+		open.addActionListener(controller);
+		this.buttons.put("open",open);
+		filePane.add(open);
+		
+		
+		
+		
+		gamePane.add(filePane);
+		gamePane.add(newGamePane);
+		gamePane.add(manageGamePane);
+		
+		JPanel settingsPane = new JPanel();
+		settingsPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		
+		settingsPane.add(makeButtonArea("Size settings", "Size :","", 10, 120, 10, 2, 50,"size"));
+		settingsPane.add(makeButtonArea("Players settings", "","hunter(s)", 1, 20, 1, 2, 3,"players"));
+		settingsPane.add(makeButtonArea("Timer settings", "","ms", 100, 2000, 100, 3, 100,"timer"));
+		
+		
+		buttonsPane.add(gamePane);
+		buttonsPane.add(settingsPane);
+		
+		buttonsPane.revalidate();
+		
 		return buttonsPane;
 	}
 	
@@ -132,7 +174,7 @@ public class GameFrame extends JFrame {
 	 * @param game The current game
 	 */
 	public void initGrid(Game game) {
-		System.out.println("Frame grid initialization");
+		System.out.println("[Frame]\tgenerating");
 		int size = game.getBoard().size();
 		cellLabels = new Matrix<JLabel>(size);
 		
@@ -184,8 +226,10 @@ public class GameFrame extends JFrame {
 		gridPanel.revalidate();
 		this.isInit = true;
 		getButton("play_game").setEnabled(true);
+		getButton("play_round").setEnabled(true);
 		getButton("save").setEnabled(true);
 		getButton("replay").setEnabled(true);
+		System.out.println("[Frame]\tready");
 	}
 	
 	
@@ -211,7 +255,7 @@ public class GameFrame extends JFrame {
 	 * Getter for a data text field
 	 * @return The size field
 	 */
-	public JTextField getData(String name) {
+	public JLabel getData(String name) {
 		return this.gameData.get(name);
 	}
 	
@@ -262,7 +306,7 @@ public class GameFrame extends JFrame {
 	/**
 	 * Make a button area
 	 * @param title		The area title
-	 * @param subTitle	The textField label
+	 * @param prefix	The textField label
 	 * @param min		The minimum value
 	 * @param max		The maximum value
 	 * @param step		The value's step
@@ -270,18 +314,18 @@ public class GameFrame extends JFrame {
 	 * @param defaultValue	The default value
 	 * @return	A button area panel 
 	 */
-	public JPanel makeButtonArea(String title, String subTitle, int min, int max, int step, int size, int defaultValue, String name ) {
+	public JPanel makeButtonArea(String title, String prefix,String suffix, int min, int max, int step, int size, int defaultValue, String name ) {
 		JPanel btn = new JPanel();
 		btn.setBorder(new TitledBorder(title));
-		btn.add(new JLabel(subTitle));
+		btn.add(new JLabel(prefix));
 		
 		
 		
-		JTextField sizeField = new JTextField(Integer.toString(defaultValue));
-		this.gameData.put(name,sizeField);
-		sizeField.setEditable(false);
-		sizeField.setColumns(size);
-		btn.add(sizeField);
+		JLabel valuelabel = new JLabel(Integer.toString(defaultValue));
+		this.gameData.put(name,valuelabel);
+		valuelabel.setBorder(null);
+		btn.add(valuelabel);
+		btn.add(new JLabel(suffix));
 		
 		JButton up = new JButton("\u2191");
 		up.setMargin(new Insets(0, 0, 0, 0));
@@ -290,9 +334,9 @@ public class GameFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int currentSize = Integer.parseInt(sizeField.getText());
+				int currentSize = Integer.parseInt(valuelabel.getText());
 				if(currentSize < max) {
-					sizeField.setText((currentSize+step)+"");
+					valuelabel.setText((currentSize+step)+"");
 				}
 				
 			}
@@ -307,9 +351,9 @@ public class GameFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int currentSize = Integer.parseInt(sizeField.getText());
+				int currentSize = Integer.parseInt(valuelabel.getText());
 				if(currentSize > min) {
-					sizeField.setText((currentSize-step)+"");
+					valuelabel.setText((currentSize-step)+"");
 				}
 				
 			}

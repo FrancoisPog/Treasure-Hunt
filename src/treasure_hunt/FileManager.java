@@ -34,8 +34,6 @@ public class FileManager {
 		select.addChoosableFileFilter(filter);
 		select.setAcceptAllFileFilterUsed(false);
 		
-		
-		
 		select.setMultiSelectionEnabled(false);
 		select.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		int res = -1;
@@ -54,7 +52,6 @@ public class FileManager {
 			File file = select.getSelectedFile();
 			return file;
 		}
-		System.out.println("User canceled operation");
 		return null;
 	}
 	
@@ -70,7 +67,7 @@ public class FileManager {
 		DataOutputStream out = null;
 		
 		try {
-			System.out.println("Map saving...");
+			System.out.println("[Save]\tcompressing");
 			out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
 			
 			// Write size
@@ -104,8 +101,8 @@ public class FileManager {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		
-		System.out.println("Map saved");
+
+		System.out.println("[Save]\tsaved");
 	}
 	
 	
@@ -119,7 +116,7 @@ public class FileManager {
 		DataInputStream in = null;
 		
 		try {
-			System.out.println("Map reading...");
+			System.out.println("[Open]\treading");
 			in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
 			
 			int size = in.readInt();
@@ -138,7 +135,7 @@ public class FileManager {
 				if(col >= size -1 && row>=size -1) {
 					break;
 				}
-				System.out.println(col+" "+row);
+//				System.out.println(col+" "+row);
 				if(col  % size == 0 && col != 0) {
 					col = 0;
 					row++;
@@ -209,13 +206,13 @@ public class FileManager {
 			in.close();
 		
 		}catch (EOFException eof) {
-			System.out.println("End of file");
+			System.err.println("[Open]\tend of file");
 		} catch (Exception e) {
-			System.err.println("Bad file");
+			System.err.println("[Open]\tBad file");
 			throw new Exception("Bad file");
 
 		}
-		System.out.println("Map done");
+		
 		
 		return 0;
 	}

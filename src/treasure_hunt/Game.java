@@ -51,7 +51,6 @@ public class Game {
 	 * @param nbPlayers
 	 */
 	public void randomBoard(int nbPlayers) {
-		System.out.println("Removing hunters");
 		removeHunter();
 		board.randomMap(hunters, nbPlayers);
 	}
@@ -62,14 +61,13 @@ public class Game {
 	 * @param nbPlayers
 	 */
 	public void replayGame(int nbPlayers) {
-		
 		removeHunter();
 		this.board.resetMap(hunters, nbPlayers);
 		
 	}
 	
 	/**
-	 * Remove all hunters on the 
+	 * Remove all hunters on the board
 	 */
 	public void removeHunter() {
 		for(Hunter h : hunters) {
@@ -80,11 +78,10 @@ public class Game {
 	}
 	
 	/**
-	 * Execute a move of each hunter
+	 * Execute a move of each hunter (console)
 	 */
 	public void execute() {
 		for(Hunter h : hunters) {
-			//System.out.println(h+":"+h.getDirection());
 			h.move();
 		}
 	}
