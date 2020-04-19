@@ -299,14 +299,26 @@ public class Board implements Iterable<Cell> {
 		return treasure;
 	}
 	
+	/**
+	 * Setter for the treasure
+	 * @param treasure	The treasure
+	 */
 	public void setTreasure(Treasure_c treasure) {
 		this.treasure = treasure;
 	}
 	
+	/**
+	 * Setter for the matrix
+	 * @param mat	The matrix
+	 */
 	public void setMatrix(Matrix<Cell> mat) {
 		this.mat = mat;
 	}
 	
+	/**
+	 * Getter for the matrix
+	 * @return The matrix
+	 */
 	public Matrix<Cell> getMatrix() {
 		return this.mat;
 	}

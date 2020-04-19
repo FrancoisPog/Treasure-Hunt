@@ -139,12 +139,15 @@ public class Controller implements ActionListener{
 		}
 		
 		for(Hunter h : game.getHunters()) {
+			
 			Position oldPos = h.getPosition();
 			Position curr = h.move();
 			if(!h.getPosition().equals(oldPos) || game.getBoard().getTreasure().isFound()) {
 				frame.clearFloor(oldPos);
 				frame.updateFloor(curr, game.getBoard());
+				
 			}
+			frame.updateDataPane(this.game);
 		}
 		
 		frame.updateTreasure(game.getBoard().getTreasure());
@@ -172,6 +175,8 @@ public class Controller implements ActionListener{
 		for(Hunter h : game.getHunters()) {
 			frame.updateFloor(h.getPosition(), game.getBoard());
 		}
+		
+		frame.initDataPane(this.game);
 
 		frame.getButton("play_game").setEnabled(true);
 		frame.getButton("play_round").setEnabled(true);
@@ -230,7 +235,7 @@ public class Controller implements ActionListener{
 			return 1;
 		}
 		System.out.println("[Open]\tfile ok");
-		frame.setData("size", game.getBoard().size()+"");
+		frame.setSetting("size", game.getBoard().size()+"");
 		frame.initGrid(game);
 		System.out.println("[Board]\tready");
 		return 0;
