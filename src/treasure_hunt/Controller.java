@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import javax.swing.Action;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
@@ -82,19 +81,21 @@ public class Controller implements ActionListener{
 		System.out.println("\n[Board]\trandom map");
 		clock.stop();
 		
-		int size = Integer.parseInt(frame.getData("size").getText());
-		int players = Integer.parseInt(frame.getData("players").getText());
+		int mode = frame.getDensity().getSelectedIndex();
+		System.out.println(mode);
+		int size = Integer.parseInt(frame.getSetting("size").getText());
+		int players = Integer.parseInt(frame.getSetting("players").getText());
 		
 		// If same size, just modify the matrix
 		if(this.game != null && size == this.game.getBoard().size()) {
-			this.game.randomBoard(players);
+			this.game.randomBoard(players,mode);
 			this.frame.initGrid(game);
 			return;
 		}
 		
 		// If different size, new game
 		
-		this.game = new Game(size, players);
+		this.game = new Game(size, players,mode);
 		this.frame.initGrid(game);
 	}
 	
@@ -103,7 +104,7 @@ public class Controller implements ActionListener{
 	 * <p>The game is stopped when the treasure is found, or if the user stop the game.</p>
 	 */
 	public void play() {
-		int time = Integer.parseInt(frame.getData("timer").getText());
+		int time = Integer.parseInt(frame.getSetting("timer").getText());
 		clock.start(time);
 		System.out.println("[Game]\tlaunch");
 		
@@ -168,7 +169,7 @@ public class Controller implements ActionListener{
 			frame.clearFloor(h.getCurrentFloor().getPosition());
 		}
 		
-		int players = Integer.parseInt(frame.getData("players").getText());
+		int players = Integer.parseInt(frame.getSetting("players").getText());
 		this.game.replayGame(players);
 		
 		frame.updateTreasure(this.game.getBoard().getTreasure());
@@ -222,7 +223,7 @@ public class Controller implements ActionListener{
 			frame.getButton("play_round").setEnabled(true);
 		}
 		System.out.println("[Open]\topened");
-		int players = Integer.parseInt(frame.getData("players").getText());
+		int players = Integer.parseInt(frame.getSetting("players").getText());
 		File file = FileManager.selectFile(this.frame,'o');
 		if(file == null) {
 			System.out.println("[Open]\tcanceled");

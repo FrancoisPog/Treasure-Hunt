@@ -24,7 +24,6 @@ public class Stone_c extends Cell {
 	/**
 	 * Redirects the hunter who queried
 	 */
-	//@SuppressWarnings("unused")
 	@Override
 	public void process(Hunter h) {
 		int hCol = h.getPosition().getColumn();

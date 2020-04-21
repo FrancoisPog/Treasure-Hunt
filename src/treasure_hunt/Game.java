@@ -40,9 +40,9 @@ public class Game {
 	 * @param size		The map size for this game party
 	 * @param nbPlayers	The number of players for this game party
 	 */
-	public Game(int size, int nbPlayers) {
+	public Game(int size, int nbPlayers,int mode) {
 		this.hunters = new TreeSet<Hunter>();
-		this.board = new Board(size,hunters,nbPlayers);
+		this.board = new Board(size,hunters,nbPlayers,mode);
 	}
 	
 	
@@ -50,9 +50,9 @@ public class Game {
 	 * Create a random board
 	 * @param nbPlayers
 	 */
-	public void randomBoard(int nbPlayers) {
+	public void randomBoard(int nbPlayers,int mode) {
 		removeHunter();
-		board.randomMap(hunters, nbPlayers);
+		board.randomMap(hunters, nbPlayers, mode);
 	}
 	
 	

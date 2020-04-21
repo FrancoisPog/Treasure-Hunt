@@ -28,10 +28,10 @@ public class Board implements Iterable<Cell> {
 	 * @param hunters	The hunters set (empty)
 	 * @param nbPlayers	The number of players to create
 	 */
-	public Board(int size, TreeSet<Hunter> hunters, int nbPlayers) {
+	public Board(int size, TreeSet<Hunter> hunters, int nbPlayers, int mode) {
 		// Matrix creation
 		mat = new Matrix<Cell>(size);
-		randomMap(hunters,nbPlayers);
+		randomMap(hunters,nbPlayers,mode);
 	}
 	
 	/**
@@ -90,7 +90,7 @@ public class Board implements Iterable<Cell> {
 	 * @param hunters 	The empty TreeSet of hunters, it will be filled in this method
 	 * @param nbPlayers	The number of players in the game
 	 */
-	public void randomMap(TreeSet<Hunter> hunters, int nbPlayers) {
+	public void randomMap(TreeSet<Hunter> hunters, int nbPlayers, int mode) {
 		int size = size();
 		
 		// Players creation and position assignment (all different), the hunters set is sorted by their positions
@@ -155,7 +155,7 @@ public class Board implements Iterable<Cell> {
 				}
 				
 				// If the current position can be a stone cell, let the probability do
-				double p = canBeStone(col, row);
+				double p = canBeStone(col, row,mode);
 				if( p < 1 ) {
 					if(Math.random()>p) {
 						
@@ -179,7 +179,8 @@ public class Board implements Iterable<Cell> {
 	 * @param row The cell position's row
 	 * @return The probability (1 for impossible, 0 for sure)
 	 */
-	public double canBeStone(int col, int row) {
+	public double canBeStone(int col, int row, int mode) {
+		double proba[][] = {{1,1,1},{0.90,0.55,0.75},{0.75,0.35,0.5},{0.4,0.4,0.2}};
 		// if border
 		if(col == 1 || col == mat.size()-2 || row == 1 || row == mat.size()-2 ) {
 			return 1;
@@ -197,16 +198,16 @@ public class Board implements Iterable<Cell> {
 			if(!get(col-1, row).isStone()) {
 				// if the top-right cell is free
 				if(!get(col+2, row-1).isStone()) {
-					return 0.75; // wall begin
+					return proba[mode][0]; // wall begin
 				}
 				// else
 				return 1;
 			}
 			// if the left left cell is stone
 			if(get(col-2, row).isStone()) {
-				return 0.35; // wall continue
+				return proba[mode][1]; // wall continue
 			}
-			return 0.5; // Wall continue (second stone in wall)
+			return proba[mode][2]; // Wall continue (second stone in wall)
 		}
 		
 		// if the top cell is stone
@@ -219,7 +220,7 @@ public class Board implements Iterable<Cell> {
 			
 			// if the top top cell is stone
 			if(get(col, row-2).isStone()) {
-				return 0.35; // wall continue
+				return proba[mode][1]; // wall continue
 			}
 			return 0; // Wall continue (mandatory)
 		}

@@ -17,6 +17,7 @@ import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -33,7 +34,8 @@ public class GameFrame extends JFrame {
 	private Map<String,JLabel> gameSettings;
 	private Map<String,JButton> buttons;
 	private List<JLabel> playersData;
-	private boolean isInit;
+	private JComboBox<String> density;
+	private boolean gridIsInit;
 
 	private JPanel gridPanel;
 	private JPanel rightPane;
@@ -52,7 +54,7 @@ public class GameFrame extends JFrame {
 		this.setMinimumSize(new Dimension(1200,700));
 		
 		// Attributes setting 
-		this.isInit = false;
+		this.gridIsInit = false;
 		cellLabels = null;
 		Controller controller = new Controller(this);
 		this.gameSettings = new HashMap<String,JLabel>();
@@ -143,7 +145,7 @@ public class GameFrame extends JFrame {
 		
 		gridPanel.repaint();
 		gridPanel.revalidate();
-		this.isInit = true;
+		this.gridIsInit = true;
 		getButton("play_game").setEnabled(true);
 		getButton("play_round").setEnabled(true);
 		getButton("save").setEnabled(true);
@@ -182,7 +184,7 @@ public class GameFrame extends JFrame {
 	 * @return	True if the grid panel is filled
 	 */
 	public boolean isInit() {
-		return this.isInit;
+		return this.gridIsInit;
 	}
 	
 	/**
@@ -190,7 +192,7 @@ public class GameFrame extends JFrame {
 	 * @param init The new value
 	 */
 	public void setInit(boolean init) {
-		this.isInit = init;
+		this.gridIsInit = init;
 	}
 	
 	
@@ -202,12 +204,16 @@ public class GameFrame extends JFrame {
 		return this.buttons.get(name);
 	}
 	
+	public JComboBox<String> getDensity(){
+		return this.density;
+	}
+	
 	
 	/**
 	 * Getter for a data text field
 	 * @return The size field
 	 */
-	public JLabel getData(String name) {
+	public JLabel getSetting(String name) {
 		return this.gameSettings.get(name);
 	}
 	
@@ -349,9 +355,19 @@ public class GameFrame extends JFrame {
 		JPanel settingsPane = new JPanel();
 		settingsPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		
-		settingsPane.add(makeButtonArea("Size settings", "Size :","", 10, 120, 10, 2, 50,"size"));
-		settingsPane.add(makeButtonArea("Players settings", "","hunter(s)", 1, 10, 1, 2, 3,"players"));
-		settingsPane.add(makeButtonArea("Timer settings", "","ms", 100, 2000, 100, 3, 100,"timer"));
+		JPanel densityPane = new JPanel();
+		String[] densityModes = {"None","Low","Medium","High"};
+		density = new JComboBox<String>(densityModes);
+		density.setSelectedIndex(2);
+		densityPane.setBorder(new TitledBorder("Wall density"));
+		densityPane.add(density);
+		settingsPane.add(densityPane);
+		
+		
+		
+		settingsPane.add(makeButtonArea("Size setting", "Size :","", 10, 120, 10, 2, 50,"size"));
+		settingsPane.add(makeButtonArea("Players setting", "","hunter(s)", 1, 10, 1, 2, 3,"players"));
+		settingsPane.add(makeButtonArea("Timer setting", "","ms", 100, 2000, 100, 3, 100,"timer"));
 		
 		buttonsPane.add(gamePane);
 		buttonsPane.add(settingsPane);
