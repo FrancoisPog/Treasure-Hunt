@@ -10,6 +10,7 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,8 +21,12 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.KeyStroke;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
@@ -33,6 +38,7 @@ public class GameFrame extends JFrame {
 	
 	private Map<String,JLabel> gameSettings;
 	private Map<String,JButton> buttons;
+	private Map<String,JMenuItem> menu;
 	private List<JLabel> playersData;
 	private JComboBox<String> density;
 	private boolean gridIsInit;
@@ -59,6 +65,7 @@ public class GameFrame extends JFrame {
 		Controller controller = new Controller(this);
 		this.gameSettings = new HashMap<String,JLabel>();
 		this.buttons = new HashMap<String,JButton>();
+		this.menu = new HashMap<String, JMenuItem>();
 		this.playersData = new ArrayList<JLabel>();
 		
 		// Main container
@@ -82,6 +89,8 @@ public class GameFrame extends JFrame {
 		center.setResizeWeight(0.85);
 		
 		main.add(center);
+		
+		this.setJMenuBar(makeMenuBar(controller));
 		
 		
 		this.revalidate();
@@ -150,8 +159,12 @@ public class GameFrame extends JFrame {
 		getButton("play_round").setEnabled(true);
 		getButton("save").setEnabled(true);
 		getButton("replay").setEnabled(true);
-		
-		
+
+		getMenuItem("play").setEnabled(true);
+		getMenuItem("round").setEnabled(true);
+		getMenuItem("save").setEnabled(true);
+		getMenuItem("replay").setEnabled(true);
+
 		initDataPane(game);
 		System.out.println("[Frame]\tready");
 	}
@@ -215,6 +228,10 @@ public class GameFrame extends JFrame {
 	 */
 	public JLabel getSetting(String name) {
 		return this.gameSettings.get(name);
+	}
+	
+	public JMenuItem getMenuItem(String name) {
+		return this.menu.get(name);
 	}
 	
 	/**
@@ -376,6 +393,104 @@ public class GameFrame extends JFrame {
 		
 		return buttonsPane;
 	}
+	
+	
+	public JMenuBar makeMenuBar(Controller controller) {
+		
+		JMenuBar menuBar = new JMenuBar();
+		
+		JMenu file = new JMenu( "Files" );
+        file.setMnemonic( 'F' );
+
+        JMenuItem saveMap = new JMenuItem( "Save map" );
+        saveMap.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK) );
+		saveMap.addActionListener( controller );
+		saveMap.setEnabled(false);
+        file.add(saveMap);
+        menu.put("save",saveMap);
+        
+        JMenuItem openMap = new JMenuItem( "Open map" );
+        openMap.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK) );
+		openMap.addActionListener( controller );
+		openMap.setEnabled(true);
+        file.add(openMap);
+        menu.put("open",openMap);
+        
+        JMenu game = new JMenu("Game");
+        game.setMnemonic('G');
+
+        JMenuItem randomMap = new JMenuItem("New random map");
+        randomMap.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.SHIFT_DOWN_MASK));
+		randomMap.addActionListener(controller);
+		randomMap.setEnabled(true);
+        game.add(randomMap);
+        menu.put("random",randomMap);
+        
+        JMenuItem replay = new JMenuItem("Replay map");
+        replay.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.SHIFT_DOWN_MASK));
+		replay.addActionListener(controller);
+		replay.setEnabled(false);
+        game.add(replay);
+        menu.put("replay",replay);
+        
+        game.addSeparator();
+        
+        JMenuItem play = new JMenuItem("Play auto");
+        play.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, KeyEvent.SHIFT_DOWN_MASK));
+		play.addActionListener(controller);
+		play.setEnabled(false);
+        game.add(play);
+        menu.put("play",play);
+        
+        JMenuItem stop = new JMenuItem("Stop");
+        stop.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.SHIFT_DOWN_MASK));
+		stop.addActionListener(controller);
+		stop.setEnabled(false);
+        game.add(stop);
+        menu.put("stop",stop);
+       
+        
+        JMenuItem round = new JMenuItem("Play round");
+        round.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, KeyEvent.CTRL_DOWN_MASK));
+		round.addActionListener(controller);
+		round.setEnabled(false);
+        game.add(round);
+        menu.put("round",round);
+        
+        JMenu settings = new JMenu("Settings");
+        settings.setMnemonic('S');
+        
+        JMenuItem reset = new JMenuItem("Reset settings");
+        reset.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.SHIFT_DOWN_MASK));
+        reset.addActionListener(controller);
+        settings.add(reset);
+        menu.put("reset",reset);
+        
+        JMenu help = new JMenu("Help");
+        help.setMnemonic('H');
+        
+        JMenuItem manual = new JMenuItem("Manual");
+        manual.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.CTRL_DOWN_MASK));
+        manual.addActionListener(controller);
+        help.add(manual);
+        menu.put("manual",manual);
+        
+        JMenuItem join = new JMenuItem("Join us");
+        join.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_J, KeyEvent.CTRL_DOWN_MASK));
+        join.addActionListener(controller);
+        help.add(join);
+        menu.put("join",join);
+        
+        
+        menuBar.add(file);
+        menuBar.add(game);
+        menuBar.add(settings);
+        menuBar.add(help);
+		
+		return menuBar;
+		
+	}
+	
 	
 	
 	/**

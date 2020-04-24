@@ -1,3 +1,0 @@
-Optimisation : 
-- barre de menu
-- mode edition

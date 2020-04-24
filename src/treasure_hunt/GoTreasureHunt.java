@@ -8,8 +8,6 @@ public class GoTreasureHunt {
 //		game.play();
 //			
 			
-			
-		
 		
 		GameFrame gf = new GameFrame();
 		

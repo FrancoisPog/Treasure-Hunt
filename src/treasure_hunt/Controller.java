@@ -38,38 +38,45 @@ public class Controller implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == frame.getButton("new")) {
+		if(e.getSource() == frame.getButton("new") || e.getSource() == frame.getMenuItem("random")) {
 			randomMap();
 			return;
 		}
-		if(e.getSource() == frame.getButton("play_game") && frame.isInit()) {
+		if(e.getSource() == frame.getButton("play_game") || e.getSource() == frame.getMenuItem("play")) {
 			play();
 			return;
 		}
 		
-		if(e.getSource() == frame.getButton("play_round") && frame.isInit()) {
+		if(e.getSource() == frame.getButton("play_round") || e.getSource() == frame.getMenuItem("round")) {
 			executeRound();
 			return;
 		}
 		
-		if(e.getSource() == frame.getButton("save") && frame.isInit()) {
+		if(e.getSource() == frame.getButton("save") || e.getSource() == frame.getMenuItem("save")) {
 			saveBoard();
 			return;
 		}
 		
-		if(e.getSource() == frame.getButton("open")) {
+		if(e.getSource() == frame.getButton("open") || e.getSource() == frame.getMenuItem("open") ) {
 			openBoard();
 			return;
 		}
 		
-		if(e.getSource() == frame.getButton("replay")) {
+		if(e.getSource() == frame.getButton("replay") || e.getSource() == frame.getMenuItem("replay")) {
 			replayBoard();
 			return;
 		}
 		
-		if(e.getSource() == frame.getButton("stop")) {
+		if(e.getSource() == frame.getButton("stop") || e.getSource() == frame.getMenuItem("stop")) {
 			stop();
 			return;
+		}
+
+		if(e.getSource() == frame.getMenuItem("reset")){
+			frame.setSetting("size", "50");
+			frame.setSetting("timer", "100");
+			frame.setSetting("players", "3");
+			frame.getDensity().setSelectedIndex(2);
 		}
 	}
 	
@@ -110,8 +117,11 @@ public class Controller implements ActionListener{
 		
 
 		frame.getButton("play_game").setEnabled(false);
+		frame.getMenuItem("play").setEnabled(false);
 		frame.getButton("stop").setEnabled(true);
+		frame.getMenuItem("stop").setEnabled(true);
 		frame.getButton("play_round").setEnabled(false);
+		frame.getMenuItem("round").setEnabled(false);
 	}
 	
 	/**
@@ -120,8 +130,11 @@ public class Controller implements ActionListener{
 	public void stop() {
 		clock.stop();
 		frame.getButton("play_game").setEnabled(true);
+		frame.getMenuItem("play").setEnabled(true);
 		frame.getButton("play_round").setEnabled(true);
+		frame.getMenuItem("round").setEnabled(true);
 		frame.getButton("stop").setEnabled(false);
+		frame.getMenuItem("stop").setEnabled(false);
 	}
 	
 	/**
@@ -134,8 +147,11 @@ public class Controller implements ActionListener{
 			System.out.println("\n[Game]\t end");
 			clock.stop();
 			frame.getButton("stop").setEnabled(false);
+			frame.getMenuItem("stop").setEnabled(false);
 			frame.getButton("play_game").setEnabled(false);
+			frame.getMenuItem("play").setEnabled(false);
 			frame.getButton("play_round").setEnabled(false);
+			frame.getMenuItem("round").setEnabled(false);
 			return;
 		}
 		
@@ -180,8 +196,11 @@ public class Controller implements ActionListener{
 		frame.initDataPane(this.game);
 
 		frame.getButton("play_game").setEnabled(true);
+		frame.getMenuItem("play").setEnabled(true);
 		frame.getButton("play_round").setEnabled(true);
+		frame.getMenuItem("round").setEnabled(true);
 		frame.getButton("stop").setEnabled(false);
+		frame.getMenuItem("stop").setEnabled(false);
 		System.out.println("[Board]\tready");
 	}
 	
@@ -190,9 +209,14 @@ public class Controller implements ActionListener{
 	 */
 	public void saveBoard() {
 		clock.stop();
-		frame.getButton("stop").setEnabled(false);
 		frame.getButton("play_game").setEnabled(true);
+		frame.getMenuItem("play").setEnabled(true);
 		frame.getButton("play_round").setEnabled(true);
+		frame.getMenuItem("round").setEnabled(true);
+		frame.getButton("stop").setEnabled(false);
+		frame.getMenuItem("stop").setEnabled(false);
+
+
 		System.out.println("[Save]\topened");
 		File file = FileManager.selectFile(this.frame,'s');
 		if(file == null) {
@@ -218,10 +242,14 @@ public class Controller implements ActionListener{
 	public int openBoard() {
 		clock.stop();
 		if(frame.isInit()) {
-			frame.getButton("stop").setEnabled(false);
 			frame.getButton("play_game").setEnabled(true);
+			frame.getMenuItem("play").setEnabled(true);
 			frame.getButton("play_round").setEnabled(true);
+			frame.getMenuItem("round").setEnabled(true);
+			frame.getButton("stop").setEnabled(false);
+			frame.getMenuItem("stop").setEnabled(false);
 		}
+
 		System.out.println("[Open]\topened");
 		int players = Integer.parseInt(frame.getSetting("players").getText());
 		File file = FileManager.selectFile(this.frame,'o');

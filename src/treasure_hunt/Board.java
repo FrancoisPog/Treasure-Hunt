@@ -1,5 +1,5 @@
 package treasure_hunt;
-
+//
 import java.io.File;
 import java.util.Iterator;
 import java.util.TreeSet;
@@ -32,6 +32,7 @@ public class Board implements Iterable<Cell> {
 		// Matrix creation
 		mat = new Matrix<Cell>(size);
 		randomMap(hunters,nbPlayers,mode);
+		
 	}
 	
 	/**
