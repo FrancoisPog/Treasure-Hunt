@@ -42,12 +42,12 @@ public class Controller implements ActionListener{
 			randomMap();
 			return;
 		}
-		if(e.getSource() == frame.getButton("play_game") || e.getSource() == frame.getMenuItem("play")) {
+		if(e.getSource() == frame.getButton("play") || e.getSource() == frame.getMenuItem("play")) {
 			play();
 			return;
 		}
 		
-		if(e.getSource() == frame.getButton("play_round") || e.getSource() == frame.getMenuItem("round")) {
+		if(e.getSource() == frame.getButton("round") || e.getSource() == frame.getMenuItem("round")) {
 			executeRound();
 			return;
 		}
@@ -73,10 +73,10 @@ public class Controller implements ActionListener{
 		}
 
 		if(e.getSource() == frame.getMenuItem("reset")){
-			frame.setSetting("size", "50");
-			frame.setSetting("timer", "100");
-			frame.setSetting("players", "3");
-			frame.getDensity().setSelectedIndex(2);
+			frame.setSetting("size", 50);
+			frame.setSetting("timer", 100);
+			frame.setSetting("players", 3);
+			frame.setSetting("density",2);
 		}
 	}
 	
@@ -88,10 +88,10 @@ public class Controller implements ActionListener{
 		System.out.println("\n[Board]\trandom map");
 		clock.stop();
 		
-		int mode = frame.getDensity().getSelectedIndex();
+		int mode = frame.getSetting("density");
 		System.out.println(mode);
-		int size = Integer.parseInt(frame.getSetting("size").getText());
-		int players = Integer.parseInt(frame.getSetting("players").getText());
+		int size = frame.getSetting("size");
+		int players = (frame.getSetting("players"));
 		
 		// If same size, just modify the matrix
 		if(this.game != null && size == this.game.getBoard().size()) {
@@ -111,16 +111,16 @@ public class Controller implements ActionListener{
 	 * <p>The game is stopped when the treasure is found, or if the user stop the game.</p>
 	 */
 	public void play() {
-		int time = Integer.parseInt(frame.getSetting("timer").getText());
+		int time = frame.getSetting("timer");
 		clock.start(time);
 		System.out.println("[Game]\tlaunch");
 		
 
-		frame.getButton("play_game").setEnabled(false);
+		frame.getButton("play").setEnabled(false);
 		frame.getMenuItem("play").setEnabled(false);
 		frame.getButton("stop").setEnabled(true);
 		frame.getMenuItem("stop").setEnabled(true);
-		frame.getButton("play_round").setEnabled(false);
+		frame.getButton("round").setEnabled(false);
 		frame.getMenuItem("round").setEnabled(false);
 	}
 	
@@ -129,9 +129,9 @@ public class Controller implements ActionListener{
 	 */
 	public void stop() {
 		clock.stop();
-		frame.getButton("play_game").setEnabled(true);
+		frame.getButton("play").setEnabled(true);
 		frame.getMenuItem("play").setEnabled(true);
-		frame.getButton("play_round").setEnabled(true);
+		frame.getButton("round").setEnabled(true);
 		frame.getMenuItem("round").setEnabled(true);
 		frame.getButton("stop").setEnabled(false);
 		frame.getMenuItem("stop").setEnabled(false);
@@ -148,9 +148,9 @@ public class Controller implements ActionListener{
 			clock.stop();
 			frame.getButton("stop").setEnabled(false);
 			frame.getMenuItem("stop").setEnabled(false);
-			frame.getButton("play_game").setEnabled(false);
+			frame.getButton("play").setEnabled(false);
 			frame.getMenuItem("play").setEnabled(false);
-			frame.getButton("play_round").setEnabled(false);
+			frame.getButton("round").setEnabled(false);
 			frame.getMenuItem("round").setEnabled(false);
 			return;
 		}
@@ -185,7 +185,7 @@ public class Controller implements ActionListener{
 			frame.clearFloor(h.getCurrentFloor().getPosition());
 		}
 		
-		int players = Integer.parseInt(frame.getSetting("players").getText());
+		int players = frame.getSetting("players");
 		this.game.replayGame(players);
 		
 		frame.updateTreasure(this.game.getBoard().getTreasure());
@@ -195,9 +195,9 @@ public class Controller implements ActionListener{
 		
 		frame.initDataPane(this.game);
 
-		frame.getButton("play_game").setEnabled(true);
+		frame.getButton("play").setEnabled(true);
 		frame.getMenuItem("play").setEnabled(true);
-		frame.getButton("play_round").setEnabled(true);
+		frame.getButton("round").setEnabled(true);
 		frame.getMenuItem("round").setEnabled(true);
 		frame.getButton("stop").setEnabled(false);
 		frame.getMenuItem("stop").setEnabled(false);
@@ -209,9 +209,9 @@ public class Controller implements ActionListener{
 	 */
 	public void saveBoard() {
 		clock.stop();
-		frame.getButton("play_game").setEnabled(true);
+		frame.getButton("play").setEnabled(true);
 		frame.getMenuItem("play").setEnabled(true);
-		frame.getButton("play_round").setEnabled(true);
+		frame.getButton("round").setEnabled(true);
 		frame.getMenuItem("round").setEnabled(true);
 		frame.getButton("stop").setEnabled(false);
 		frame.getMenuItem("stop").setEnabled(false);
@@ -242,16 +242,16 @@ public class Controller implements ActionListener{
 	public int openBoard() {
 		clock.stop();
 		if(frame.isInit()) {
-			frame.getButton("play_game").setEnabled(true);
+			frame.getButton("play").setEnabled(true);
 			frame.getMenuItem("play").setEnabled(true);
-			frame.getButton("play_round").setEnabled(true);
+			frame.getButton("round").setEnabled(true);
 			frame.getMenuItem("round").setEnabled(true);
 			frame.getButton("stop").setEnabled(false);
 			frame.getMenuItem("stop").setEnabled(false);
 		}
 
 		System.out.println("[Open]\topened");
-		int players = Integer.parseInt(frame.getSetting("players").getText());
+		int players = frame.getSetting("players");
 		File file = FileManager.selectFile(this.frame,'o');
 		if(file == null) {
 			System.out.println("[Open]\tcanceled");
@@ -264,7 +264,7 @@ public class Controller implements ActionListener{
 			return 1;
 		}
 		System.out.println("[Open]\tfile ok");
-		frame.setSetting("size", game.getBoard().size()+"");
+		frame.setSetting("size", game.getBoard().size());
 		frame.initGrid(game);
 		System.out.println("[Board]\tready");
 		return 0;
