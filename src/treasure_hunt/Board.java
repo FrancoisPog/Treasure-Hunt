@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.TreeSet;
 
+
 /**
  * <p><strong>Board</strong> is the class representing the game board.<p>
  * <p>A Board is characterized by : </p>
@@ -22,6 +23,15 @@ import java.util.TreeSet;
 public class Board implements Iterable<Cell> {
 	private Matrix<Cell> mat;
 	private Treasure_c treasure;
+	
+	/**
+	 * Constructor for the board like project example
+	 * @param hunters	The hunters set (empty)
+	 */
+	public Board(TreeSet<Hunter> hunters) {
+		mat = new Matrix<Cell>(14);
+		defaultMap(hunters);
+	}
 	
 	/**
 	 * Constructor creating a random Board
@@ -47,6 +57,62 @@ public class Board implements Iterable<Cell> {
 	public Board(File file, TreeSet<Hunter> hunters, int nbPlayers) throws Exception {
 		FileManager.openMap(this, file);
 		setHunters(hunters, nbPlayers);
+	}
+	
+	/**
+	 * Initialize the board like the project example
+	 * @param hunters	The hunters set
+	 */
+	public void defaultMap(TreeSet<Hunter> hunters) {
+		this.treasure = new Treasure_c(new Position(2, 4), this);
+		
+		for(int row = 0 ; row < 14 ; ++row) {
+			for(int col = 0 ; col < 14 ; ++col) {
+				Position curr = new Position(col, row);
+				
+				// If the current position is on the border of map
+				if(col == 0 || col == 13 || row == 0 || row == 13) {
+					// Assignment of border cell in this position
+					mat.set(col, row, new Border_c(curr,this));
+					continue;
+				}
+				
+				if(curr.equals(this.treasure.getPosition())){
+					mat.set(col, row, treasure);
+					continue;
+				}
+				
+				if((col == 4 && row >= 3 && row <= 9) || (row == 7 && col <= 9 && col >= 7)) {
+					mat.set(col, row, new Stone_c(curr, this));
+					continue;
+				}
+				
+				Floor_c floor = new Floor_c(curr, null, this);
+				
+				mat.set(col, row, floor);
+				
+				if(col == 10 && row == 4) {
+					Hunter h = new Hunter('A', floor);
+					hunters.add(h);
+					floor.come(h);
+					continue;
+				}
+				
+				if(col == 9 && row == 9) {
+					Hunter h = new Hunter('B', floor);
+					hunters.add(h);
+					floor.come(h);
+					continue;
+				}
+				
+				if(col == 8 && row == 8) {
+					Hunter h = new Hunter('C', floor);
+					hunters.add(h);
+					floor.come(h);
+					continue;
+				}
+			}
+		}
 	}
 	
 	
@@ -81,7 +147,6 @@ public class Board implements Iterable<Cell> {
 			if(hunters.add(h)) {
 				// Hunter added
 				c++;
-				h.setDirection(h.getPosition().getBestDirTo(getTreasure().getPosition(),this,false,0));
 			}
 			
 		}

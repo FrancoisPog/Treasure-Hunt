@@ -90,7 +90,7 @@ public class Controller implements ActionListener{
 		
 		int mode = frame.getSetting("density");
 		System.out.println(mode);
-		int size = frame.getSetting("size");
+		int size = frame.getSetting("size")+2;
 		int players = (frame.getSetting("players"));
 		
 		// If same size, just modify the matrix

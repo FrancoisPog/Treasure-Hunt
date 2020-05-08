@@ -52,6 +52,16 @@ public class Game {
 		this.playAuto = playAuto;
 	}
 	
+	/**
+	 * Constructor to play the map of the project example
+	 * @param playAuto	The playing mode 
+	 */
+	public Game(boolean playAuto) {
+		this.hunters = new TreeSet<Hunter>();
+		this.playAuto = playAuto;
+		this.board = new Board(hunters);
+	}
+	
 	
 	
 	/**
@@ -108,7 +118,7 @@ public class Game {
 			
 			
 			if(this.playAuto) {
-				Thread.sleep(150);
+				Thread.sleep(200);
 			}else {
 				sc.nextLine();
 			}
@@ -130,35 +140,45 @@ public class Game {
 	public static Game welcome() {
 		@SuppressWarnings("resource") // Because we don't want to close System.in
 		Scanner sc = new Scanner(System.in);
-		int size = 30;
+		
+		System.out.println("Hello,\nWelcome to the best treasure hunt game!");
+		
+		System.out.println("Do you want to use a random map instead of the default map ? (y/n)");
+		boolean defaultMap = sc.next().equalsIgnoreCase("n");
+		
+		int size = 32;
 		int players = 3;
 		int wallDensity = 2;
 		boolean auto = true;
 		
-		System.out.println("Hello,\nWelcome to the best treasure hunt game!");
-		System.out.println("Do you want to personalize the board ? (y/n)");
-		boolean personalize = sc.next().equalsIgnoreCase("y");
-		
-		if(personalize) {
-			do {
-				System.out.println("Enter the size wanted [10;100] : ");
-				size = sc.nextInt();
-			}while(size < 10 || size > 100);
-			do {
-				System.out.println("Enter the number of players [1;10] : ");
-				players = sc.nextInt();
-			}while(players < 1 || players > 10);
-			do {
-				System.out.println("Enter the wall density (0:none, 1:low, 2:medium, 3:high) : ");
-				wallDensity = sc.nextInt();
-			}while(wallDensity < 0 || wallDensity > 3);
+		if(!defaultMap) {
+			
+			
+			System.out.println("Do you want to personalize the random settings ? (y/n)");
+			boolean personalize = sc.next().equalsIgnoreCase("y");
+			
+			if(personalize) {
+				do {
+					System.out.println("Enter the size wanted [10;100] : ");
+					size = sc.nextInt()+2;
+				}while(size < 10 || size > 100);
+				do {
+					System.out.println("Enter the number of players [1;10] : ");
+					players = sc.nextInt();
+				}while(players < 1 || players > 10);
+				do {
+					System.out.println("Enter the wall density (0:none, 1:low, 2:medium, 3:high) : ");
+					wallDensity = sc.nextInt();
+				}while(wallDensity < 0 || wallDensity > 3);
+			}
 		}
-		
 		
 		System.out.println("Mode auto or manual ? (a/m)");
 		auto = sc.next().equalsIgnoreCase("a");
-		
-		return new Game(size,players,wallDensity,auto);
+		if(!defaultMap) {
+			return new Game(size,players,wallDensity,auto);
+		}
+		return new Game(auto);
 	}
 	
 	/**

@@ -35,7 +35,7 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 	 */
 	public Hunter(char symbol, Floor_c currentFloor) {
 		this.symbol = symbol;
-		this.direction = 0;
+		this.direction = (int)(1 + Math.random()*(8));
 		this.currentFloor = currentFloor;
 		this.bypassDirection = 0;
 	}
@@ -109,7 +109,7 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 		if(that == null) {
 			return 1;
 		}
-		return (this.symbol+"").compareTo(that.getSymbol()+"");
+		return this.symbol-that.getSymbol();
 			
 	}
 	
