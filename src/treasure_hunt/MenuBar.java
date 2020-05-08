@@ -22,7 +22,7 @@ public class MenuBar extends JMenuBar {
 	
 	/**
 	 * Constructor
-	 * @param controllerenability 
+	 * @param controller The controller
 	 */
 	public MenuBar(ActionListener controller) {
 		this.menu = new HashMap<String,JMenuItem>();

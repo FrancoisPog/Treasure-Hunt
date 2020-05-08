@@ -41,7 +41,7 @@ public class Board implements Iterable<Cell> {
 	 * Create a board from file
 	 * @param file		The board file
 	 * @param hunters	The hunters set (empty)
-	 * @param nbPlayer	The number of players to create
+	 * @param nbPlayers	The number of players to create
 	 * @throws Exception If the file is wrong
 	 */
 	public Board(File file, TreeSet<Hunter> hunters, int nbPlayers) throws Exception {
@@ -76,11 +76,10 @@ public class Board implements Iterable<Cell> {
 				pos = Position.randomPos(this.size()-2, 1); // random position
 			}while(!this.get(pos).getClass().getSimpleName().equals("Floor_c"));
 			
-			Floor_c floor = (Floor_c)this.get(pos); // Floor_c creation
+			Floor_c floor = (Floor_c)this.get(pos); 
 			floor.come(h); // Hunter's floor assignment
 			if(hunters.add(h)) {
 				// Hunter added
-//				System.out.println(h.getPosition()+" : Hunter "+(char)c+" | "+hunters.size());
 				c++;
 				h.setDirection(h.getPosition().getBestDirTo(getTreasure().getPosition(),this,false,0));
 			}
@@ -96,57 +95,21 @@ public class Board implements Iterable<Cell> {
 	public void randomMap(TreeSet<Hunter> hunters, int nbPlayers, int mode) {
 		int size = size();
 		
-		// Players creation and position assignment (all different), the hunters set is sorted by their positions
-		int c = 'A';
-		while(hunters.size() != nbPlayers) {
-			Hunter h = new Hunter((char)(c), null);
-			Floor_c floor = new Floor_c(Position.randomPos(size-2, 1),h,this);
-			h.setCurrentFloor(floor);
-			if(hunters.add(h)) {
-				c++;
-			}
-		}
 		
-		// Treasure creation and position assignment ( with different position than hunters)
-		boolean ok = true;
-		treasure = null;
-		do {
-			ok = true;
-			treasure = new Treasure_c(Position.randomPos(size-2, 1),this);
-			
-			for(Hunter h : hunters) {
-				if(h.getPosition().equals(treasure.getPosition())) {
-					ok = false;
-				}
-			}
-		}while(!ok);
-		
-		// Temporary copy of hunters TreeSet
-		@SuppressWarnings("unchecked")
-		TreeSet<Hunter> hunters_tmp = (TreeSet<Hunter>) hunters.clone();
+		// Treasure creation and position assignment
+		treasure = new Treasure_c(Position.randomPos(size-2, 1),this);
 		
 		
 		// Map generation
 		for(int row = 0 ; row < size ; row++) {
 			for(int col = 0 ; col < size ; col++) {
-				Position curr = new Position(col,row);
 				
-				// If the current position is the same than the first players in the TreeSet
-				if(!hunters_tmp.isEmpty() &&  hunters_tmp.first().getPosition().equals(curr)) {
-					// Assignment of player at this position
-					Hunter h = hunters_tmp.pollFirst();
-					mat.set(col, row, h.getCurrentFloor());
-					
-					h.setDirection(h.getPosition().getBestDirTo(getTreasure().getPosition(),this,false,0));
-					continue;
-				}
+				Position curr = new Position(col,row);
 				
 				// If the current position is on the border of map
 				if(col == 0 || col == size-1 || row == 0 || row == size-1) {
 					// Assignment of border cell in this position
-					
 					mat.set(col, row, new Border_c(curr,this));
-					
 					continue;
 				}
 				
@@ -169,10 +132,11 @@ public class Board implements Iterable<Cell> {
 				}
 				
 				// Else, assignment of a floor cell at this position 
-				
 				mat.set(col, row, new Floor_c(curr,null,this));
 			}
 		}
+		// Set hunters on the board
+		this.setHunters(hunters, nbPlayers);
 	}
 	
 
@@ -294,7 +258,7 @@ public class Board implements Iterable<Cell> {
 	
 	/**
 	 * Setter for the cell of the matrix
-	 * @param col	The row index
+	 * @param row	The row index
 	 * @param col 	The column index
 	 * @param value	The new cell
 	 */

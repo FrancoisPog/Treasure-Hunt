@@ -102,7 +102,7 @@ public class Controller implements ActionListener{
 		
 		// If different size, new game
 		
-		this.game = new Game(size, players,mode);
+		this.game = new Game(size, players,mode, false);
 		this.frame.getGamePane().initGrid(game);
 	}
 	

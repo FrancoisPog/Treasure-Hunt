@@ -9,17 +9,25 @@ package treasure_hunt;
  * 
  * 
  * @author François Poguet
+ * @author Enzo Costantini
  */
 public class Border_c extends Cell {
-
+	
+	/**
+	 * Default border constructor
+	 * @param pos	The stone position
+	 * @param cm	The matrix
+	 */
 	public Border_c(Position pos,Board cm) {
 		super(pos,cm);
 	}
 	
-	
+	/**
+	 * Redirects the hunter who queried to the opposite direction
+	 */
 	@Override
 	public void process(Hunter h) {
-		
+		System.out.println("You can't exit the map ");
 		switch(h.getDirection()) {
 			case 3:
 				h.setDirection(7);
@@ -49,7 +57,6 @@ public class Border_c extends Cell {
 				System.err.println("Error");
 				break;
 		}
-		//System.out.println("["+h+"] : Bord -> "+h.getDirection());
 	}
 
 	@Override

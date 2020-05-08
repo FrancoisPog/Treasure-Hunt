@@ -12,6 +12,8 @@ import java.util.TreeSet;
  * 			<dd>- The hunters are stored in a TreeSet</dd></li> 
  * 		<li><dt>A cell matrix</dt>
  * 			<dd>- The matrix generated for this game</dd></li>
+ * 		<li><dt>A playing mode</dt>
+ * 			<dd>- Automatically of manually</dd></li>
  * </ul>
  * <p>The Game class is used to manage a game process without worrying about the map and players</p>
  * @see treasure_hunt.Hunter
@@ -23,6 +25,7 @@ import java.util.TreeSet;
 public class Game {
 	private TreeSet<Hunter> hunters;
 	private Board board;
+	private boolean playAuto;
 	
 	
 	/**
@@ -38,13 +41,17 @@ public class Game {
 	
 	/**
 	 * Default Game constructor
-	 * @param size		The map size for this game party
-	 * @param nbPlayers	The number of players for this game party
+	 * @param size			The map size for this game party
+	 * @param nbPlayers		The number of players for this game party
+	 * @param wallDensity	The walls density indicator
+	 * @param playAuto		The playing mode in console only (auto/manual)
 	 */
-	public Game(int size, int nbPlayers,int mode) {
+	public Game(int size, int nbPlayers,int wallDensity, boolean playAuto) {
 		this.hunters = new TreeSet<Hunter>();
-		this.board = new Board(size,hunters,nbPlayers,mode);
+		this.board = new Board(size,hunters,nbPlayers,wallDensity);
+		this.playAuto = playAuto;
 	}
+	
 	
 	
 	/**
@@ -82,6 +89,7 @@ public class Game {
 	 */
 	public void execute() {
 		for(Hunter h : hunters) {
+			System.out.println("Hunter "+h+" :\n\tPosition "+h.getPosition()+" - Direction : "+h.getDirection()+" "+Hunter.dirToArrow(h.getDirection()));
 			h.move();
 		}
 	}
@@ -90,29 +98,75 @@ public class Game {
 	 * Execute the entire game party in console
 	 */
 	public void play() throws InterruptedException {
+		
+		@SuppressWarnings("resource") // Because we don't want to close System.in
 		Scanner sc = new Scanner(System.in);
-		while(this.board.getTreasure().getWinner() == null) {
-			System.out.println(board);
+		
+		System.out.println(board);
+			
+		while(!this.board.getTreasure().isFound()) {
+			
+			
+			if(this.playAuto) {
+				Thread.sleep(150);
+			}else {
+				sc.nextLine();
+			}
+			
 			this.execute();
-			Thread.sleep(150);
-			//sc.nextLine();
+			
+			System.out.println(board);
 			
 		}
-		sc.close();
+		
+		
+		
 	}
 	
 	/**
-	 * Display the welcome menu before lauch the game
+	 * Display the console welcome menu before launch the game
+	 * @return The game with specified settings
 	 */
-	public void welcome() {
+	public static Game welcome() {
+		@SuppressWarnings("resource") // Because we don't want to close System.in
+		Scanner sc = new Scanner(System.in);
+		int size = 30;
+		int players = 3;
+		int wallDensity = 2;
+		boolean auto = true;
 		
+		System.out.println("Hello,\nWelcome to the best treasure hunt game!");
+		System.out.println("Do you want to personalize the board ? (y/n)");
+		boolean personalize = sc.next().equalsIgnoreCase("y");
+		
+		if(personalize) {
+			do {
+				System.out.println("Enter the size wanted [10;100] : ");
+				size = sc.nextInt();
+			}while(size < 10 || size > 100);
+			do {
+				System.out.println("Enter the number of players [1;10] : ");
+				players = sc.nextInt();
+			}while(players < 1 || players > 10);
+			do {
+				System.out.println("Enter the wall density (0:none, 1:low, 2:medium, 3:high) : ");
+				wallDensity = sc.nextInt();
+			}while(wallDensity < 0 || wallDensity > 3);
+		}
+		
+		
+		System.out.println("Mode auto or manual ? (a/m)");
+		auto = sc.next().equalsIgnoreCase("a");
+		
+		return new Game(size,players,wallDensity,auto);
 	}
 	
 	/**
 	 * Execute the game ending and display result
 	 */
 	public void result() {
-		
+		Hunter winner = this.board.getTreasure().getWinner();
+		System.out.println("The player "+winner+" won !\nSee you soon ! (the graphic version will be better)");
 	}
 	
 	/**

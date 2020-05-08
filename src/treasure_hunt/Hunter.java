@@ -30,8 +30,8 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 	
 	/**
 	 * Default constructor
-	 * @param symbol 	The hunter's symbol on display
-	 * @param pos 		The hunter's position
+	 * @param symbol 			The hunter's symbol on display
+	 * @param currentFloor 		The hunter's current floor
 	 */
 	public Hunter(char symbol, Floor_c currentFloor) {
 		this.symbol = symbol;
@@ -46,6 +46,14 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 	 */
 	public int getDirection() {
 		return direction;
+	}
+	
+	/**
+	 * Getter for the symbol
+	 * @return The symbol
+	 */
+	public int getSymbol() {
+		return symbol;
 	}
 
 	/**
@@ -101,7 +109,7 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 		if(that == null) {
 			return 1;
 		}
-		return this.getPosition().compareTo(that.getPosition());
+		return (this.symbol+"").compareTo(that.getSymbol()+"");
 			
 	}
 	
@@ -111,7 +119,9 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 	 */
 	public Position move() {
 		Board board = this.currentFloor.getBoard();
+		System.out.println("\tTarget cell : "+board.getCellInDir(getPosition(), direction).getPosition());
 		board.getCellInDir(getPosition(), direction).process(this);
+		System.out.println("\t-> Position : "+getPosition()+" - "+"Direction : "+getDirection()+" "+Hunter.dirToArrow(getDirection())+"\n");
 		return this.getPosition();
 		
 	}
@@ -133,6 +143,15 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 		this.bypassDirection = byPassDir;
 	}
 	
+	/**
+	 * Get the arrow from a direction
+	 * @param dir	The direction
+	 * @return		The arrow
+	 */
+	public static char dirToArrow(int dir) {
+		char arrows[] = {'\u2192','\u2197','\u2191','\u2196','\u2190','\u2199','\u2193','\u2198'};
+		return arrows[dir-1];
+	}
 	
 }
 	

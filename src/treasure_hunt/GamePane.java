@@ -131,7 +131,7 @@ public class GamePane extends JSplitPane {
 			System.out.println(h.toString());
 			JLabel data = new JLabel();
 			data.setFont(new java.awt.Font(Font.DIALOG,Font.BOLD,30));
-			data.setText(" "+h.toString()+" : "+h.getPosition()+" - "+dirToArrow(h.getDirection()));
+			data.setText(" "+h.toString()+" : "+h.getPosition()+" - "+Hunter.dirToArrow(h.getDirection()));
 			pane.add(data);
 			this.playersData.add(data);
 		}
@@ -147,7 +147,7 @@ public class GamePane extends JSplitPane {
 		int i = 0;
 		for(Hunter h : game.getHunters()) {
 			JLabel data = this.playersData.get(i);
-			data.setText(" "+h.toString()+" : "+h.getPosition()+" - "+dirToArrow(h.getDirection()));
+			data.setText(" "+h.toString()+" : "+h.getPosition()+" - "+Hunter.dirToArrow(h.getDirection()));
 			++i;
 		}
 	}
@@ -209,15 +209,7 @@ public class GamePane extends JSplitPane {
 		this.gridIsInit = init;
 	}
 	
-	/**
-	 * Get the arrow from a direction
-	 * @param dir	The direction
-	 * @return		The arrow
-	 */
-	public static char dirToArrow(int dir) {
-		char arrows[] = {'\u2192','\u2197','\u2191','\u2196','\u2190','\u2199','\u2193','\u2198'};
-		return arrows[dir-1];
-	}
+	
 	
 
 }

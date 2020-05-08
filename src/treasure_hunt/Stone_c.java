@@ -213,6 +213,7 @@ public class Stone_c extends Cell {
 		}
 
 		h.setDirection(h.getPosition().getBestDirTo(treasurePos, this.getBoard(),true,h.getBypassDirection()));
+		System.out.println("\tBypassing a wall");
 	}
 
 	@Override
