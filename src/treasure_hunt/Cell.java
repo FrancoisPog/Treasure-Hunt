@@ -9,12 +9,14 @@ package treasure_hunt;
  * 		<li><dt>A Position</dt>
  * 			<dd>- Its position in the matrix</dd></li>
  * </ul>
+ * <p>N.B. all classes that extend it are suffixed with '_c' to avoid confusion.</p>
  * <p>The cell class implements the <strong>Questionable</strong> interface, so it can be queried by hunters.</p>
- * <p>The cell class implements also the <strong>Positionable</strong> interface.<p>
+ * <p>The cell class also implements the <strong>Positionable</strong> interface.<p>
  * @see treasure_hunt.Positionable 
  * @see treasure_hunt.Questionable
  * 
  * @author François Poguet
+ * @author Enzo Costantini
  */
 public abstract class Cell implements Questionable, Positionable{
 	private Position pos;
@@ -22,7 +24,7 @@ public abstract class Cell implements Questionable, Positionable{
 	
 	/**
 	 * Default constructor 
-	 * @param pos	The position (it will keep the same all its life)
+	 * @param pos	The position 
 	 * @param board	Its board
 	 */
 	public Cell(Position pos,Board board) {
@@ -69,7 +71,7 @@ public abstract class Cell implements Questionable, Positionable{
 	}
 	
 	/**
-	 * Get the number encoding number
+	 * Get the cell encoding number
 	 * @return The encoding number
 	 */
 	public abstract byte encode();

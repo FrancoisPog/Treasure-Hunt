@@ -192,6 +192,7 @@ public class ButtonsPane extends JPanel {
 	public void setSettings(String name, int value) {
 		if(name.equals("density")) {
 			this.density.setSelectedIndex(value);
+			return ;
 		}
 		this.settings.get(name).setText(""+value);
 	}

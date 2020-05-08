@@ -14,7 +14,9 @@ import java.util.Iterator;
  * 
  * @param <T> The generic type used
  * @see java.lang.Iterable
+ * 
  * @author François Poguet
+ * @author Enzo Costantini
  */
 public class Matrix<T> implements Iterable<T>{
 	private ArrayList<ArrayList<T>> matrix;
@@ -100,6 +102,7 @@ public class Matrix<T> implements Iterable<T>{
 	 * @see java.util.Iterator
 	 * 
 	 * @author François Poguet
+	 * @author Enzo Costantini
 	 */
 	public class MatrixIterator implements Iterator<T>{
 		private int rowIndex;

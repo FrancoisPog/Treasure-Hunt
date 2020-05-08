@@ -1,2 +1,8 @@
 /bin/
 .settings/
+*.png
+*.tex
+*.lof
+*.log
+*.aux
+*.toc

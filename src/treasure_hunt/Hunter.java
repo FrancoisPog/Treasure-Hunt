@@ -19,6 +19,7 @@ package treasure_hunt;
  * @see treasure_hunt.Positionable
  * 
  * @author François Poguet
+ * @author Enzo Costantini
  */
 public class Hunter implements Positionable,Comparable<Hunter>{
 	private char symbol;
@@ -91,7 +92,6 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 	}
 
 
-	
 	/**
 	 * Compare the hunter with an other by their position
 	 * @param that The other hunter 
@@ -106,53 +106,15 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 	}
 	
 	/**
-	 * Execute a move depending the current cell and the current direction
-	 * @param mat The cell matrix where the hunter is
+	 * Execute a move : query the cell in his direction
+	 * @return the new player position
 	 */
 	public Position move() {
-		Board mat = this.currentFloor.getBoard();
-		int row = 0, col = 0;
-		
-		switch(this.direction) {
-			case 3:
-				row = -1;
-				break;
-			case 4:
-				row = -1;
-				col = -1;
-				break;
-			case 2:
-				row = -1;
-				col = 1;
-				break;
-			case 1:
-				col = 1;
-				break;
-			case 5:
-				col = -1;
-				break;
-			case 7:
-				row = 1;
-				break;
-			case 6:
-				row = 1;
-				col = -1;
-				break;
-			case 8:
-				row = 1;
-				col = 1;
-				break;
-			default : 
-				System.err.println("Error dir");
-				break;
-		}
-		
-		mat.get(this.getPosition().getColumn()+col, this.getPosition().getRow()+row).process(this);
-		
+		Board board = this.currentFloor.getBoard();
+		board.getCellInDir(getPosition(), direction).process(this);
 		return this.getPosition();
 		
 	}
-
 
 
 	/**

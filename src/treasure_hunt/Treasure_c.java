@@ -5,6 +5,7 @@ package treasure_hunt;
  * <p><strong>Treasure_c</strong> is the class representing a treasure cell on the matrix .<p>
  * <p>A Floor_c is characterized by : </p>
  *  <ul>
+ *  	<li><dt>A state : found or not</dt></li>
  * 		<li><dt>A winner : only if a hunter found it</dt></li> 
  * </ul>
  * <p>When a Treasure_c is queried by a hunter, it brings the hunter on, and he win.</p>
@@ -12,6 +13,7 @@ package treasure_hunt;
  * @see treasure_hunt.Board
  * 
  * @author François Poguet
+ * @author Enzo Costantini
  */
 public class Treasure_c extends Cell {
 	private Hunter winner; 
@@ -50,7 +52,7 @@ public class Treasure_c extends Cell {
 	 */
 	public String toString() {
 		if(isFound) {
-			return " "+this.winner.toString()+" ";
+			return "|"+this.winner.toString()+"|";
 		}
 		return " T ";
 	}
@@ -71,6 +73,9 @@ public class Treasure_c extends Cell {
 		return this.isFound;
 	}
 	
+	/**
+	 * Reset the treasure
+	 */
 	public void reset() {
 		this.isFound = false;
 		this.winner = null;

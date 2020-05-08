@@ -14,6 +14,7 @@ import java.util.Arrays;
  * @see java.lang.Comparable
  * 
  * @author François Poguet
+ * @author Enzo Costantini
  */
 public class Position implements Comparable<Position>{
 	private int column;
@@ -39,7 +40,7 @@ public class Position implements Comparable<Position>{
 	}
 	
 	/**
-	 * Compute the direction to have to go to another close position
+	 * Compute naively the direction to have to go to another close position
 	 * @param that	The other position
 	 * @return 		The direction
 	 */
@@ -120,7 +121,6 @@ public class Position implements Comparable<Position>{
 		if(best_pos == null) {
 			return 1;
 		}
-		//System.out.println("best:"+this.getDirectionTo(best_pos));
 		return this.getDirectionTo(best_pos);
 	}
 	

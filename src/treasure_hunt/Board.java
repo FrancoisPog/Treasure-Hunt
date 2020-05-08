@@ -9,7 +9,7 @@ import java.util.TreeSet;
  * <p>A Board is characterized by : </p>
  * <ul>
  * 		<li><dt>A Cell Matrix</dt>
- * 			<dd>- All cells of the game is stored in the <strong>collections</strong></dd></li>
+ * 			<dd>- All cells of the game is stored in the <strong>Matrix</strong></dd></li>
  * 		<li><dt>A treasure</dt>
  * 			<dd>- The treasure among the cells</dd></li>
  * </ul>
@@ -17,6 +17,7 @@ import java.util.TreeSet;
  * @see treasure_hunt.Cell
  * 
  * @author François Poguet
+ * @author Enzo Costantini
  */
 public class Board implements Iterable<Cell> {
 	private Matrix<Cell> mat;
@@ -24,14 +25,15 @@ public class Board implements Iterable<Cell> {
 	
 	/**
 	 * Constructor creating a random Board
-	 * @param size		The board's size
-	 * @param hunters	The hunters set (empty)
-	 * @param nbPlayers	The number of players to create
+	 * @param size			The board's size
+	 * @param hunters		The hunters set (empty)
+	 * @param nbPlayers		The number of players to create
+	 * @param wallDensity	The walls density indicator
 	 */
-	public Board(int size, TreeSet<Hunter> hunters, int nbPlayers, int mode) {
+	public Board(int size, TreeSet<Hunter> hunters, int nbPlayers, int wallDensity) {
 		// Matrix creation
 		mat = new Matrix<Cell>(size);
-		randomMap(hunters,nbPlayers,mode);
+		randomMap(hunters,nbPlayers,wallDensity);
 		
 	}
 	
@@ -105,7 +107,7 @@ public class Board implements Iterable<Cell> {
 			}
 		}
 		
-		// Treasure_c creation and position assignment ( with different position than hunters)
+		// Treasure creation and position assignment ( with different position than hunters)
 		boolean ok = true;
 		treasure = null;
 		do {
@@ -176,12 +178,14 @@ public class Board implements Iterable<Cell> {
 
 	/**
 	 * Method for calculating the probability that the cell can be of the stone type
-	 * @param col The cell position's column
-	 * @param row The cell position's row
-	 * @return The probability (1 for impossible, 0 for sure)
+	 * @param col 			The cell position's column
+	 * @param row 			The cell position's row
+	 * @param wallDensity	The wall's density indicator
+	 * @return The inverse probability (1 for impossible, 0 for sure)
 	 */
-	public double canBeStone(int col, int row, int mode) {
+	public double canBeStone(int col, int row, int wallDensity) {
 		double proba[][] = {{1,1,1},{0.90,0.55,0.75},{0.75,0.35,0.5},{0.4,0.4,0.2}};
+		
 		// if border
 		if(col == 1 || col == mat.size()-2 || row == 1 || row == mat.size()-2 ) {
 			return 1;
@@ -199,16 +203,16 @@ public class Board implements Iterable<Cell> {
 			if(!get(col-1, row).isStone()) {
 				// if the top-right cell is free
 				if(!get(col+2, row-1).isStone()) {
-					return proba[mode][0]; // wall begin
+					return proba[wallDensity][0]; // wall begin
 				}
 				// else
 				return 1;
 			}
 			// if the left left cell is stone
 			if(get(col-2, row).isStone()) {
-				return proba[mode][1]; // wall continue
+				return proba[wallDensity][1]; // wall continue
 			}
-			return proba[mode][2]; // Wall continue (second stone in wall)
+			return proba[wallDensity][2]; // Wall continue (second stone in wall)
 		}
 		
 		// if the top cell is stone
@@ -221,12 +225,11 @@ public class Board implements Iterable<Cell> {
 			
 			// if the top top cell is stone
 			if(get(col, row-2).isStone()) {
-				return proba[mode][1]; // wall continue
+				return proba[wallDensity][1]; // wall continue
 			}
 			return 0; // Wall continue (mandatory)
 		}
 		
-		//System.out.println("DEBUG: error");
 		return 1;
 	}
 	
@@ -288,6 +291,13 @@ public class Board implements Iterable<Cell> {
 		return mat.get(pos.getColumn(), pos.getRow());
 	}
 	
+	
+	/**
+	 * Setter for the cell of the matrix
+	 * @param col	The row index
+	 * @param col 	The column index
+	 * @param value	The new cell
+	 */
 	public void set(int col, int row, Cell value) {
 		this.mat.set(col, row, value);
 	}

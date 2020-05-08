@@ -18,6 +18,7 @@ import java.util.TreeSet;
  * @see treasure_hunt.Board
  * 
  * @author François Poguet
+ * @author Enzo Costantini
  */
 public class Game {
 	private TreeSet<Hunter> hunters;
@@ -25,7 +26,7 @@ public class Game {
 	
 	
 	/**
-	 * Game from file
+	 * Game constructor from file
 	 * @param file
 	 * @param nbPlayers
 	 * @throws Exception If the file is wrong
@@ -47,17 +48,17 @@ public class Game {
 	
 	
 	/**
-	 * Create a random board
+	 * Create a new random board (same size)
 	 * @param nbPlayers
 	 */
-	public void randomBoard(int nbPlayers,int mode) {
+	public void randomBoard(int nbPlayers,int wallDensity) {
 		removeHunter();
-		board.randomMap(hunters, nbPlayers, mode);
+		board.randomMap(hunters, nbPlayers, wallDensity);
 	}
 	
 	
 	/**
-	 * Replay the same map
+	 * Replay the same map (just replace randomly hunters and reset treasure)
 	 * @param nbPlayers
 	 */
 	public void replayGame(int nbPlayers) {
@@ -67,13 +68,12 @@ public class Game {
 	}
 	
 	/**
-	 * Remove all hunters on the board
+	 * Remove all hunters
 	 */
 	public void removeHunter() {
 		for(Hunter h : hunters) {
 			h.getCurrentFloor().leave();
 		}
-		
 		hunters.clear();
 	}
 	
@@ -99,6 +99,13 @@ public class Game {
 			
 		}
 		sc.close();
+	}
+	
+	/**
+	 * Display the welcome menu before lauch the game
+	 */
+	public void welcome() {
+		
 	}
 	
 	/**

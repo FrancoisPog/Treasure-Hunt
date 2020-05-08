@@ -6,7 +6,8 @@ package treasure_hunt;
  * @see treasure_hunt.Cell
  * @see treasure_hunt.Board
  * 
- * @author François Poguet
+ * @author François Poguet 
+ * @author Enzo Costantini
  */
 public class Stone_c extends Cell {
 
@@ -22,7 +23,7 @@ public class Stone_c extends Cell {
 	
 	
 	/**
-	 * Redirects the hunter who queried
+	 * Redirects the hunter who queried to bypass a wall
 	 */
 	@Override
 	public void process(Hunter h) {
@@ -212,9 +213,6 @@ public class Stone_c extends Cell {
 		}
 
 		h.setDirection(h.getPosition().getBestDirTo(treasurePos, this.getBoard(),true,h.getBypassDirection()));
-		
-		//System.out.println("["+h+"] : Mur -> "+h.getDirection()+"bp:"+h.getByPassDirection());
-		
 	}
 
 	@Override
@@ -275,22 +273,21 @@ public class Stone_c extends Cell {
 					j++;
 					continue;
 			}
-			//System.out.println("dd");
 		}
-		//System.out.println("r");
 		if(dir%2 == 0) {
 			return Math.abs(j)-1;
 		}
-		
 		return Math.abs(i)-1;
 		
 	}
 	
-	
+	/**
+	 * Check if a wall is vertical.
+	 * @return	a boolean
+	 */
 	public boolean wallIsVertical() {
 		return (this.wallSize(1) > 0 || this.wallSize(3) > 0);
 	}
-
 
 
 	@Override
