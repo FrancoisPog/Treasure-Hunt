@@ -59,6 +59,14 @@ public class Board implements Iterable<Cell> {
 		setHunters(hunters, nbPlayers);
 	}
 	
+	
+	public Board(int size) {
+		mat = new Matrix<Cell>(size);
+	}
+	
+	
+	
+	
 	/**
 	 * Initialize the board like the project example
 	 * @param hunters	The hunters set

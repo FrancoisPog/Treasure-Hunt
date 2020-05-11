@@ -28,6 +28,7 @@ public class ButtonsPane extends JPanel {
 		
 		this.setLayout(new GridLayout(1,2));
 		
+		
 		JPanel gamePane = new JPanel();
 		gamePane.setLayout(new FlowLayout(FlowLayout.LEFT));
 		
@@ -66,6 +67,7 @@ public class ButtonsPane extends JPanel {
 		
 		JPanel filePane = new JPanel();
 		filePane.setBorder(new TitledBorder("Manage files"));
+		
 		JButton save = new JButton("Save");
 		save.setEnabled(false);
 		save.addActionListener(controller);
@@ -77,9 +79,21 @@ public class ButtonsPane extends JPanel {
 		this.buttons.put("open",open);
 		filePane.add(open);
 		
+		JButton switchMode = new JButton("Switch to edition mode");
+		switchMode.addActionListener(controller);
+		this.buttons.put("switch",switchMode);
+		
+		JPanel modePane = new JPanel();
+		modePane.setBorder(new TitledBorder("Mode"));
+		modePane.add(switchMode);
+		
+		
 		gamePane.add(filePane);
 		gamePane.add(newGamePane);
 		gamePane.add(manageGamePane);
+		gamePane.add(modePane);
+		
+		
 		
 		JPanel settingsPane = new JPanel();
 		settingsPane.setLayout(new FlowLayout(FlowLayout.RIGHT));

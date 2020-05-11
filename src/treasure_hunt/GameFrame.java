@@ -16,6 +16,8 @@ public class GameFrame extends JFrame {
 	private ButtonsPane buttonsPane;
 	private MenuBar menuBar;
 	private GamePane gamePane;
+	private EditPane editPane;
+	private boolean isGameMode;
 	
 	
 	/**
@@ -25,10 +27,11 @@ public class GameFrame extends JFrame {
 	public GameFrame() {
 		super("Treasure Hunt");
 		this.setSize(1400,1000);
-		this.setLocationRelativeTo(null);
+		
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setMinimumSize(new Dimension(1200,700));
+		this.setMinimumSize(new Dimension(1600,700));
+		this.setLocationRelativeTo(null);
 		
 		Controller controller = new Controller(this);
 		
@@ -41,10 +44,15 @@ public class GameFrame extends JFrame {
 		main.add(buttonsPane,"North");
 		this.buttonsPane = buttonsPane;
 		
-		// Game pane
+//		// Game pane
 		this.gamePane = new GamePane(this);
 		main.add(gamePane);
+		this.isGameMode = true;
 		
+		
+		
+		
+	
 		// Menu bar
 		this.menuBar = new MenuBar(controller);
 		this.setJMenuBar(this.menuBar);
@@ -99,6 +107,14 @@ public class GameFrame extends JFrame {
 		return this.gamePane;
 	}
 	
+	public EditPane getEditPane() {
+		return this.editPane;
+	}
+	
+	public boolean isGameMode() {
+		return this.isGameMode;
+	}
+	
 	/**
 	 * Set if buttons and menu item is enable or not
 	 * @param name
@@ -110,7 +126,29 @@ public class GameFrame extends JFrame {
 	}
 	
 	
-	
+	public void switchMode() {
+		if(this.isGameMode) {
+			this.editPane = new EditPane(this);
+			this.getContentPane().remove(this.gamePane);
+			this.getContentPane().add(editPane,"Center");
+			this.isGameMode = false;
+			setEnable("save", false);
+			setEnable("open", false);
+			setEnable("round", false);
+			setEnable("stop", false);
+			setEnable("play", false);
+			setEnable("new", false);
+			setEnable("replay", false);
+		}else {
+			this.gamePane = new GamePane(this);
+			this.getContentPane().remove(this.editPane);
+			this.getContentPane().add(gamePane,"Center");
+			this.isGameMode = true;
+			setEnable("open", true);
+			setEnable("new", true);
+		}
+		this.revalidate();
+	}
 	
 	
 	

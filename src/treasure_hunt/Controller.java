@@ -38,7 +38,7 @@ public class Controller implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == frame.getButton("new") || e.getSource() == frame.getMenuItem("random")) {
+		if(e.getSource() == frame.getButton("new") || e.getSource() == frame.getMenuItem("new")) {
 			randomMap();
 			return;
 		}
@@ -70,6 +70,13 @@ public class Controller implements ActionListener{
 		if(e.getSource() == frame.getButton("stop") || e.getSource() == frame.getMenuItem("stop")) {
 			stop();
 			return;
+		}
+		
+		if(e.getSource() == frame.getButton("switch")) {
+			frame.switchMode();
+			if(!frame.isGameMode()) {
+				frame.getEditPane().initGrid(50);
+			}
 		}
 
 		if(e.getSource() == frame.getMenuItem("reset")){

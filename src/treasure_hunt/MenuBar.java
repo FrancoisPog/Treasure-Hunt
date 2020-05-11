@@ -52,7 +52,7 @@ public class MenuBar extends JMenuBar {
 		randomMap.addActionListener(controller);
 		randomMap.setEnabled(true);
         game.add(randomMap);
-        menu.put("random",randomMap);
+        menu.put("new",randomMap);
         
         JMenuItem replay = new JMenuItem("Replay map");
         replay.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.SHIFT_DOWN_MASK));
