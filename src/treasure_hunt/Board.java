@@ -1,8 +1,13 @@
 package treasure_hunt;
+import java.awt.Color;
 //
 import java.io.File;
 import java.util.Iterator;
 import java.util.TreeSet;
+
+import javax.swing.JLabel;
+
+import treasure_hunt.Matrix.MatrixIterator;
 
 
 /**
@@ -25,7 +30,7 @@ public class Board implements Iterable<Cell> {
 	private Treasure_c treasure;
 	
 	/**
-	 * Constructor for the board like project example
+	 * Constructor for the board like project example (console only)
 	 * @param hunters	The hunters set (empty)
 	 */
 	public Board(TreeSet<Hunter> hunters) {
@@ -60,8 +65,42 @@ public class Board implements Iterable<Cell> {
 	}
 	
 	
-	public Board(int size) {
-		mat = new Matrix<Cell>(size);
+	public Board(Matrix<JLabel> labels,TreeSet<Hunter> hunters, int nbPlayers) {
+		mat = new Matrix<Cell>(labels.size());
+		int size = labels.size();
+		
+		for(int row = 0 ; row < size ; ++row ) {
+			for(int col = 0 ; col < size ; ++col) {
+				
+				Position curr = new Position(col, row);
+				
+				// If the current position is on the border of map
+				if(col == 0 || col == size-1 || row == 0 || row == size-1) {
+					mat.set(col, row, new Border_c(curr,this));
+					continue;
+				}
+				
+				Color color = labels.get(col, row).getBackground();
+				
+				if(color == Color.black) {
+					mat.set(col, row, new Stone_c(curr, this));
+					continue;
+				}
+				
+				if(color == Color.yellow) {
+					this.treasure = new Treasure_c(curr, this);
+					mat.set(col, row, this.treasure);
+					continue;
+				}
+				
+				mat.set(col, row, new Floor_c(curr, null, this));
+			
+			}
+		}
+		
+		setHunters(hunters, nbPlayers);
+		
+		
 	}
 	
 	

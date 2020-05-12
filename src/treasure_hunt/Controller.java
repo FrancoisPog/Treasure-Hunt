@@ -73,10 +73,7 @@ public class Controller implements ActionListener{
 		}
 		
 		if(e.getSource() == frame.getButton("switch")) {
-			frame.switchMode();
-			if(!frame.isGameMode()) {
-				frame.getEditPane().initGrid(50);
-			}
+			new EditionFrame(this.frame);
 		}
 
 		if(e.getSource() == frame.getMenuItem("reset")){
@@ -261,6 +258,15 @@ public class Controller implements ActionListener{
 		System.out.println("[Board]\tready");
 		return 0;
 	}
+	
+	
+//	public void boardFromEdition() {
+//		System.out.println("edit");
+//		int players = (frame.getSetting("players"));
+//		this.game = new Game(this.frame.getEditPane().getMatrix(), players);
+//		this.frame.getGamePane().initGrid(game);
+//		
+//	}
 	
 	
 	/**

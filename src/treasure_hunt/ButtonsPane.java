@@ -79,7 +79,7 @@ public class ButtonsPane extends JPanel {
 		this.buttons.put("open",open);
 		filePane.add(open);
 		
-		JButton switchMode = new JButton("Switch to edition mode");
+		JButton switchMode = new JButton("Open edition mode");
 		switchMode.addActionListener(controller);
 		this.buttons.put("switch",switchMode);
 		

@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.Scanner;
 import java.util.TreeSet;
 
+import javax.swing.JLabel;
+
 /**
  * <p><strong>Game</strong> is the class which manage a game party.<p>
  * <p>A Game is characterized by : </p>
@@ -51,6 +53,13 @@ public class Game {
 		this.board = new Board(size,hunters,nbPlayers,wallDensity);
 		this.playAuto = playAuto;
 	}
+	
+	
+	public Game(Matrix<JLabel> labels, int nbPlayer) {
+		this.hunters = new TreeSet<Hunter>();
+		this.board = new Board(labels,hunters,nbPlayer);
+	}	
+	
 	
 	/**
 	 * Constructor to play the map of the project example
