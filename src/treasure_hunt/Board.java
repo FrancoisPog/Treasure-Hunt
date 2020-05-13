@@ -46,8 +46,8 @@ public class Board implements Iterable<Cell> {
 	public Board(int size, TreeSet<Hunter> hunters, int nbPlayers, int wallDensity) {
 		// Matrix creation
 		mat = new Matrix<Cell>(size);
-		randomMap(hunters,nbPlayers,wallDensity);
-		
+		randomMap(wallDensity);
+		setHunters(hunters, nbPlayers);
 		
 	}
 	
@@ -203,7 +203,7 @@ public class Board implements Iterable<Cell> {
 	 * @param hunters 	The empty TreeSet of hunters, it will be filled in this method
 	 * @param nbPlayers	The number of players in the game
 	 */
-	public void randomMap(TreeSet<Hunter> hunters, int nbPlayers, int mode) {
+	public void randomMap(int mode) {
 		int size = size();
 		
 		
@@ -248,8 +248,7 @@ public class Board implements Iterable<Cell> {
 		}
 		
 		
-		// Set hunters on the board
-		this.setHunters(hunters, nbPlayers);
+		
 		
 	}
 	

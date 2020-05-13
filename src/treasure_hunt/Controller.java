@@ -8,12 +8,16 @@ import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 
+
 public class Controller implements ActionListener{
 	
 	private GameFrame gameFrame;
 	private EditionFrame editionFrame;
 	private Game game;
 	private Clock clock;
+	
+	private char current_hunter;
+	private boolean canAddHunter;
 	
 	/**
 	 * Controller constructor<br>
@@ -24,6 +28,8 @@ public class Controller implements ActionListener{
 		this.editionFrame = null;
 		this.gameFrame = frame;
 		this.game = null;
+		this.current_hunter = 'A';
+		this.canAddHunter = false;
 		
 		ActionListener action = new ActionListener() {
 			
@@ -76,9 +82,21 @@ public class Controller implements ActionListener{
 			return;
 		}
 		
-		if(e.getSource() == gameFrame.getButton("switch")) {
+		if(e.getSource() == gameFrame.getButton("editor") || e.getSource() == gameFrame.getMenuItem("editor")) {
 			this.editionFrame = new EditionFrame(this);
-			editionFrame.getCenterPanel().initGrid(game);
+			editionFrame.getCenterPanel().initGrid(50);
+			if(this.game != null) {
+				gameFrame.setEnable("send", true);
+			}
+			gameFrame.setEnable("editor", false);
+			return;
+		}
+		
+		if(e.getSource() == gameFrame.getButton("send") || e.getSource() == gameFrame.getMenuItem("send")) {
+			if(this.editionFrame != null && this.editionFrame.isVisible()) {
+				editionFrame.getCenterPanel().initGrid(game);
+				editionFrame.getButtonPane().setSettings("size", game.getBoard().size()-2);
+			}
 			return;
 		}
 		
@@ -108,13 +126,21 @@ public class Controller implements ActionListener{
 	 * <p>If the user keep the same size, only the board is changed, otherwise a new game begin.</p>
 	 */
 	public void randomMap() {
+		this.current_hunter = 'A';
 		System.out.println("\n[Board]\trandom map");
 		clock.stop();
 		
 		int mode = gameFrame.getSetting("density");
 		System.out.println(mode);
 		int size = gameFrame.getSetting("size")+2;
-		int players = (gameFrame.getSetting("players"));
+		int players = gameFrame.getSetting("players");
+		
+		if(gameFrame.getSetting("randomHunters") == 0) {
+			players = 0;
+			this.canAddHunter = true;
+		}else {
+			this.canAddHunter = false;
+		}
 		
 		
 		// If same size, just modify the matrix
@@ -128,6 +154,10 @@ public class Controller implements ActionListener{
 		
 		this.game = new Game(size, players,mode, false);
 		this.gameFrame.getGamePane().initGrid(game);
+		if(this.editionFrame != null && this.editionFrame.isVisible()) {
+			gameFrame.setEnable("send", true);
+		}
+		
 		
 	}
 	
@@ -136,6 +166,10 @@ public class Controller implements ActionListener{
 	 * <p>The game is stopped when the treasure is found, or if the user stop the game.</p>
 	 */
 	public void play() {
+		if(game.getHunters().size() == 0) {
+			JOptionPane.showMessageDialog(gameFrame, "You have to place at least one hunter before playing.");
+			return;
+		}
 		int time = gameFrame.getSetting("timer");
 		clock.start(time);
 		System.out.println("[Game]\tlaunch");
@@ -144,7 +178,7 @@ public class Controller implements ActionListener{
 		gameFrame.setEnable("stop", true);
 		gameFrame.setEnable("round", false);
 		
-
+		this.canAddHunter = false;
 		
 	}
 	
@@ -164,6 +198,10 @@ public class Controller implements ActionListener{
 	 * <p>Each hunter move, and the board is updated.</p>
 	 */
 	public void executeRound() {
+		if(game.getHunters().size() == 0) {
+			JOptionPane.showMessageDialog(gameFrame, "You have to place at least one hunter before playing.");
+			return;
+		}
 		System.out.print(".");
 		if(game.getBoard().getTreasure().isFound()) {
 			System.out.println("\n[Game]\t end");
@@ -187,7 +225,7 @@ public class Controller implements ActionListener{
 		}
 		
 		gameFrame.getGamePane().updateTreasure(game.getBoard().getTreasure());
-				
+		this.canAddHunter = false;
 	}
 	
 	/**
@@ -196,6 +234,7 @@ public class Controller implements ActionListener{
 	 */
 	public void replayBoard() {
 		clock.stop();
+		this.current_hunter = 'A';
 		
 		System.out.println("[board]\treplay map");
 		while(!this.game.getHunters().isEmpty()) {
@@ -205,6 +244,12 @@ public class Controller implements ActionListener{
 		}
 		
 		int players = gameFrame.getSetting("players");
+		if(gameFrame.getSetting("randomHunters") == 0) {
+			players = 0;
+			this.canAddHunter = true;
+		}else {
+			this.canAddHunter = false;
+		}
 		this.game.replayGame(players);
 		
 		gameFrame.getGamePane().updateTreasure(this.game.getBoard().getTreasure());
@@ -218,6 +263,7 @@ public class Controller implements ActionListener{
 		gameFrame.setEnable("stop", false);
 		gameFrame.setEnable("round", true);
 		System.out.println("[Board]\tready");
+		
 	}
 	
 	/**
@@ -274,14 +320,21 @@ public class Controller implements ActionListener{
 			return 1;
 		}
 		System.out.println("[Open]\tfile ok");
-		gameFrame.setSetting("size", game.getBoard().size());
+		gameFrame.setSetting("size", game.getBoard().size()-2);
 		gameFrame.getGamePane().initGrid(game);
+		if(this.editionFrame != null && this.editionFrame.isVisible()) {
+			gameFrame.setEnable("send", true);
+		}
 		System.out.println("[Board]\tready");
 		return 0;
 	}
 	
 	
 	public void editionGenerate() {
+		int conf = JOptionPane.showConfirmDialog(editionFrame, "Generate a new empty map will overwrite the current map on editor.", "Are you sure ?",JOptionPane.WARNING_MESSAGE);
+		if(conf != 0) {
+			return;
+		}
 		int size = this.editionFrame.getButtonPane().getSettings("size");
 		this.editionFrame.getCenterPanel().initGrid(size);
 	}
@@ -289,9 +342,47 @@ public class Controller implements ActionListener{
 	public void boardFromEdition() {
 		System.out.println("edit");
 		int players = (gameFrame.getSetting("players"));
+		if(gameFrame.getSetting("randomHunters") == 0) {
+			players = 0;
+			this.canAddHunter = true;
+		}else {
+			this.canAddHunter = false;
+		}
+		
 		this.game = new Game(this.editionFrame.getCenterPanel().getMatrix(), players);
 		this.gameFrame.getGamePane().initGrid(game);
+		this.gameFrame.setSetting("size", game.getBoard().size());
 		
+	}
+	
+	public void closingEditor() {
+		gameFrame.setEnable("editor", true);
+		gameFrame.setEnable("send", false);
+	}
+	
+	public void addHunter(int j_inner, int i_inner) {
+		if(!this.canAddHunter) {
+			return;
+		}
+		Floor_c floor = (Floor_c) this.game.getBoard().get(j_inner, i_inner);
+		if(floor.isFull()) {
+			game.getHunters().remove(new Hunter(floor.toString().charAt(1), null));
+			floor.leave();
+			gameFrame.getGamePane().updateFloor(floor.getPosition(), this.game.getBoard());
+			gameFrame.getGamePane().initDataPane(game);
+			return;
+		}
+		if(game.getHunters().size() == 10) {
+			JOptionPane.showMessageDialog(gameFrame, "The number maximum of hunter is 10.");
+			return;
+		}
+		Hunter h = new Hunter(current_hunter, floor);
+		floor.come(h);
+		this.game.getHunters().add(h);
+		
+		gameFrame.getGamePane().updateFloor(floor.getPosition(), this.game.getBoard());
+		this.current_hunter++;
+		gameFrame.getGamePane().initDataPane(game);
 	}
 	
 	
@@ -330,6 +421,9 @@ public class Controller implements ActionListener{
 			isActive = false;
 		}
 	}
+
+
+	
 	
 	
 

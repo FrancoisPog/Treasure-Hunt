@@ -9,6 +9,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -45,7 +48,7 @@ public class GameFrame extends JFrame {
 	 */
 	public GameFrame() {
 		super("Treasure Hunt - Game");
-		this.setSize(1400,1000);
+		this.setSize(1800,1000);
 		
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -182,6 +185,14 @@ public class GameFrame extends JFrame {
 	        ViewComponents.makeMenuItem("Stop", game, controller, false, items, "stop",KeyEvent.VK_S, KeyEvent.SHIFT_DOWN_MASK);
 	        
 	        ViewComponents.makeMenuItem("Play round", game, controller, false, items, "round",KeyEvent.VK_SPACE, KeyEvent.CTRL_DOWN_MASK);
+	        
+	        
+	        // Editor menu
+	        JMenu editor = new JMenu("Editor");
+	        editor.setMnemonic('E');
+	        
+	        ViewComponents.makeMenuItem("Open editor", editor, controller, true, items, "editor", KeyEvent.VK_E, KeyEvent.CTRL_DOWN_MASK);
+	        ViewComponents.makeMenuItem("Send map to editor", editor, controller, false, items, "send", KeyEvent.VK_E, KeyEvent.SHIFT_DOWN_MASK);
 	       
 	   
 	        // Settings menu
@@ -204,6 +215,7 @@ public class GameFrame extends JFrame {
 	        
 	        this.add(file);
 	        this.add(game);
+	        this.add(editor);
 	        this.add(settings);
 	        this.add(help);
 		}
@@ -230,6 +242,7 @@ public class GameFrame extends JFrame {
 		private Map<String,JButton> buttons;
 		private Map<String,JLabel> settings;
 		
+		private JCheckBox huntersRandom;
 		private JComboBox<String> density;
 		
 		@SuppressWarnings("unused")
@@ -271,9 +284,10 @@ public class GameFrame extends JFrame {
 			
 			// Mode panel
 			JPanel modePane = new JPanel();
-			modePane.setBorder(new TitledBorder("Mode"));
+			modePane.setBorder(new TitledBorder("Editor"));
 			
-			JButton switchMode = ViewComponents.makeButton("Open edition mode",modePane, controller, true, buttons, "switch");
+			JButton switchMode = ViewComponents.makeButton("Open editor",modePane, controller, true, buttons, "editor");
+			JButton sendMap = ViewComponents.makeButton("Send map to editor",modePane, controller, false, buttons, "send");
 			
 			// LEFT PANEL
 			JPanel leftPanel = new JPanel();
@@ -285,6 +299,12 @@ public class GameFrame extends JFrame {
 			leftPanel.add(modePane);
 			
 			
+			JPanel huntersRandomPanel = new JPanel();
+			huntersRandomPanel.setBorder(new TitledBorder("Players position"));
+			
+			this.huntersRandom = new JCheckBox("Random       ");
+			huntersRandomPanel.add(huntersRandom);
+			//huntersRandomPanel.add(new JLabel("Random"));
 			
 			// Density panel
 			JPanel densityPanel = new JPanel();
@@ -298,6 +318,7 @@ public class GameFrame extends JFrame {
 			JPanel rightPanel = new JPanel();
 			rightPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			
+			rightPanel.add(huntersRandomPanel);
 			rightPanel.add(densityPanel);
 			rightPanel.add(ViewComponents.makeButtonArea("Size setting", "Size :","", 10, 120, 10, 2, 50,this.settings,"size"));
 			rightPanel.add(ViewComponents.makeButtonArea("Players setting", "","hunter(s)", 1, 10, 1, 2, 3,this.settings,"players"));
@@ -329,6 +350,9 @@ public class GameFrame extends JFrame {
 		public int getSettings(String name) {
 			if(name.equals("density")) {
 				return this.density.getSelectedIndex();
+			}
+			if(name.equals("randomHunters")) {
+				return this.huntersRandom.isSelected()?1:0;
 			}
 			return Integer.parseInt(this.settings.get(name).getText());
 		}
@@ -408,33 +432,27 @@ public class GameFrame extends JFrame {
 					curr_l.setBorder(border);
 					curr_l.setHorizontalAlignment(JLabel.CENTER);
 					cellLabels.set(j, i, curr_l);
-					leftPane.add(cellLabels.get(j, i));
+					
+					JLabel label = cellLabels.get(j, i);
+					label.setOpaque(true);
+					
+					leftPane.add(label);
 					Cell curr = game.getBoard().get(j, i);
-					String cellType = curr.getClass().getSimpleName();
-					if(cellType.equals("Floor_c")) {
-						cellLabels.get(j, i).setBackground(Color.gray);
-						cellLabels.get(j, i).setOpaque(true);
-						Floor_c curr_f = (Floor_c)curr;
-						if(curr_f.isFull()) {
-							cellLabels.get(j, i).setBackground(Color.blue);
-							cellLabels.get(j, i).setText(curr_f.toString());
-						}
+					
+					label.setBackground(curr.color());
+					
+					if(curr.color() == Color.blue) {
+						label.setText(curr.toString());
 					}
 					
-					if(cellType.equals("Border_c")) {
-						cellLabels.get(j, i).setBackground(Color.red);
-						cellLabels.get(j, i).setOpaque(true);
-						
-					}
-					
-					if(cellType.equals("Treasure_c")) {
-						cellLabels.get(j, i).setBackground(Color.yellow);
-						cellLabels.get(j, i).setOpaque(true);
-					}
-					
-					if(cellType.equals("Stone_c")) {
-						cellLabels.get(j, i).setBackground(Color.black);
-						cellLabels.get(j, i).setOpaque(true);
+					final int i_inner = i;
+					final int j_inner = j;
+					if(curr.color() == Color.blue || curr.color() == Color.gray) {
+						label.addMouseListener(new MouseAdapter() {
+							public void mouseClicked(MouseEvent e) {
+								controller.addHunter(j_inner, i_inner);
+							}
+						});
 					}
 				}
 			}
@@ -495,7 +513,6 @@ public class GameFrame extends JFrame {
 		public void clearFloor(Position pos) {
 			cellLabels.get(pos.getColumn(), pos.getRow()).setText("");
 			cellLabels.get(pos.getColumn(), pos.getRow()).setBackground(Color.gray);
-//			this.revalidate();
 		}
 		
 		/**
@@ -509,6 +526,9 @@ public class GameFrame extends JFrame {
 			if(curr.isFull()) {
 				cellLabels.get(pos.getColumn(), pos.getRow()).setText(board.get(pos).toString());
 				cellLabels.get(pos.getColumn(), pos.getRow()).setBackground(Color.blue);
+			}else {
+				cellLabels.get(pos.getColumn(), pos.getRow()).setText("");
+				cellLabels.get(pos.getColumn(), pos.getRow()).setBackground(Color.gray);
 			}
 			
 			

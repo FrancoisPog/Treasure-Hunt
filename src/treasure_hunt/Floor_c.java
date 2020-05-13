@@ -119,6 +119,9 @@ public class Floor_c extends Cell {
 
 	@Override
 	public Color color() {
+		if(isFull) {
+			return Color.blue;
+		}
 		return Color.gray;
 	}
 

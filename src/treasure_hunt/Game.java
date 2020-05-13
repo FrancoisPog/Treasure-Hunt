@@ -79,7 +79,8 @@ public class Game {
 	 */
 	public void randomBoard(int nbPlayers,int wallDensity) {
 		removeHunter();
-		board.randomMap(hunters, nbPlayers, wallDensity);
+		board.randomMap( wallDensity);
+		board.setHunters(hunters, nbPlayers);
 	}
 	
 	

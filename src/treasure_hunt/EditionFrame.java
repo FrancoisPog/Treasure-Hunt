@@ -9,6 +9,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +30,7 @@ public class EditionFrame extends JFrame {
 	private ButtonPanel buttonPane;
 	private CenterPane centerPanel;
 		
-	public EditionFrame(ActionListener controller) {
+	public EditionFrame(Controller controller) {
 		super("Treasure Hunt - Edition");
 		this.setSize(1400,1000);
 		
@@ -48,6 +50,12 @@ public class EditionFrame extends JFrame {
 		
 		this.centerPanel = new CenterPane(this);
 		main.add(centerPanel,"Center");
+		
+		this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				controller.closingEditor();
+			}
+		});
 		
 		this.revalidate();
 	}
@@ -263,7 +271,7 @@ public class EditionFrame extends JFrame {
 					
 					Color color = game.getBoard().get(new Position(j, i)).color();
 					cellLabels.get(j, i).setBackground(color);
-					if(color == color.yellow) {
+					if(color == Color.yellow) {
 						this.treasure = cellLabels.get(j, i);
 					}
 					
@@ -275,7 +283,7 @@ public class EditionFrame extends JFrame {
 					final int jInner = j;
 					
 					cellLabels.get(j, i).addMouseListener(new MouseAdapter() {
-						public void mouseClicked(MouseEvent event) {
+						public void mousePressed(MouseEvent event) {
 							changeColor(jInner,iInner);
 						}
 					});
@@ -293,6 +301,10 @@ public class EditionFrame extends JFrame {
 			System.out.println("[Frame]\tready");
 		}
 		
+		public boolean isColor(int col, int row, Color color) {
+			return this.getMatrix().get(col, row).getBackground() == Color.black;
+		}
+		
 		public void changeColor(int col, int row) {
 			JLabel cell = cellLabels.get(col, row);
 			Color cellBg = cell.getBackground();
@@ -301,6 +313,16 @@ public class EditionFrame extends JFrame {
 				if(cellBg == Color.black) {
 					cell.setBackground(Color.gray);
 				}else {
+					if(isColor(col-1, row-1,Color.black) || isColor(col-1, row+1,Color.black) || isColor(col+1, row-1,Color.black) || isColor(col+1, row+1,Color.black)) {
+						return;
+					}
+					
+					if( col == 1 || col == getMatrix().size()-2 || row == 1 || row == getMatrix().size()-2) {
+						return;
+					}
+					
+					
+					
 					if(cellBg == Color.yellow) {
 						this.treasure = null;
 					}
