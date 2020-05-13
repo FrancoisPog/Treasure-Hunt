@@ -1,5 +1,7 @@
 package treasure_hunt;
 
+import java.awt.Color;
+
 /**
  * <p><strong>Cell</strong> is an abstract class for different cell type.<p>
  * <p>A cell is characterized by : </p>
@@ -75,4 +77,6 @@ public abstract class Cell implements Questionable, Positionable{
 	 * @return The encoding number
 	 */
 	public abstract byte encode();
+	
+	public abstract Color color();
 }

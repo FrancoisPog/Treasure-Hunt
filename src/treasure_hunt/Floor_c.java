@@ -1,5 +1,7 @@
 package treasure_hunt;
 
+import java.awt.Color;
+
 /**
  * <p><strong>Floor_c</strong> is the class representing a floor cell on the matrix .<p>
  * <p>A Floor_c is characterized by : </p>
@@ -112,6 +114,12 @@ public class Floor_c extends Cell {
 	@Override
 	public byte encode() {
 		return 0;
+	}
+
+
+	@Override
+	public Color color() {
+		return Color.gray;
 	}
 
 	

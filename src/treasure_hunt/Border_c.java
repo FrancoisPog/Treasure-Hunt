@@ -1,5 +1,6 @@
 package treasure_hunt;
 
+import java.awt.Color;
 
 /**
  * <p><strong>Border_c</strong> is the class representing a cell on the matrix extremities.<p>
@@ -70,7 +71,12 @@ public class Border_c extends Cell {
 		return 1;
 	}
 
+	@Override
+	public Color color() {
+		return Color.red;
+	}
 
+	
 	
 
 	

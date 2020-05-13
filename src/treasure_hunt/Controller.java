@@ -10,7 +10,8 @@ import javax.swing.Timer;
 
 public class Controller implements ActionListener{
 	
-	private GameFrame frame;
+	private GameFrame gameFrame;
+	private EditionFrame editionFrame;
 	private Game game;
 	private Clock clock;
 	
@@ -20,7 +21,8 @@ public class Controller implements ActionListener{
 	 * @param frame The frame to control
 	 */
 	public Controller(GameFrame frame) {
-		this.frame = frame;
+		this.editionFrame = null;
+		this.gameFrame = frame;
 		this.game = null;
 		
 		ActionListener action = new ActionListener() {
@@ -38,49 +40,66 @@ public class Controller implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == frame.getButton("new") || e.getSource() == frame.getMenuItem("new")) {
+		
+		
+		if(e.getSource() == gameFrame.getButton("new") || e.getSource() == gameFrame.getMenuItem("new")) {
 			randomMap();
 			return;
 		}
-		if(e.getSource() == frame.getButton("play") || e.getSource() == frame.getMenuItem("play")) {
+		if(e.getSource() == gameFrame.getButton("play") || e.getSource() == gameFrame.getMenuItem("play")) {
 			play();
 			return;
 		}
 		
-		if(e.getSource() == frame.getButton("round") || e.getSource() == frame.getMenuItem("round")) {
+		if(e.getSource() == gameFrame.getButton("round") || e.getSource() == gameFrame.getMenuItem("round")) {
 			executeRound();
 			return;
 		}
 		
-		if(e.getSource() == frame.getButton("save") || e.getSource() == frame.getMenuItem("save")) {
+		if(e.getSource() == gameFrame.getButton("save") || e.getSource() == gameFrame.getMenuItem("save")) {
 			saveBoard();
 			return;
 		}
 		
-		if(e.getSource() == frame.getButton("open") || e.getSource() == frame.getMenuItem("open") ) {
+		if(e.getSource() == gameFrame.getButton("open") || e.getSource() == gameFrame.getMenuItem("open") ) {
 			openBoard();
 			return;
 		}
 		
-		if(e.getSource() == frame.getButton("replay") || e.getSource() == frame.getMenuItem("replay")) {
+		if(e.getSource() == gameFrame.getButton("replay") || e.getSource() == gameFrame.getMenuItem("replay")) {
 			replayBoard();
 			return;
 		}
 		
-		if(e.getSource() == frame.getButton("stop") || e.getSource() == frame.getMenuItem("stop")) {
+		if(e.getSource() == gameFrame.getButton("stop") || e.getSource() == gameFrame.getMenuItem("stop")) {
 			stop();
 			return;
 		}
 		
-		if(e.getSource() == frame.getButton("switch")) {
-			new EditionFrame(this.frame);
+		if(e.getSource() == gameFrame.getButton("switch")) {
+			this.editionFrame = new EditionFrame(this);
+			editionFrame.getCenterPanel().initGrid(game);
+			return;
 		}
+		
 
-		if(e.getSource() == frame.getMenuItem("reset")){
-			frame.setSetting("size", 50);
-			frame.setSetting("timer", 100);
-			frame.setSetting("players", 3);
-			frame.setSetting("density",2);
+		if(e.getSource() == gameFrame.getMenuItem("reset")){
+			gameFrame.setSetting("size", 50);
+			gameFrame.setSetting("timer", 100);
+			gameFrame.setSetting("players", 3);
+			gameFrame.setSetting("density",2);
+			return;
+		}
+		
+		if(this.editionFrame != null) {
+			if(e.getSource() == editionFrame.getButtonPane().getButton("empty")) {
+				editionGenerate();
+				return;
+			}
+			if(e.getSource() == editionFrame.getButtonPane().getButton("play")) {
+				boardFromEdition();
+				return;
+			}
 		}
 	}
 	
@@ -92,22 +111,24 @@ public class Controller implements ActionListener{
 		System.out.println("\n[Board]\trandom map");
 		clock.stop();
 		
-		int mode = frame.getSetting("density");
+		int mode = gameFrame.getSetting("density");
 		System.out.println(mode);
-		int size = frame.getSetting("size")+2;
-		int players = (frame.getSetting("players"));
+		int size = gameFrame.getSetting("size")+2;
+		int players = (gameFrame.getSetting("players"));
+		
 		
 		// If same size, just modify the matrix
 		if(this.game != null && size == this.game.getBoard().size()) {
 			this.game.randomBoard(players,mode);
-			this.frame.getGamePane().initGrid(game);
+			this.gameFrame.getGamePane().initGrid(game);
 			return;
 		}
 		
 		// If different size, new game
 		
 		this.game = new Game(size, players,mode, false);
-		this.frame.getGamePane().initGrid(game);
+		this.gameFrame.getGamePane().initGrid(game);
+		
 	}
 	
 	/**
@@ -115,13 +136,13 @@ public class Controller implements ActionListener{
 	 * <p>The game is stopped when the treasure is found, or if the user stop the game.</p>
 	 */
 	public void play() {
-		int time = frame.getSetting("timer");
+		int time = gameFrame.getSetting("timer");
 		clock.start(time);
 		System.out.println("[Game]\tlaunch");
 		
-		frame.setEnable("play", false);
-		frame.setEnable("stop", true);
-		frame.setEnable("round", false);
+		gameFrame.setEnable("play", false);
+		gameFrame.setEnable("stop", true);
+		gameFrame.setEnable("round", false);
 		
 
 		
@@ -133,9 +154,9 @@ public class Controller implements ActionListener{
 	public void stop() {
 		clock.stop();
 		
-		frame.setEnable("play", true);
-		frame.setEnable("stop", false);
-		frame.setEnable("round", true);
+		gameFrame.setEnable("play", true);
+		gameFrame.setEnable("stop", false);
+		gameFrame.setEnable("round", true);
 	}
 	
 	/**
@@ -147,9 +168,9 @@ public class Controller implements ActionListener{
 		if(game.getBoard().getTreasure().isFound()) {
 			System.out.println("\n[Game]\t end");
 			clock.stop();
-			frame.setEnable("play", false);
-			frame.setEnable("stop", false);
-			frame.setEnable("round",false);
+			gameFrame.setEnable("play", false);
+			gameFrame.setEnable("stop", false);
+			gameFrame.setEnable("round",false);
 			return;
 		}
 		
@@ -158,14 +179,14 @@ public class Controller implements ActionListener{
 			Position oldPos = h.getPosition();
 			Position curr = h.move();
 			if(!h.getPosition().equals(oldPos) || game.getBoard().getTreasure().isFound()) {
-				frame.getGamePane().clearFloor(oldPos);
-				frame.getGamePane().updateFloor(curr, game.getBoard());
+				gameFrame.getGamePane().clearFloor(oldPos);
+				gameFrame.getGamePane().updateFloor(curr, game.getBoard());
 				
 			}
-			frame.getGamePane().updateDataPane(this.game);
+			gameFrame.getGamePane().updateDataPane(this.game);
 		}
 		
-		frame.getGamePane().updateTreasure(game.getBoard().getTreasure());
+		gameFrame.getGamePane().updateTreasure(game.getBoard().getTreasure());
 				
 	}
 	
@@ -180,22 +201,22 @@ public class Controller implements ActionListener{
 		while(!this.game.getHunters().isEmpty()) {
 			Hunter h = this.game.getHunters().pollFirst();
 			h.getCurrentFloor().leave();
-			frame.getGamePane().clearFloor(h.getCurrentFloor().getPosition());
+			gameFrame.getGamePane().clearFloor(h.getCurrentFloor().getPosition());
 		}
 		
-		int players = frame.getSetting("players");
+		int players = gameFrame.getSetting("players");
 		this.game.replayGame(players);
 		
-		frame.getGamePane().updateTreasure(this.game.getBoard().getTreasure());
+		gameFrame.getGamePane().updateTreasure(this.game.getBoard().getTreasure());
 		for(Hunter h : game.getHunters()) {
-			frame.getGamePane().updateFloor(h.getPosition(), game.getBoard());
+			gameFrame.getGamePane().updateFloor(h.getPosition(), game.getBoard());
 		}
 		
-		frame.getGamePane().initDataPane(this.game);
+		gameFrame.getGamePane().initDataPane(this.game);
 
-		frame.setEnable("play", true);
-		frame.setEnable("stop", false);
-		frame.setEnable("round", true);
+		gameFrame.setEnable("play", true);
+		gameFrame.setEnable("stop", false);
+		gameFrame.setEnable("round", true);
 		System.out.println("[Board]\tready");
 	}
 	
@@ -204,16 +225,16 @@ public class Controller implements ActionListener{
 	 */
 	public void saveBoard() {
 		clock.stop();
-		frame.setEnable("play", true);
-		frame.setEnable("stop", false);
-		frame.setEnable("round", true);
+		gameFrame.setEnable("play", true);
+		gameFrame.setEnable("stop", false);
+		gameFrame.setEnable("round", true);
 
 
 		System.out.println("[Save]\topened");
-		File file = FileManager.selectFile(this.frame,'s');
+		File file = FileManager.selectFile(this.gameFrame,'s');
 		if(file == null) {
 			System.out.println("\n[Open]\tcanceled");
-			frame.setEnable("play",true);
+			gameFrame.setEnable("play",true);
 			return;
 		}
 		String filePath = file.getPath();
@@ -233,15 +254,15 @@ public class Controller implements ActionListener{
 	 */
 	public int openBoard() {
 		clock.stop();
-		if(frame.getGamePane().isInit()) {
-			frame.setEnable("play", true);
-			frame.setEnable("stop", false);
-			frame.setEnable("round", true);
+		if(gameFrame.getGamePane().isInit()) {
+			gameFrame.setEnable("play", true);
+			gameFrame.setEnable("stop", false);
+			gameFrame.setEnable("round", true);
 		}
 
 		System.out.println("[Open]\topened");
-		int players = frame.getSetting("players");
-		File file = FileManager.selectFile(this.frame,'o');
+		int players = gameFrame.getSetting("players");
+		File file = FileManager.selectFile(this.gameFrame,'o');
 		if(file == null) {
 			System.out.println("[Open]\tcanceled");
 			return 1;
@@ -249,24 +270,29 @@ public class Controller implements ActionListener{
 		try {
 			this.game = new Game(file,players);
 		}catch(Exception e) {
-			JOptionPane.showMessageDialog(frame, "The chosen file is wrong, please try another one. ", "Something is wrong...", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(gameFrame, "The chosen file is wrong, please try another one. ", "Something is wrong...", JOptionPane.ERROR_MESSAGE);
 			return 1;
 		}
 		System.out.println("[Open]\tfile ok");
-		frame.setSetting("size", game.getBoard().size());
-		frame.getGamePane().initGrid(game);
+		gameFrame.setSetting("size", game.getBoard().size());
+		gameFrame.getGamePane().initGrid(game);
 		System.out.println("[Board]\tready");
 		return 0;
 	}
 	
 	
-//	public void boardFromEdition() {
-//		System.out.println("edit");
-//		int players = (frame.getSetting("players"));
-//		this.game = new Game(this.frame.getEditPane().getMatrix(), players);
-//		this.frame.getGamePane().initGrid(game);
-//		
-//	}
+	public void editionGenerate() {
+		int size = this.editionFrame.getButtonPane().getSettings("size");
+		this.editionFrame.getCenterPanel().initGrid(size);
+	}
+	
+	public void boardFromEdition() {
+		System.out.println("edit");
+		int players = (gameFrame.getSetting("players"));
+		this.game = new Game(this.editionFrame.getCenterPanel().getMatrix(), players);
+		this.gameFrame.getGamePane().initGrid(game);
+		
+	}
 	
 	
 	/**

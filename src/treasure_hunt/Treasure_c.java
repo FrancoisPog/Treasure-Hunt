@@ -1,5 +1,6 @@
 package treasure_hunt;
 
+import java.awt.Color;
 
 /**
  * <p><strong>Treasure_c</strong> is the class representing a treasure cell on the matrix .<p>
@@ -85,5 +86,11 @@ public class Treasure_c extends Cell {
 	@Override
 	public byte encode() {
 		return 2;
+	}
+
+
+	@Override
+	public Color color() {
+		return Color.yellow;
 	}
 }

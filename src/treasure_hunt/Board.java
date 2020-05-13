@@ -7,8 +7,6 @@ import java.util.TreeSet;
 
 import javax.swing.JLabel;
 
-import treasure_hunt.Matrix.MatrixIterator;
-
 
 /**
  * <p><strong>Board</strong> is the class representing the game board.<p>
@@ -49,6 +47,7 @@ public class Board implements Iterable<Cell> {
 		// Matrix creation
 		mat = new Matrix<Cell>(size);
 		randomMap(hunters,nbPlayers,wallDensity);
+		
 		
 	}
 	
@@ -187,14 +186,14 @@ public class Board implements Iterable<Cell> {
 			Position pos = null;				  	
 			do {
 				pos = Position.randomPos(this.size()-2, 1); // random position
-			}while(!this.get(pos).getClass().getSimpleName().equals("Floor_c"));
+			}while(!this.get(pos).getClass().getSimpleName().equals("Floor_c") || ((Floor_c)get(pos)).isFull());
 			
 			Floor_c floor = (Floor_c)this.get(pos); 
-			floor.come(h); // Hunter's floor assignment
-			if(hunters.add(h)) {
-				// Hunter added
-				c++;
-			}
+			floor.come(h);
+			hunters.add(h);
+			c++;
+			// Hunter added
+
 			
 		}
 	}
@@ -247,8 +246,11 @@ public class Board implements Iterable<Cell> {
 				mat.set(col, row, new Floor_c(curr,null,this));
 			}
 		}
+		
+		
 		// Set hunters on the board
 		this.setHunters(hunters, nbPlayers);
+		
 	}
 	
 

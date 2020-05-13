@@ -1,5 +1,7 @@
 package treasure_hunt;
 
+import java.awt.Color;
+
 /**
  * <p><strong>Stone_c</strong> is the class representing a stone cell on the matrix .<p>
  * <p>When a stone is queried by a hunter, it give to the hunter a bypass direction to go around the wall and get closer to the treasure</p>
@@ -294,6 +296,13 @@ public class Stone_c extends Cell {
 	@Override
 	public byte encode() {
 		return 3;
+	}
+
+
+
+	@Override
+	public Color color() {
+		return Color.black;
 	}
 
 	
