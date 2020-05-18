@@ -21,6 +21,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 public class EditionFrame extends JFrame {
@@ -32,11 +35,11 @@ public class EditionFrame extends JFrame {
 		
 	public EditionFrame(Controller controller) {
 		super("Treasure Hunt - Edition");
-		this.setSize(1400,1000);
+		this.setSize(1000,700);
 		
 		this.setVisible(true);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		this.setMinimumSize(new Dimension(1600,700));
+		this.setMinimumSize(new Dimension(1000,700));
 		this.setLocationRelativeTo(null);
 		
 		
@@ -92,16 +95,15 @@ public class EditionFrame extends JFrame {
 			// Game panel
 			JPanel gamePanel = new JPanel();
 			gamePanel.setBorder(new TitledBorder("Play this board"));
-			
-			ViewComponents.makeButton("Send map to game", gamePanel, controller, true, buttons, "play");
+			gamePanel.add(ViewComponents.makeButton("Send map to game", controller, true, buttons, "play"));
 			
 			JPanel emptyPanel = new JPanel();
 			emptyPanel.setBorder(new TitledBorder("New empty map"));
-			ViewComponents.makeButton("   Generate   ", emptyPanel, controller, true, buttons, "empty");
+			emptyPanel.add(ViewComponents.makeButton("   Generate   ", controller, true, buttons, "empty"));
 			
 			this.add(gamePanel);
 			this.add(emptyPanel);
-			this.add(ViewComponents.makeButtonArea("  Configure size  ", " size :", "", 10, 120, 10, 3, 50, settings, "size"));
+			this.add(ViewComponents.makeButtonArea("  Configure size  ", " size :", "", 10, 120, 10, 3, 30, settings, "size"));
 			
 			this.revalidate();
 			
@@ -168,12 +170,25 @@ public class EditionFrame extends JFrame {
 						
 		}
 		
+		public boolean treasureIsInit() {
+			return this.treasure != null;
+		}
+		
 		
 		public JPanel makeRightPane(JPanel rightPane) {
-			rightPane.setLayout(new GridLayout());
+			rightPane.setLayout(new GridLayout(3,1,0,0));
 			Color colors[] = {Color.black,Color.yellow};
+			String names[] = {"Wall","Treasure"};
 			
+			JLabel title = new JLabel("Edition Mode");
+			title.setHorizontalAlignment(JLabel.CENTER);
+			rightPane.add(title);
+			
+			
+			int i = 0;
 			for(Color color : colors) {
+				JPanel colorPanel = new JPanel(new GridLayout(1,2));
+				
 				JLabel label = new JLabel("");
 				label.setBorder(BorderFactory.createLineBorder(Color.black,1));
 				label.setOpaque(true);
@@ -182,11 +197,20 @@ public class EditionFrame extends JFrame {
 				label.addMouseListener(new MouseAdapter() {
 					public void mouseClicked(MouseEvent event){
 						currentColor = color;
+						label.setBorder(BorderFactory.createLineBorder(Color.gray,3));
 					}
 				});
 				
+				colorPanel.setBorder(new CompoundBorder(colorPanel.getBorder(), new EmptyBorder(50,10,50,50)));
 				
-				rightPane.add(label);
+				colorPanel.add(label);
+				
+				JLabel name = new JLabel(names[i]);
+				name.setHorizontalAlignment(JLabel.CENTER);
+				colorPanel.add(name);
+				
+				rightPane.add(colorPanel);
+				i++;
 			}
 			
 			rightPane.revalidate();
@@ -195,6 +219,7 @@ public class EditionFrame extends JFrame {
 		}
 		
 		public void initGrid(int size) {
+			this.treasure = null;
 			System.out.println("[Frame]\tgenerating");
 			cellLabels = new Matrix<JLabel>(size);
 			
@@ -244,6 +269,7 @@ public class EditionFrame extends JFrame {
 		}
 		
 		public void initGrid(Game game) {
+			this.treasure = null;
 			System.out.println("[Frame]\tgenerating");
 			int size = game.getBoard().size();
 			cellLabels = new Matrix<JLabel>(size);

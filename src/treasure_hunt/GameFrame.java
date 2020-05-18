@@ -257,37 +257,37 @@ public class GameFrame extends JFrame {
 			JPanel newGamePanel = new JPanel();
 			newGamePanel.setBorder(new TitledBorder("Random map"));
 			
-			JButton newGame = ViewComponents.makeButton("New map",newGamePanel, controller, true, this.buttons, "new");
+			newGamePanel.add(ViewComponents.makeButton("New map",controller, true, this.buttons, "new"));
 			
 			
 			// Manage Game Panel
 			JPanel manageGamePanel = new JPanel();
 			manageGamePanel.setBorder(new TitledBorder("Manage game"));
 			
-			JButton play = ViewComponents.makeButton("Play",manageGamePanel, controller, false, this.buttons, "play");
+			manageGamePanel.add(ViewComponents.makeButton("Play", controller, false, this.buttons, "play"));
 			
-			JButton round = ViewComponents.makeButton("Round",manageGamePanel, controller, false, this.buttons, "round");
+			manageGamePanel.add(ViewComponents.makeButton("Round", controller, false, this.buttons, "round"));
 			
-			JButton stop = ViewComponents.makeButton("Stop",manageGamePanel, controller, false, this.buttons, "stop");
+			manageGamePanel.add(ViewComponents.makeButton("Stop", controller, false, this.buttons, "stop"));
 			
-			JButton replay = ViewComponents.makeButton("Replay",manageGamePanel, controller, false, this.buttons, "replay");
+			manageGamePanel.add(ViewComponents.makeButton("Replay", controller, false, this.buttons, "replay"));
 			
 			
 			// File panel
 			JPanel filePanel = new JPanel();
 			filePanel.setBorder(new TitledBorder("Manage files"));
 			
-			JButton save = ViewComponents.makeButton("Save",filePanel, controller, false, this.buttons, "save");
+			filePanel.add(ViewComponents.makeButton("Save", controller, false, this.buttons, "save"));
 			
-			JButton open = ViewComponents.makeButton("Open",filePanel, controller, true, this.buttons, "open");
+			filePanel.add(ViewComponents.makeButton("Open", controller, true, this.buttons, "open"));
 			
 			
 			// Mode panel
 			JPanel modePane = new JPanel();
 			modePane.setBorder(new TitledBorder("Editor"));
 			
-			JButton switchMode = ViewComponents.makeButton("Open editor",modePane, controller, true, buttons, "editor");
-			JButton sendMap = ViewComponents.makeButton("Send map to editor",modePane, controller, false, buttons, "send");
+			modePane.add(ViewComponents.makeButton("Open editor", controller, true, buttons, "editor"));
+			modePane.add(ViewComponents.makeButton("Send map to editor", controller, false, buttons, "send"));
 			
 			// LEFT PANEL
 			JPanel leftPanel = new JPanel();
@@ -303,8 +303,9 @@ public class GameFrame extends JFrame {
 			huntersRandomPanel.setBorder(new TitledBorder("Players position"));
 			
 			this.huntersRandom = new JCheckBox("Random       ");
+			huntersRandom.setSelected(true);
 			huntersRandomPanel.add(huntersRandom);
-			//huntersRandomPanel.add(new JLabel("Random"));
+			
 			
 			// Density panel
 			JPanel densityPanel = new JPanel();

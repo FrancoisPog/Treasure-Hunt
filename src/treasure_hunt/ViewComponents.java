@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import java.util.Map;
 
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -16,13 +15,11 @@ import javax.swing.border.TitledBorder;
 
 public class ViewComponents {
 	
-	public static JButton makeButton(String label,JComponent parent, ActionListener listener, boolean enable, Map<String,JButton> buttons, String name) {
+	public static JButton makeButton(String label, ActionListener listener, boolean enable, Map<String,JButton> buttons, String name) {
 		JButton btn = new JButton(label);
 		btn.setEnabled(enable);
 		btn.addActionListener(listener);
 		buttons.put(name, btn);
-		parent.add(btn);
-		
 		return btn;
 	}
 	

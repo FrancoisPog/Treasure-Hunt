@@ -84,7 +84,7 @@ public class Controller implements ActionListener{
 		
 		if(e.getSource() == gameFrame.getButton("editor") || e.getSource() == gameFrame.getMenuItem("editor")) {
 			this.editionFrame = new EditionFrame(this);
-			editionFrame.getCenterPanel().initGrid(50);
+			editionFrame.getCenterPanel().initGrid(30);
 			if(this.game != null) {
 				gameFrame.setEnable("send", true);
 			}
@@ -115,6 +115,10 @@ public class Controller implements ActionListener{
 				return;
 			}
 			if(e.getSource() == editionFrame.getButtonPane().getButton("play")) {
+				if(!editionFrame.getCenterPanel().treasureIsInit()) {
+					JOptionPane.showMessageDialog(editionFrame, "You must place a treasure","No treasure",JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 				boardFromEdition();
 				return;
 			}
