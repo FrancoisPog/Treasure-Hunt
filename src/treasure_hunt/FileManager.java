@@ -14,8 +14,11 @@ import javax.swing.JFrame;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
+ * <p>The class <strong>FileManager</strong> manage the files interactions to save or open board in file.<p>
+ * <p>This class contains only static method</p>
  * 
- * @author Francois Poguet
+ * @author François Poguet
+ * @author Enzo Costantini
  *
  */
 public class FileManager {
@@ -25,8 +28,7 @@ public class FileManager {
 	 * Open a dialog window to choose a file
 	 * @param parent	The parent frame
 	 * @param type		The type of window (save/open)
-	 * @return
-	 * @throws Exception 
+	 * @return The selected file
 	 */
 	public static File selectFile(JFrame parent,char type ) {
 		JFileChooser select = new JFileChooser();
@@ -112,7 +114,7 @@ public class FileManager {
 	 * @param file	The files used
 	 * @throws Exception If the file is wrong
 	 */
-	public static int openMap(Board board, File file) throws Exception {
+	public static void openMap(Board board, File file) throws Exception {
 		DataInputStream in = null;
 		
 		try {
@@ -214,7 +216,7 @@ public class FileManager {
 		}
 		
 		
-		return 0;
+		return;
 	}
 	
 	

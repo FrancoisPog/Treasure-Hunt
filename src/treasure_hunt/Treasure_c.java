@@ -38,7 +38,7 @@ public class Treasure_c extends Cell {
 	 * @param h	The hunter
 	 */
 	public void process(Hunter h) {
-		if(this.winner != null) {
+		if(this.isFound) {
 			return;
 		}
 		h.getCurrentFloor().leave();

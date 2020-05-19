@@ -26,6 +26,7 @@ public class Stone_c extends Cell {
 	
 	/**
 	 * Redirects the hunter who queried to bypass a wall
+	 *  N.B We have chosen to keep a fairly long but clear method to facilitate future changes
 	 */
 	@Override
 	public void process(Hunter h) {

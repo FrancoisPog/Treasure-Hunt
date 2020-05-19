@@ -30,6 +30,22 @@ import javax.swing.JSplitPane;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
+
+/**
+ * <p><strong>GameFrame</strong> is the class representing the game frame.<p>
+ * <p>A game frame is characterized by : </p>
+ * <ul>
+ * 		<li>A button panel</li>
+ * 		<li>A menu bar</li>
+ * 		<li>A game panel</li>
+ * </ul>
+ * @see treasure_hunt.GameFrame.ButtonsPanel
+ * @see treasure_hunt.GameFrame.MenuBar
+ * @see treasure_hunt.GameFrame.GamePanel
+ * 
+ * @author François Poguet
+ * @author Enzo Costantini
+ */
 public class GameFrame extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
@@ -37,7 +53,7 @@ public class GameFrame extends JFrame {
 	
 	private ButtonsPanel buttonsPane;
 	private MenuBar menuBar;
-	private GamePane gamePane;
+	private GamePanel gamePanel;
 	
 	private Controller controller;
 	
@@ -52,7 +68,7 @@ public class GameFrame extends JFrame {
 		
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setMinimumSize(new Dimension(1600,700));
+		this.setMinimumSize(new Dimension(1700,700));
 		this.setLocationRelativeTo(null);
 		
 		this.controller = new Controller(this);
@@ -66,9 +82,9 @@ public class GameFrame extends JFrame {
 		main.add(buttonsPane,"North");
 		this.buttonsPane = buttonsPane;
 		
-//		// Game pane
-		this.gamePane = new GamePane(this);
-		main.add(gamePane);
+		// Game pane
+		this.gamePanel = new GamePanel(this);
+		main.add(gamePanel);
 		
 		
 		// Menu bar
@@ -90,6 +106,10 @@ public class GameFrame extends JFrame {
 		return this.buttonsPane.getButton(name);
 	}
 	
+	/**
+	 * Getter for the controller
+	 * @return	The controller
+	 */
 	public Controller getController() {
 		return this.controller;
 	}
@@ -122,18 +142,18 @@ public class GameFrame extends JFrame {
 	}
 	
 	/**
-	 * Getter for the gamePane
-	 * @return
+	 * Getter for the gamePanel
+	 * @return	The gamePanel
 	 */
-	public GamePane getGamePane() {
-		return this.gamePane;
+	public GamePanel getGamePanel() {
+		return this.gamePanel;
 	}
 	
 	
 	/**
 	 * Set if buttons and menu item is enable or not
-	 * @param name
-	 * @param value
+	 * @param name	The component name
+	 * @param value	The new value
 	 */
 	public void setEnable(String name,boolean value) {
 		getButton(name).setEnabled(value);
@@ -145,9 +165,15 @@ public class GameFrame extends JFrame {
 
 	
 	/**
-	 * Class menubar
-	 * @author francois
-	 *
+	 * <p><strong>Menubar</strong> is a inner class to manage the menu bar and keyboard shortcuts .<p>
+	 * <p>A Menu bar is characterized by : </p>
+	 * <ul>
+	 * 		<li>A item list</li>
+	 * </ul>
+	
+	 * 
+	 * @author François Poguet
+	 * @author Enzo Costantini
 	 */
 	public class MenuBar extends JMenuBar {
 
@@ -232,9 +258,15 @@ public class GameFrame extends JFrame {
 	}
 	
 	/**
-	 * Class ButtonsPanel
-	 * @author francois
-	 *
+	 * <p><strong>ButtonsPanel</strong> is a inner class to manage the buttons panel of the frame.<p>
+	 * <p>A buttons panel is characterized by : </p>
+	 * <ul>
+	 * 		<li>A buttons list</li>
+	 * 		<li>A label list : the settings</li>
+	 * 		<li>Other components like checkbox or combobox</li>
+	 * </ul>
+	 * @author François Poguet
+	 * @author Enzo Costantini
 	 */
 	public class ButtonsPanel extends JPanel {
 
@@ -374,12 +406,16 @@ public class GameFrame extends JFrame {
 	}
 	
 	
-	/**
-	 * Class GamePane
+	/**<p><strong>GamePanel</strong> is a inner class to manage the main panel of the frame.<p>
+	 * <p>A game panel is characterized by : </p>
+	 * <ul>
+	 * 		<li>A matrix of label</li>
+	 * 		<li>Some players data (position, direction)</li>
+	 * </ul>
 	 * @author François Poguet
-	 *
-	 */
-	public class GamePane extends JSplitPane {
+	 * @author Enzo Costantini
+	 */ 
+	public class GamePanel extends JSplitPane {
 		
 		private GameFrame frame;
 		
@@ -395,7 +431,7 @@ public class GameFrame extends JFrame {
 		 * Constructor
 		 * @param frame
 		 */
-		public GamePane(GameFrame frame) {
+		public GamePanel(GameFrame frame) {
 			super(JSplitPane.HORIZONTAL_SPLIT,new JPanel(),new JPanel());
 			this.setResizeWeight(0.85);
 			
@@ -446,8 +482,15 @@ public class GameFrame extends JFrame {
 						label.setText(curr.toString());
 					}
 					
+					// We can't place a hunter on a corner because he could be blocked
+					if((j == 1 && i == 1) || (j == cellLabels.size()-2 && i == 1) || (j == cellLabels.size()-2 && i == cellLabels.size()-2) ||(j == 1 && i == cellLabels.size()-2)) {
+						continue;
+					}
+					
 					final int i_inner = i;
 					final int j_inner = j;
+					
+					// Set the listener to place hunters by clicking
 					if(curr.color() == Color.blue || curr.color() == Color.gray) {
 						label.addMouseListener(new MouseAdapter() {
 							public void mouseClicked(MouseEvent e) {

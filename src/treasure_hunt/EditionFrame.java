@@ -11,6 +11,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,16 +24,32 @@ import javax.swing.JSplitPane;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
+/**
+ * <p><strong>EditionFrame</strong> is the class representing the edition frame.<p>
+ * <p>An edition frame is characterized by : </p>
+ * <ul>
+ * 		<li>A button panel</li>
+ * 		<li>A center panel</li>
+ * </ul>
+ * @see treasure_hunt.EditionFrame.ButtonPanel
+ * @see treasure_hunt.EditionFrame.CenterPanel
+ * 
+ * @author François Poguet
+ * @author Enzo Costantini
+ */
 public class EditionFrame extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	
 	private ButtonPanel buttonPane;
-	private CenterPane centerPanel;
+	private CenterPanel centerPanel;
 		
+	/**
+	 * Default edition frame constructor
+	 * @param controller	The controller used in the main frame
+	 */
 	public EditionFrame(Controller controller) {
 		super("Treasure Hunt - Edition");
 		this.setSize(1000,700);
@@ -51,7 +68,7 @@ public class EditionFrame extends JFrame {
 		this.buttonPane = new ButtonPanel(controller);
 		main.add(buttonPane,"North");
 		
-		this.centerPanel = new CenterPane(this);
+		this.centerPanel = new CenterPanel(this);
 		main.add(centerPanel,"Center");
 		
 		this.addWindowListener(new WindowAdapter() {
@@ -63,29 +80,45 @@ public class EditionFrame extends JFrame {
 		this.revalidate();
 	}
 	
-	
-	
-	
-	
-	public ButtonPanel getButtonPane() {
+	/**
+	 * Getter for the buttons panel
+	 * @return	The buttons panel
+	 */
+	public ButtonPanel getButtonPanel() {
 		return buttonPane;
 	}
 
-	public CenterPane getCenterPanel() {
+	/**
+	 * Getter for the center panel
+	 * @return	The center panel
+	 */
+	public CenterPanel getCenterPanel() {
 		return centerPanel;
 	}
 
 
 
 
-
+	/**
+	 * <p><strong>ButtonsPanel</strong> is a inner class to manage the buttons panel of the frame.<p>
+	 * <p>A buttons panel is characterized by : </p>
+	 * <ul>
+	 * 		<li>A buttons list</li>
+	 * 		<li>A label list : the settings</li>
+	 * </ul>
+	 * @author François Poguet
+	 * @author Enzo Costantini
+	 */
 	public class ButtonPanel extends JPanel{
 		
 		private static final long serialVersionUID = 1L;
 		private Map<String,JButton> buttons;
 		private Map<String,JLabel> settings;
 		
-		
+		/**
+		 * Bttons panel default constructor
+		 * @param controller	The frame's controller 
+		 */
 		public ButtonPanel(ActionListener controller) {
 			this.buttons = new HashMap<String, JButton>();
 			this.settings = new HashMap<String, JLabel>();
@@ -109,6 +142,11 @@ public class EditionFrame extends JFrame {
 			
 		}
 		
+		/**
+		 * Getter for a button
+		 * @param name	The button's name
+		 * @return	The button
+		 */
 		public JButton getButton(String name) {
 			return buttons.get(name);
 		}
@@ -133,15 +171,22 @@ public class EditionFrame extends JFrame {
 		
 	}
 	
-	public class CenterPane extends JSplitPane {
-		/**
-		 * 
-		 */
+	
+	/**<p><strong>CenterPanel</strong> is a inner class to manage the main panel of the frame.<p>
+	 * <p>A center panel is characterized by : </p>
+	 * <ul>
+	 * 		<li>A matrix of label</li>
+	 * </ul>
+	 * @author François Poguet
+	 * @author Enzo Costantini
+	 */ 
+	public class CenterPanel extends JSplitPane {
+		
 		private static final long serialVersionUID = 1L;
 		private JPanel leftPane;
 		private JPanel rightPane;
 		
-		
+		private ArrayList<JLabel> colorLabels;
 		private Color currentColor;
 
 		private Matrix<JLabel> cellLabels;
@@ -149,10 +194,10 @@ public class EditionFrame extends JFrame {
 		
 		
 		/**
-		 * Constructor
-		 * @param frame
+		 * Default center panel constructor
+		 * @param frame	The main frame
 		 */
-		public CenterPane(JFrame frame) {
+		public CenterPanel(JFrame frame) {
 			super(JSplitPane.HORIZONTAL_SPLIT,new JPanel(),new JPanel());
 			this.setResizeWeight(0.8);
 			
@@ -160,43 +205,59 @@ public class EditionFrame extends JFrame {
 			this.leftPane = (JPanel) this.getComponent(0);
 			this.rightPane = (JPanel) this.getComponent(1);
 			
+			this.colorLabels = new ArrayList<JLabel>();
 			this.rightPane = makeRightPane(rightPane);
 			
 			rightPane.setSize(300, 0);
 			rightPane.setMinimumSize(new Dimension(300, 0));
+			
 			
 			this.currentColor = Color.yellow;
 			this.treasure = null;
 						
 		}
 		
+		/**
+		 * Check if a treasure in set
+		 * @return	a boolean
+		 */
 		public boolean treasureIsInit() {
 			return this.treasure != null;
 		}
 		
-		
+		/**
+		 * Make the right panel
+		 * @param rightPane	The panel to use
+		 * @return	The panel modified
+		 */
 		public JPanel makeRightPane(JPanel rightPane) {
 			rightPane.setLayout(new GridLayout(3,1,0,0));
 			Color colors[] = {Color.black,Color.yellow};
 			String names[] = {"Wall","Treasure"};
 			
-			JLabel title = new JLabel("Edition Mode");
-			title.setHorizontalAlignment(JLabel.CENTER);
-			rightPane.add(title);
 			
 			
 			int i = 0;
 			for(Color color : colors) {
 				JPanel colorPanel = new JPanel(new GridLayout(1,2));
 				
+				
 				JLabel label = new JLabel("");
-				label.setBorder(BorderFactory.createLineBorder(Color.black,1));
+				colorLabels.add(label);
+				if(color == Color.yellow) {
+					label.setBorder(BorderFactory.createLineBorder(Color.gray,3));
+				}else {
+					label.setBorder(BorderFactory.createLineBorder(Color.black,1));
+				}
 				label.setOpaque(true);
 				label.setBackground(color);
 				label.setPreferredSize(new Dimension(30,30));
 				label.addMouseListener(new MouseAdapter() {
 					public void mouseClicked(MouseEvent event){
 						currentColor = color;
+						for(JLabel colorLabel : colorLabels) {
+							colorLabel.setBorder(BorderFactory.createLineBorder(Color.black,1));
+						}
 						label.setBorder(BorderFactory.createLineBorder(Color.gray,3));
 					}
 				});
@@ -218,6 +279,10 @@ public class EditionFrame extends JFrame {
 			return rightPane;
 		}
 		
+		/**
+		 * initialize an empty label matrix
+		 * @param size	The board size
+		 */
 		public void initGrid(int size) {
 			this.treasure = null;
 			System.out.println("[Frame]\tgenerating");
@@ -268,6 +333,10 @@ public class EditionFrame extends JFrame {
 			System.out.println("[Frame]\tready");
 		}
 		
+		/**
+		 * initialize a label matrix from a game board
+		 * @param game	The game used
+		 */
 		public void initGrid(Game game) {
 			this.treasure = null;
 			System.out.println("[Frame]\tgenerating");
@@ -297,6 +366,9 @@ public class EditionFrame extends JFrame {
 					
 					Color color = game.getBoard().get(new Position(j, i)).color();
 					cellLabels.get(j, i).setBackground(color);
+					if(color == Color.blue) {
+						cellLabels.get(j, i).setBackground(Color.gray);
+					}
 					if(color == Color.yellow) {
 						this.treasure = cellLabels.get(j, i);
 					}
@@ -327,10 +399,22 @@ public class EditionFrame extends JFrame {
 			System.out.println("[Frame]\tready");
 		}
 		
+		/**
+		 * Check is a label is of a given color
+		 * @param col	The label column
+		 * @param row	The label row
+		 * @param color	The given color
+		 * @return		A boolean
+		 */
 		public boolean isColor(int col, int row, Color color) {
 			return this.getMatrix().get(col, row).getBackground() == Color.black;
 		}
 		
+		/**
+		 * Change the color of a label
+		 * @param col	The label column
+		 * @param row	The label row
+		 */
 		public void changeColor(int col, int row) {
 			JLabel cell = cellLabels.get(col, row);
 			Color cellBg = cell.getBackground();
@@ -372,7 +456,10 @@ public class EditionFrame extends JFrame {
 		}
 		
 		
-		
+		/**
+		 * Getter for the labe matrix
+		 * @return
+		 */
 		public Matrix<JLabel> getMatrix(){
 			return this.cellLabels;
 		}
