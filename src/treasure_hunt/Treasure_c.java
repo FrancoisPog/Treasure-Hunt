@@ -53,7 +53,7 @@ public class Treasure_c extends Cell {
 	 */
 	public String toString() {
 		if(isFound) {
-			return "|"+this.winner.toString()+"|";
+			return " "+this.winner.toString()+" ";
 		}
 		return " T ";
 	}
