@@ -12,11 +12,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -33,7 +30,7 @@ import javax.swing.border.TitledBorder;
  * 		<li>A button panel</li>
  * 		<li>A center panel</li>
  * </ul>
- * @see treasure_hunt.EditionFrame.ButtonPanel
+ * @see treasure_hunt.EditionFrame.EditionButtonsPanel
  * @see treasure_hunt.EditionFrame.CenterPanel
  * 
  * @author François Poguet
@@ -43,7 +40,7 @@ public class EditionFrame extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private ButtonPanel buttonPane;
+	private EditionButtonsPanel buttonPane;
 	private CenterPanel centerPanel;
 		
 	/**
@@ -65,7 +62,7 @@ public class EditionFrame extends JFrame {
 		Container main = this.getContentPane();
 		main.setLayout(new BorderLayout());
 		
-		this.buttonPane = new ButtonPanel(controller);
+		this.buttonPane = new EditionButtonsPanel(controller);
 		main.add(buttonPane,"North");
 		
 		this.centerPanel = new CenterPanel(this);
@@ -84,7 +81,7 @@ public class EditionFrame extends JFrame {
 	 * Getter for the buttons panel
 	 * @return	The buttons panel
 	 */
-	public ButtonPanel getButtonPanel() {
+	public EditionButtonsPanel getButtonPanel() {
 		return buttonPane;
 	}
 
@@ -109,65 +106,37 @@ public class EditionFrame extends JFrame {
 	 * @author François Poguet
 	 * @author Enzo Costantini
 	 */
-	public class ButtonPanel extends JPanel{
+	public class EditionButtonsPanel extends ButtonsPanel{
 		
 		private static final long serialVersionUID = 1L;
-		private Map<String,JButton> buttons;
-		private Map<String,JLabel> settings;
+		
 		
 		/**
-		 * Bttons panel default constructor
+		 * Buttons panel default constructor
 		 * @param controller	The frame's controller 
 		 */
-		public ButtonPanel(ActionListener controller) {
-			this.buttons = new HashMap<String, JButton>();
-			this.settings = new HashMap<String, JLabel>();
+		public EditionButtonsPanel(ActionListener controller) {
+			super();
 			
 			this.setLayout(new FlowLayout(FlowLayout.LEFT));
 			
 			// Game panel
 			JPanel gamePanel = new JPanel();
 			gamePanel.setBorder(new TitledBorder("Play this board"));
-			gamePanel.add(ViewComponents.makeButton("Send map to game", controller, true, buttons, "play"));
+			gamePanel.add(ViewComponents.makeButton("Send map to game", controller, true, this.buttons, "play"));
 			
 			JPanel emptyPanel = new JPanel();
 			emptyPanel.setBorder(new TitledBorder("New empty map"));
-			emptyPanel.add(ViewComponents.makeButton("   Generate   ", controller, true, buttons, "empty"));
+			emptyPanel.add(ViewComponents.makeButton("   Generate   ", controller, true, this.buttons, "empty"));
 			
 			this.add(gamePanel);
 			this.add(emptyPanel);
-			this.add(ViewComponents.makeButtonArea("  Configure size  ", " size :", "", 10, 120, 10, 3, 30, settings, "size"));
+			this.add(ViewComponents.makeButtonArea("  Configure size  ", " size :", "", 10, 120, 10, 3, 30, this.settings, "size"));
 			
 			this.revalidate();
-			
 		}
 		
-		/**
-		 * Getter for a button
-		 * @param name	The button's name
-		 * @return	The button
-		 */
-		public JButton getButton(String name) {
-			return buttons.get(name);
-		}
 		
-		/**
-		 * Getter for settings
-		 * @param name	The setting'a name
-		 * @return		The setting value
-		 */
-		public int getSettings(String name) {
-			return Integer.parseInt(this.settings.get(name).getText());
-		}
-		
-		/**
-		 * Setter for settings
-		 * @param name	The setting's name
-		 * @param value	The new setting value
-		 */
-		public void setSettings(String name, int value) {
-			this.settings.get(name).setText(""+value);
-		}
 		
 	}
 	

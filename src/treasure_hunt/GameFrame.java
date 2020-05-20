@@ -12,18 +12,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
-import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -39,8 +35,8 @@ import javax.swing.border.TitledBorder;
  * 		<li>A menu bar</li>
  * 		<li>A game panel</li>
  * </ul>
- * @see treasure_hunt.GameFrame.ButtonsPanel
- * @see treasure_hunt.GameFrame.MenuBar
+ * @see treasure_hunt.GameFrame.GameButtonsPanel
+ * @see treasure_hunt.GameFrame.GameMenuBar
  * @see treasure_hunt.GameFrame.GamePanel
  * 
  * @author François Poguet
@@ -51,8 +47,8 @@ public class GameFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
 	
-	private ButtonsPanel buttonsPanel;
-	private MenuBar menuBar;
+	private GameButtonsPanel buttonsPanel;
+	private GameMenuBar menuBar;
 	private GamePanel gamePanel;
 	
 	private Controller controller;
@@ -78,7 +74,7 @@ public class GameFrame extends JFrame {
 		main.setLayout(new BorderLayout());
 		
 		// Buttons pane
-		ButtonsPanel buttonsPane = new ButtonsPanel(controller);
+		GameButtonsPanel buttonsPane = new GameButtonsPanel(controller);
 		main.add(buttonsPane,"North");
 		this.buttonsPanel = buttonsPane;
 		
@@ -88,7 +84,7 @@ public class GameFrame extends JFrame {
 		
 		
 		// Menu bar
-		this.menuBar = new MenuBar(controller);
+		this.menuBar = new GameMenuBar(controller);
 		this.setJMenuBar(this.menuBar);
 		
 		
@@ -100,7 +96,7 @@ public class GameFrame extends JFrame {
 	 * Getter for the buttons panel
 	 * @return	The buttons panel
 	 */
-	public ButtonsPanel getButtonPanel() {
+	public GameButtonsPanel getButtonPanel() {
 		return buttonsPanel;
 	}
 
@@ -163,18 +159,15 @@ public class GameFrame extends JFrame {
 	 * @author François Poguet
 	 * @author Enzo Costantini
 	 */
-	public class MenuBar extends JMenuBar {
-
+	public class GameMenuBar extends MenuBar {
 		private static final long serialVersionUID = 1L;
-		private Map<String,JMenuItem> items;
-		
+
 		/**
 		 * Constructor
 		 * @param controller The controller
 		 */
-		public MenuBar(ActionListener controller) {
-			this.items = new HashMap<String,JMenuItem>();
-			
+		public GameMenuBar(ActionListener controller) {
+			super();
 			
 			// File menu
 			JMenu file = new JMenu( "Files" );
@@ -226,7 +219,6 @@ public class GameFrame extends JFrame {
 	        ViewComponents.makeMenuItem("Join us", help, controller, true, items, "join",KeyEvent.VK_J, KeyEvent.CTRL_DOWN_MASK);
 	       
 	        
-	        
 	        this.add(file);
 	        this.add(game);
 	        this.add(editor);
@@ -234,14 +226,7 @@ public class GameFrame extends JFrame {
 	        this.add(help);
 		}
 		
-		/**
-		 * Getter for menu item
-		 * @param name
-		 * @return
-		 */
-		public JMenuItem getItem(String name) {
-			return this.items.get(name);
-		}
+		
 
 	}
 	
@@ -256,22 +241,17 @@ public class GameFrame extends JFrame {
 	 * @author François Poguet
 	 * @author Enzo Costantini
 	 */
-	public class ButtonsPanel extends JPanel {
+	public class GameButtonsPanel extends ButtonsPanel {
 
 		private static final long serialVersionUID = 1L;
-		private Map<String,JButton> buttons;
-		private Map<String,JLabel> settings;
 		
 		private JCheckBox huntersRandom;
 		private JComboBox<String> density;
 		
-		@SuppressWarnings("unused")
-		public ButtonsPanel(ActionListener controller) {
-			this.settings = new HashMap<String,JLabel>();
-			this.buttons = new HashMap<String,JButton>();
+		public GameButtonsPanel(ActionListener controller) {
+			super();
 			
 			this.setLayout(new GridLayout(1,2));
-			
 			
 			// New Game Panel
 			JPanel newGamePanel = new JPanel();
@@ -355,15 +335,6 @@ public class GameFrame extends JFrame {
 
 		
 		/**
-		 * Getter for buttons
-		 * @param name	The button's name
-		 * @return		The buttons
-		 */
-		public JButton getButton(String name) {
-			return this.buttons.get(name);
-		}
-		
-		/**
 		 * Getter for settings
 		 * @param name	The setting'a name
 		 * @return		The setting value
@@ -375,7 +346,7 @@ public class GameFrame extends JFrame {
 			if(name.equals("randomHunters")) {
 				return this.huntersRandom.isSelected()?1:0;
 			}
-			return Integer.parseInt(this.settings.get(name).getText());
+			return super.getSettings(name);
 		}
 		
 		/**
@@ -388,7 +359,7 @@ public class GameFrame extends JFrame {
 				this.density.setSelectedIndex(value);
 				return ;
 			}
-			this.settings.get(name).setText(""+value);
+			super.setSettings(name, value);
 		}
 
 	}
