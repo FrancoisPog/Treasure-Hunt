@@ -57,9 +57,6 @@ public class Game {
 	}	
 	
 	
-
-	
-	
 	/**
 	 * Create a new random board (same size)
 	 * @param nbPlayers

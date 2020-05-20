@@ -51,7 +51,7 @@ public class GameFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
 	
-	private ButtonsPanel buttonsPane;
+	private ButtonsPanel buttonsPanel;
 	private MenuBar menuBar;
 	private GamePanel gamePanel;
 	
@@ -80,7 +80,7 @@ public class GameFrame extends JFrame {
 		// Buttons pane
 		ButtonsPanel buttonsPane = new ButtonsPanel(controller);
 		main.add(buttonsPane,"North");
-		this.buttonsPane = buttonsPane;
+		this.buttonsPanel = buttonsPane;
 		
 		// Game pane
 		this.gamePanel = new GamePanel(this);
@@ -96,15 +96,23 @@ public class GameFrame extends JFrame {
 	
 	}
 	
-	
-	
 	/**
-	 * Getter for a button 
-	 * @return	The button'sname
+	 * Getter for the buttons panel
+	 * @return	The buttons panel
 	 */
-	public JButton getButton(String name) {
-		return this.buttonsPane.getButton(name);
+	public ButtonsPanel getButtonPanel() {
+		return buttonsPanel;
 	}
+
+	/**
+	 * Getter for the game panel
+	 * @return	The center panel
+	 */
+	public GamePanel getGamePanel() {
+		return gamePanel;
+	}
+	
+	
 	
 	/**
 	 * Getter for the controller
@@ -115,13 +123,6 @@ public class GameFrame extends JFrame {
 	}
 	
 	
-	/**
-	 * Getter for a data text field
-	 * @return The size field
-	 */
-	public int getSetting(String name) {
-		return this.buttonsPane.getSettings(name);
-	}
 	
 	/**
 	 * Getter for the menu items  
@@ -132,22 +133,9 @@ public class GameFrame extends JFrame {
 		return this.menuBar.getItem(name);
 	}
 	
-	/**
-	 * Setter for a setting
-	 * @param name	The setting name
-	 * @param value	The new setting value
-	 */
-	public void setSetting(String name, int value) {
-		this.buttonsPane.setSettings(name,value);
-	}
 	
-	/**
-	 * Getter for the gamePanel
-	 * @return	The gamePanel
-	 */
-	public GamePanel getGamePanel() {
-		return this.gamePanel;
-	}
+	
+	
 	
 	
 	/**
@@ -156,7 +144,7 @@ public class GameFrame extends JFrame {
 	 * @param value	The new value
 	 */
 	public void setEnable(String name,boolean value) {
-		getButton(name).setEnabled(value);
+		getButtonPanel().getButton(name).setEnabled(value);
 		getMenuItem(name).setEnabled(value);
 	}
 	

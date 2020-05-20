@@ -56,41 +56,41 @@ public class Controller implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
-		if(e.getSource() == gameFrame.getButton("new") || e.getSource() == gameFrame.getMenuItem("new")) {
+		if(e.getSource() == gameFrame.getButtonPanel().getButton("new") || e.getSource() == gameFrame.getMenuItem("new")) {
 			randomMap();
 			return;
 		}
-		if(e.getSource() == gameFrame.getButton("play") || e.getSource() == gameFrame.getMenuItem("play")) {
+		if(e.getSource() == gameFrame.getButtonPanel().getButton("play") || e.getSource() == gameFrame.getMenuItem("play")) {
 			play();
 			return;
 		}
 		
-		if(e.getSource() == gameFrame.getButton("round") || e.getSource() == gameFrame.getMenuItem("round")) {
+		if(e.getSource() == gameFrame.getButtonPanel().getButton("round") || e.getSource() == gameFrame.getMenuItem("round")) {
 			executeRound();
 			return;
 		}
 		
-		if(e.getSource() == gameFrame.getButton("save") || e.getSource() == gameFrame.getMenuItem("save")) {
+		if(e.getSource() == gameFrame.getButtonPanel().getButton("save") || e.getSource() == gameFrame.getMenuItem("save")) {
 			saveBoard();
 			return;
 		}
 		
-		if(e.getSource() == gameFrame.getButton("open") || e.getSource() == gameFrame.getMenuItem("open") ) {
+		if(e.getSource() == gameFrame.getButtonPanel().getButton("open") || e.getSource() == gameFrame.getMenuItem("open") ) {
 			openBoard();
 			return;
 		}
 		
-		if(e.getSource() == gameFrame.getButton("replay") || e.getSource() == gameFrame.getMenuItem("replay")) {
+		if(e.getSource() == gameFrame.getButtonPanel().getButton("replay") || e.getSource() == gameFrame.getMenuItem("replay")) {
 			replayBoard();
 			return;
 		}
 		
-		if(e.getSource() == gameFrame.getButton("stop") || e.getSource() == gameFrame.getMenuItem("stop")) {
+		if(e.getSource() == gameFrame.getButtonPanel().getButton("stop") || e.getSource() == gameFrame.getMenuItem("stop")) {
 			stop();
 			return;
 		}
 		
-		if(e.getSource() == gameFrame.getButton("editor") || e.getSource() == gameFrame.getMenuItem("editor")) {
+		if(e.getSource() == gameFrame.getButtonPanel().getButton("editor") || e.getSource() == gameFrame.getMenuItem("editor")) {
 			this.editionFrame = new EditionFrame(this);
 			editionFrame.getCenterPanel().initGrid(30);
 			if(this.game != null) {
@@ -100,7 +100,7 @@ public class Controller implements ActionListener{
 			return;
 		}
 		
-		if(e.getSource() == gameFrame.getButton("send") || e.getSource() == gameFrame.getMenuItem("send")) {
+		if(e.getSource() == gameFrame.getButtonPanel().getButton("send") || e.getSource() == gameFrame.getMenuItem("send")) {
 			if(this.editionFrame != null && this.editionFrame.isVisible()) {
 				editionFrame.getCenterPanel().initGrid(game);
 				editionFrame.getButtonPanel().setSettings("size", game.getBoard().size()-2);
@@ -110,10 +110,10 @@ public class Controller implements ActionListener{
 		
 
 		if(e.getSource() == gameFrame.getMenuItem("reset")){
-			gameFrame.setSetting("size", 50);
-			gameFrame.setSetting("timer", 100);
-			gameFrame.setSetting("players", 3);
-			gameFrame.setSetting("density",2);
+			gameFrame.getButtonPanel().setSettings("size", 50);
+			gameFrame.getButtonPanel().setSettings("timer", 100);
+			gameFrame.getButtonPanel().setSettings("players", 3);
+			gameFrame.getButtonPanel().setSettings("density",2);
 			return;
 		}
 		
@@ -142,12 +142,12 @@ public class Controller implements ActionListener{
 		System.out.println("\n[Board]\trandom map");
 		clock.stop();
 		
-		int mode = gameFrame.getSetting("density");
+		int mode = gameFrame.getButtonPanel().getSettings("density");
 		System.out.println(mode);
-		int size = gameFrame.getSetting("size")+2;
-		int players = gameFrame.getSetting("players");
+		int size = gameFrame.getButtonPanel().getSettings("size")+2;
+		int players = gameFrame.getButtonPanel().getSettings("players");
 		
-		if(gameFrame.getSetting("randomHunters") == 0) {
+		if(gameFrame.getButtonPanel().getSettings("randomHunters") == 0) {
 			players = 0;
 			this.canAddHunter = true;
 		}else {
@@ -182,7 +182,7 @@ public class Controller implements ActionListener{
 			JOptionPane.showMessageDialog(gameFrame, "You have to place at least one hunter before playing.");
 			return;
 		}
-		int time = gameFrame.getSetting("timer");
+		int time = gameFrame.getButtonPanel().getSettings("timer");
 		clock.start(time);
 		System.out.println("[Game]\tlaunch");
 		
@@ -228,6 +228,7 @@ public class Controller implements ActionListener{
 			
 			Position oldPos = h.getPosition();
 			Position curr = h.move();
+			
 			if(!h.getPosition().equals(oldPos) || game.getBoard().getTreasure().isFound()) {
 				gameFrame.getGamePanel().clearFloor(oldPos);
 				gameFrame.getGamePanel().updateFloor(curr, game.getBoard());
@@ -255,8 +256,8 @@ public class Controller implements ActionListener{
 			gameFrame.getGamePanel().clearFloor(h.getCurrentFloor().getPosition());
 		}
 		
-		int players = gameFrame.getSetting("players");
-		if(gameFrame.getSetting("randomHunters") == 0) {
+		int players = gameFrame.getButtonPanel().getSettings("players");
+		if(gameFrame.getButtonPanel().getSettings("randomHunters") == 0) {
 			players = 0;
 			this.canAddHunter = true;
 		}else {
@@ -319,7 +320,7 @@ public class Controller implements ActionListener{
 		}
 
 		System.out.println("[Open]\topened");
-		int players = gameFrame.getSetting("players");
+		int players = gameFrame.getButtonPanel().getSettings("players");
 		File file = FileManager.selectFile(this.gameFrame,'o');
 		if(file == null) {
 			System.out.println("[Open]\tcanceled");
@@ -332,7 +333,7 @@ public class Controller implements ActionListener{
 			return ;
 		}
 		System.out.println("[Open]\tfile ok");
-		gameFrame.setSetting("size", game.getBoard().size()-2);
+		gameFrame.getButtonPanel().setSettings("size", game.getBoard().size()-2);
 		gameFrame.getGamePanel().initGrid(game);
 		if(this.editionFrame != null && this.editionFrame.isVisible()) {
 			gameFrame.setEnable("send", true);
@@ -358,8 +359,8 @@ public class Controller implements ActionListener{
 	 */
 	public void boardFromEdition() {
 		System.out.println("edit");
-		int players = (gameFrame.getSetting("players"));
-		if(gameFrame.getSetting("randomHunters") == 0) {
+		int players = (gameFrame.getButtonPanel().getSettings("players"));
+		if(gameFrame.getButtonPanel().getSettings("randomHunters") == 0) {
 			players = 0;
 			this.canAddHunter = true;
 		}else {
@@ -368,7 +369,8 @@ public class Controller implements ActionListener{
 		
 		this.game = new Game(this.editionFrame.getCenterPanel().getMatrix(), players);
 		this.gameFrame.getGamePanel().initGrid(game);
-		this.gameFrame.setSetting("size", game.getBoard().size());
+		this.gameFrame.getButtonPanel().setSettings("size", game.getBoard().size()-2);
+		this.gameFrame.setEnable("send", true);
 		
 	}
 	
