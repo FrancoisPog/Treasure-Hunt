@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -26,6 +27,7 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+
 
 
 /**
@@ -397,15 +399,30 @@ public class GameFrame extends JFrame {
 			this.setResizeWeight(0.85);
 			
 			
+			
 			this.playersData = new ArrayList<JLabel>();
 			this.frame = frame;
 			this.leftPanel = (JPanel) this.getComponent(0);
 			this.rightPanel = (JPanel) this.getComponent(1);
 			
+
+			JLabel logo = new JLabel(new ImageIcon("logo1.png"));
+			logo.setBorder(new CompoundBorder(logo.getBorder(),new EmptyBorder(200,0,0,0)));
+			leftPanel.add(logo);
+			
+			JLabel logo2 = new JLabel(new ImageIcon("logo3.png"));
+			logo2.setBorder(new CompoundBorder(logo2.getBorder(),new EmptyBorder(00,0,00,0)));
+			logo2.setPreferredSize(new Dimension(1000, 100));
+			leftPanel.add(logo2);
+			
+
+			
+			
 			rightPanel.setSize(300, 0);
 			rightPanel.setMinimumSize(new Dimension(300, 0));
 			
-			
+			this.revalidate();
+			this.repaint();
 		}
 		
 

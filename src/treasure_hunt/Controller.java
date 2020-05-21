@@ -1,8 +1,12 @@
 package treasure_hunt;
 
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
@@ -131,8 +135,24 @@ public class Controller implements ActionListener{
 				return;
 			}
 		}
+		
+		
+		if(e.getSource() == gameFrame.getGameMenuBar().getItem("join")) {
+			Desktop desktop = Desktop.getDesktop(); 
+			 try {
+				desktop.mail(new URI("mailto:francoispoguet@gmail.com?subject=About%20your%20Treasure%20Hunt%20game"));
+			} catch (IOException | URISyntaxException exception) {}
+		}
+		
+		if(e.getSource() == gameFrame.getGameMenuBar().getItem("manual")) {
+			Desktop desktop = Desktop.getDesktop();
+			File file = new File("manual.pdf");
+			try {
+				desktop.open(file);
+			} catch (Exception e1) {
+			}
+		}
 	}
-	
 	/**
 	 * Get a new random map.<br>
 	 * N.B.If the user keep the same size, only the board is changed, otherwise a new game begin.
@@ -143,14 +163,12 @@ public class Controller implements ActionListener{
 		clock.stop();
 		
 		int mode = gameFrame.getButtonPanel().getSettings("density");
-		
 		int size = gameFrame.getButtonPanel().getSettings("size")+2;
 		int players = gameFrame.getButtonPanel().getSettings("players");
 		
 		if(gameFrame.getButtonPanel().getSettings("randomHunters") == 0) {
 			players = 0;
 			this.canAddHunter = true;
-			
 		}else {
 			this.canAddHunter = false;
 		}
