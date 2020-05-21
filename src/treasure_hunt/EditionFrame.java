@@ -272,7 +272,7 @@ public class EditionFrame extends JFrame {
 		 */
 		public void initGrid(int size) {
 			this.treasure = null;
-			System.out.println("[Frame]\tgenerating");
+			
 			cellLabels = new Matrix<JLabel>(size);
 			
 			
@@ -317,7 +317,7 @@ public class EditionFrame extends JFrame {
 			
 
 		
-			System.out.println("[Frame]\tready");
+			
 		}
 		
 		/**
@@ -326,7 +326,7 @@ public class EditionFrame extends JFrame {
 		 */
 		public void initGrid(Game game) {
 			this.treasure = null;
-			System.out.println("[Frame]\tgenerating");
+			
 			int size = game.getBoard().size();
 			cellLabels = new Matrix<JLabel>(size);
 			
@@ -383,7 +383,7 @@ public class EditionFrame extends JFrame {
 			
 
 		
-			System.out.println("[Frame]\tready");
+			
 		}
 		
 		/**

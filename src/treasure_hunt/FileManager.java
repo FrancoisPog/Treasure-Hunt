@@ -69,7 +69,7 @@ public class FileManager {
 		DataOutputStream out = null;
 		
 		try {
-			System.out.println("[Save]\tcompressing");
+			
 			out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
 			
 			// Write size
@@ -104,7 +104,7 @@ public class FileManager {
 			e.printStackTrace();
 		}
 
-		System.out.println("[Save]\tsaved");
+		
 	}
 	
 	
@@ -118,7 +118,7 @@ public class FileManager {
 		DataInputStream in = null;
 		
 		try {
-			System.out.println("[Open]\treading");
+			
 			in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
 			
 			int size = in.readInt();
@@ -137,7 +137,7 @@ public class FileManager {
 				if(col >= size -1 && row>=size -1) {
 					break;
 				}
-//				System.out.println(col+" "+row);
+//				
 				if(col  % size == 0 && col != 0) {
 					col = 0;
 					row++;

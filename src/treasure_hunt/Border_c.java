@@ -28,7 +28,7 @@ public class Border_c extends Cell {
 	 */
 	@Override
 	public void process(Hunter h) {
-		System.out.println("You can't exit the map ");
+		
 		switch(h.getDirection()) {
 			case 3:
 				h.setDirection(7);

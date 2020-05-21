@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
@@ -140,11 +139,11 @@ public class Controller implements ActionListener{
 	 */
 	public void randomMap() {
 		this.current_hunter = 'A';
-		System.out.println("\n[Board]\trandom map");
+		
 		clock.stop();
 		
 		int mode = gameFrame.getButtonPanel().getSettings("density");
-		System.out.println(mode);
+		
 		int size = gameFrame.getButtonPanel().getSettings("size")+2;
 		int players = gameFrame.getButtonPanel().getSettings("players");
 		
@@ -162,7 +161,7 @@ public class Controller implements ActionListener{
 			this.game.randomBoard(players,mode);
 			this.gameFrame.getGamePanel().initGrid(game);
 			if(this.canAddHunter) {
-				gameFrame.getGamePanel().getRightPanel().add(new JLabel("<html>Click on a cell to add hunter.</html>"));
+				gameFrame.getGamePanel().addMessage("<html>Click on a cell to add hunter.</html>");
 			}
 			return;
 		}
@@ -175,7 +174,7 @@ public class Controller implements ActionListener{
 		}
 		
 		if(this.canAddHunter) {
-			gameFrame.getGamePanel().getRightPanel().add(new JLabel("<html>Click on a cell to add hunter.</html>"));
+			gameFrame.getGamePanel().addMessage("<html>Click on a cell to add hunter.</html>");
 		}
 		
 		
@@ -192,7 +191,7 @@ public class Controller implements ActionListener{
 		}
 		int time = gameFrame.getButtonPanel().getSettings("timer");
 		clock.start(time);
-		System.out.println("[Game]\tlaunch");
+		
 		
 		gameFrame.setEnable("play", false);
 		gameFrame.setEnable("stop", true);
@@ -222,10 +221,11 @@ public class Controller implements ActionListener{
 			JOptionPane.showMessageDialog(gameFrame, "You have to place at least one hunter before playing.");
 			return;
 		}
-		System.out.print(".");
+		
 		if(game.getBoard().getTreasure().isFound()) {
-			System.out.println("\n[Game]\t end");
+			
 			clock.stop();
+			gameFrame.getGamePanel().addMessage("<html>The winner is "+game.getBoard().getTreasure().getWinner()+" !</html>");
 			gameFrame.setEnable("play", false);
 			gameFrame.setEnable("stop", false);
 			gameFrame.setEnable("round",false);
@@ -257,7 +257,7 @@ public class Controller implements ActionListener{
 		clock.stop();
 		this.current_hunter = 'A';
 		
-		System.out.println("[board]\treplay map");
+		
 		while(!this.game.getHunters().isEmpty()) {
 			Hunter h = this.game.getHunters().pollFirst();
 			h.getCurrentFloor().leave();
@@ -281,13 +281,13 @@ public class Controller implements ActionListener{
 		gameFrame.getGamePanel().initDataPanel(this.game);
 		
 		if(this.canAddHunter) {
-			gameFrame.getGamePanel().getRightPanel().add(new JLabel("<html>Click on a cell to add hunter.</html>"));
+			gameFrame.getGamePanel().addMessage("<html>Click on a cell to add hunter.</html>");
 		}
 
 		gameFrame.setEnable("play", true);
 		gameFrame.setEnable("stop", false);
 		gameFrame.setEnable("round", true);
-		System.out.println("[Board]\tready");
+		
 		
 	}
 	
@@ -301,10 +301,10 @@ public class Controller implements ActionListener{
 		gameFrame.setEnable("round", true);
 
 
-		System.out.println("[Save]\topened");
+		
 		File file = FileManager.selectFile(this.gameFrame,'s');
 		if(file == null) {
-			System.out.println("\n[Open]\tcanceled");
+			
 			gameFrame.setEnable("play",true);
 			return;
 		}
@@ -316,7 +316,7 @@ public class Controller implements ActionListener{
 		}
 		
 		FileManager.saveMap(game.getBoard(), file);
-		System.out.println("[Save]\tmap saved");
+		
 		
 	}
 	
@@ -331,7 +331,7 @@ public class Controller implements ActionListener{
 			gameFrame.setEnable("round", true);
 		}
 
-		System.out.println("[Open]\topened");
+		
 		int players = gameFrame.getButtonPanel().getSettings("players");
 		if(gameFrame.getButtonPanel().getSettings("randomHunters") == 0) {
 			players = 0;
@@ -341,7 +341,7 @@ public class Controller implements ActionListener{
 		}
 		File file = FileManager.selectFile(this.gameFrame,'o');
 		if(file == null) {
-			System.out.println("[Open]\tcanceled");
+			
 			return ;
 		}
 		try {
@@ -350,16 +350,16 @@ public class Controller implements ActionListener{
 			JOptionPane.showMessageDialog(gameFrame, "The chosen file is wrong, please try another one. ", "Something is wrong...", JOptionPane.ERROR_MESSAGE);
 			return ;
 		}
-		System.out.println("[Open]\tfile ok");
+		
 		gameFrame.getButtonPanel().setSettings("size", game.getBoard().size()-2);
 		gameFrame.getGamePanel().initGrid(game);
 		if(this.editionFrame != null && this.editionFrame.isVisible()) {
 			gameFrame.setEnable("send", true);
 		}
 		if(this.canAddHunter) {
-			gameFrame.getGamePanel().getRightPanel().add(new JLabel("<html>Click on a cell to add hunter.</html>"));
+			gameFrame.getGamePanel().addMessage("<html>Click on a cell to add hunter.</html>");
 		}
-		System.out.println("[Board]\tready");
+		
 		return;
 	}
 	
@@ -379,7 +379,7 @@ public class Controller implements ActionListener{
 	 * Generate the board from edition in the game frame
 	 */
 	public void boardFromEdition() {
-		System.out.println("edit");
+		
 		int players = (gameFrame.getButtonPanel().getSettings("players"));
 		if(gameFrame.getButtonPanel().getSettings("randomHunters") == 0) {
 			players = 0;
@@ -393,7 +393,7 @@ public class Controller implements ActionListener{
 		this.gameFrame.getButtonPanel().setSettings("size", game.getBoard().size()-2);
 		this.gameFrame.setEnable("send", true);
 		if(this.canAddHunter) {
-			gameFrame.getGamePanel().getRightPanel().add(new JLabel("<html>Click on a cell to add hunter.</html>"));
+			gameFrame.getGamePanel().addMessage("<html>Click on a cell to add hunter.</html>");
 		}
 		
 	}
@@ -462,10 +462,10 @@ public class Controller implements ActionListener{
 		 */
 		public void start(int delay) {
 			if(isActive) {
-				System.out.println("[Timer]\talready started");
+				
 				return;
 			}
-			System.out.println("\n[Timer]\tstart");
+			
 			timer.setDelay(delay);
 			timer.start();
 			isActive = true;
@@ -476,10 +476,10 @@ public class Controller implements ActionListener{
 		 */
 		public void stop() {
 			if(!isActive) {
-				System.out.println("[Timer]\talready stopped");
+				
 				return;
 			}
-			System.out.println("[Timer]\tstop\n");
+			
 			timer.stop();
 			isActive = false;
 		}

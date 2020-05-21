@@ -65,7 +65,7 @@ public class GameFrame extends JFrame {
 		
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setMinimumSize(new Dimension(1700,700));
+		this.setMinimumSize(new Dimension(1775,850));
 		this.setLocationRelativeTo(null);
 		
 		this.controller = new Controller(this);
@@ -315,7 +315,7 @@ public class GameFrame extends JFrame {
 			rightPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			
 			JLabel titleLabel = new JLabel("Game mode");
-			titleLabel.setBorder(new CompoundBorder(titleLabel.getBorder(),new EmptyBorder(0,0,0,250)));
+			titleLabel.setBorder(new CompoundBorder(titleLabel.getBorder(),new EmptyBorder(0,0,0,100)));
 			titleLabel.setFont(new Font(Font.SANS_SERIF, Font.CENTER_BASELINE, 30));
 			
 			rightPanel.add(titleLabel);
@@ -385,8 +385,8 @@ public class GameFrame extends JFrame {
 		private List<JLabel> playersData;
 		private boolean gridIsInit;
 		
-		private JPanel leftPane;
-		private JPanel rightPane;
+		private JPanel leftPanel;
+		private JPanel rightPanel;
 		
 		/**
 		 * Constructor
@@ -399,11 +399,11 @@ public class GameFrame extends JFrame {
 			
 			this.playersData = new ArrayList<JLabel>();
 			this.frame = frame;
-			this.leftPane = (JPanel) this.getComponent(0);
-			this.rightPane = (JPanel) this.getComponent(1);
+			this.leftPanel = (JPanel) this.getComponent(0);
+			this.rightPanel = (JPanel) this.getComponent(1);
 			
-			rightPane.setSize(300, 0);
-			rightPane.setMinimumSize(new Dimension(300, 0));
+			rightPanel.setSize(300, 0);
+			rightPanel.setMinimumSize(new Dimension(300, 0));
 			
 			
 		}
@@ -414,13 +414,13 @@ public class GameFrame extends JFrame {
 		 * @param game The current game
 		 */
 		public void initGrid(Game game) {
-			System.out.println("[Frame]\tgenerating");
+			
 			int size = game.getBoard().size();
 			cellLabels = new Matrix<JLabel>(size);
 			
 			
-			leftPane.removeAll();
-			leftPane.setLayout(new GridLayout(size,size));
+			leftPanel.removeAll();
+			leftPanel.setLayout(new GridLayout(size,size));
 			
 			Border border = BorderFactory.createLineBorder(Color.black,1);
 			for(int i = 0 ; i < cellLabels.size(); ++i) {
@@ -434,7 +434,7 @@ public class GameFrame extends JFrame {
 					JLabel label = cellLabels.get(j, i);
 					label.setOpaque(true);
 					
-					leftPane.add(label);
+					leftPanel.add(label);
 					Cell curr = game.getBoard().get(j, i);
 					
 					label.setBackground(curr.color());
@@ -463,8 +463,8 @@ public class GameFrame extends JFrame {
 			}
 
 			
-			leftPane.repaint();
-			leftPane.revalidate();
+			leftPanel.repaint();
+			leftPanel.revalidate();
 			this.gridIsInit = true;
 			
 			frame.setEnable("play",true);
@@ -473,7 +473,7 @@ public class GameFrame extends JFrame {
 			frame.setEnable("replay",true);
 
 			initDataPanel(game);
-			System.out.println("[Frame]\tready");
+			
 		}
 		
 		/**
@@ -481,13 +481,13 @@ public class GameFrame extends JFrame {
 		 * @param game	The current game
 		 */
 		public void initDataPanel(Game game) {
-			JPanel pane =  this.rightPane;
+			JPanel pane =  this.rightPanel;
 			pane.setLayout(new GridLayout(game.getHunters().size(),1));
 			this.playersData.clear();
 			pane.removeAll();
 			
 			for(Hunter h : game.getHunters()) {
-				System.out.println(h.toString());
+				
 				JLabel data = new JLabel();
 				data.setFont(new java.awt.Font(Font.DIALOG,Font.BOLD,30));
 				data.setText(" "+h.toString()+" : "+h.getPosition()+" - "+Hunter.dirToArrow(h.getDirection()));
@@ -570,12 +570,14 @@ public class GameFrame extends JFrame {
 			this.gridIsInit = init;
 		}
 		
-		/**
-		 * Getter for the right panel
-		 * @return	The right panel
-		 */
-		public JPanel getRightPanel() {
-			return this.rightPane;
+		public void addMessage(String msg_str) {
+			JLabel msg = new JLabel(msg_str);
+			msg.setFont(new Font(Font.MONOSPACED, Font.CENTER_BASELINE, 20));
+			this.rightPanel.removeAll();
+			this.rightPanel.setLayout(new GridLayout());
+			this.rightPanel.add(msg);
+			this.rightPanel.revalidate();
+			this.rightPanel.repaint();
 		}
 		
 		

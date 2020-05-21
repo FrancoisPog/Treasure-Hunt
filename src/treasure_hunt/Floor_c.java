@@ -48,7 +48,7 @@ public class Floor_c extends Cell {
 		if(isFull) {
 			h.setDirection(1 + (int)(Math.random()*8));
 			h.setBypassDirection(0);
-			System.out.println("\tThe floor is full");
+			
 			return;
 		}
 		
@@ -73,7 +73,7 @@ public class Floor_c extends Cell {
 		// Redirect the hunter to the best direction to get closer to the treasure
 		Position treasure_pos = this.getBoard().getTreasure().getPosition();
 		h.setDirection(h.getPosition().getBestDirTo(treasure_pos,this.getBoard(),false,h.getBypassDirection()));
-		System.out.println("\tBest direction : "+h.getDirection()+" "+Hunter.dirToArrow(h.getDirection()));
+		
 	}
 	
 	

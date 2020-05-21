@@ -119,9 +119,9 @@ public class Hunter implements Positionable,Comparable<Hunter>{
 	 */
 	public Position move() {
 		Board board = this.currentFloor.getBoard();
-		System.out.println("\tTarget cell : "+board.getCellInDir(getPosition(), direction).getPosition());
+		
 		board.getCellInDir(getPosition(), direction).process(this);
-		System.out.println("\t-> Position : "+getPosition()+" - "+"Direction : "+getDirection()+" "+Hunter.dirToArrow(getDirection())+"\n");
+		
 		return this.getPosition();
 		
 	}
