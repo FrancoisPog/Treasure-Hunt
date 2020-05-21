@@ -42,13 +42,6 @@ public abstract class Cell implements Questionable, Positionable{
 		return board;
 	}
 	
-	/**
-	 * Setter for its board
-	 * @param board The new board
-	 */
-	public void setBoard(Board board) {
-		this.board = board;
-	}
 
 	/**
 	 * Getter for its position

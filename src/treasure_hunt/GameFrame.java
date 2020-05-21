@@ -20,10 +20,11 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 
@@ -119,19 +120,14 @@ public class GameFrame extends JFrame {
 	}
 	
 	
-	
 	/**
-	 * Getter for the menu items  
-	 * @param name	The item's name
-	 * @return		The menu item
+	 * Getter for the game menu bar
+	 * @return	The menu bar
 	 */
-	public JMenuItem getMenuItem(String name) {
-		return this.menuBar.getItem(name);
+	public GameMenuBar getGameMenuBar() {
+		return this.menuBar;
 	}
-	
-	
-	
-	
+
 	
 	
 	/**
@@ -141,7 +137,7 @@ public class GameFrame extends JFrame {
 	 */
 	public void setEnable(String name,boolean value) {
 		getButtonPanel().getButton(name).setEnabled(value);
-		getMenuItem(name).setEnabled(value);
+		getGameMenuBar().getItem(name).setEnabled(value);
 	}
 	
 	
@@ -227,7 +223,6 @@ public class GameFrame extends JFrame {
 		}
 		
 		
-
 	}
 	
 	/**
@@ -319,6 +314,11 @@ public class GameFrame extends JFrame {
 			JPanel rightPanel = new JPanel();
 			rightPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			
+			JLabel titleLabel = new JLabel("Game mode");
+			titleLabel.setBorder(new CompoundBorder(titleLabel.getBorder(),new EmptyBorder(0,0,0,250)));
+			titleLabel.setFont(new Font(Font.SANS_SERIF, Font.CENTER_BASELINE, 30));
+			
+			rightPanel.add(titleLabel);
 			rightPanel.add(huntersRandomPanel);
 			rightPanel.add(densityPanel);
 			rightPanel.add(ViewComponents.makeButtonArea("Size setting", "Size :","", 10, 120, 10, 2, 50,this.settings,"size"));
@@ -339,6 +339,7 @@ public class GameFrame extends JFrame {
 		 * @param name	The setting'a name
 		 * @return		The setting value
 		 */
+		@Override
 		public int getSettings(String name) {
 			if(name.equals("density")) {
 				return this.density.getSelectedIndex();
@@ -354,6 +355,7 @@ public class GameFrame extends JFrame {
 		 * @param name	The setting's name
 		 * @param value	The new setting value
 		 */
+		@Override
 		public void setSettings(String name, int value) {
 			if(name.equals("density")) {
 				this.density.setSelectedIndex(value);
@@ -470,15 +472,15 @@ public class GameFrame extends JFrame {
 			frame.setEnable("round",true);
 			frame.setEnable("replay",true);
 
-			initDataPane(game);
+			initDataPanel(game);
 			System.out.println("[Frame]\tready");
 		}
 		
 		/**
-		 * Initialize the data pane at the game start
+		 * Initialize the data panel at the game start
 		 * @param game	The current game
 		 */
-		public void initDataPane(Game game) {
+		public void initDataPanel(Game game) {
 			JPanel pane =  this.rightPane;
 			pane.setLayout(new GridLayout(game.getHunters().size(),1));
 			this.playersData.clear();
@@ -568,6 +570,13 @@ public class GameFrame extends JFrame {
 			this.gridIsInit = init;
 		}
 		
+		/**
+		 * Getter for the right panel
+		 * @return	The right panel
+		 */
+		public JPanel getRightPanel() {
+			return this.rightPane;
+		}
 		
 		
 

@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
@@ -56,43 +57,43 @@ public class Controller implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
-		if(e.getSource() == gameFrame.getButtonPanel().getButton("new") || e.getSource() == gameFrame.getMenuItem("new")) {
+		if(e.getSource() == gameFrame.getButtonPanel().getButton("new") || e.getSource() == gameFrame.getGameMenuBar().getItem("new")) {
 			randomMap();
 			return;
 		}
-		if(e.getSource() == gameFrame.getButtonPanel().getButton("play") || e.getSource() == gameFrame.getMenuItem("play")) {
+		if(e.getSource() == gameFrame.getButtonPanel().getButton("play") || e.getSource() == gameFrame.getGameMenuBar().getItem("play")) {
 			play();
 			return;
 		}
 		
-		if(e.getSource() == gameFrame.getButtonPanel().getButton("round") || e.getSource() == gameFrame.getMenuItem("round")) {
+		if(e.getSource() == gameFrame.getButtonPanel().getButton("round") || e.getSource() == gameFrame.getGameMenuBar().getItem("round")) {
 			executeRound();
 			return;
 		}
 		
-		if(e.getSource() == gameFrame.getButtonPanel().getButton("save") || e.getSource() == gameFrame.getMenuItem("save")) {
+		if(e.getSource() == gameFrame.getButtonPanel().getButton("save") || e.getSource() == gameFrame.getGameMenuBar().getItem("save")) {
 			saveBoard();
 			return;
 		}
 		
-		if(e.getSource() == gameFrame.getButtonPanel().getButton("open") || e.getSource() == gameFrame.getMenuItem("open") ) {
+		if(e.getSource() == gameFrame.getButtonPanel().getButton("open") || e.getSource() == gameFrame.getGameMenuBar().getItem("open") ) {
 			openBoard();
 			return;
 		}
 		
-		if(e.getSource() == gameFrame.getButtonPanel().getButton("replay") || e.getSource() == gameFrame.getMenuItem("replay")) {
+		if(e.getSource() == gameFrame.getButtonPanel().getButton("replay") || e.getSource() == gameFrame.getGameMenuBar().getItem("replay")) {
 			replayBoard();
 			return;
 		}
 		
-		if(e.getSource() == gameFrame.getButtonPanel().getButton("stop") || e.getSource() == gameFrame.getMenuItem("stop")) {
+		if(e.getSource() == gameFrame.getButtonPanel().getButton("stop") || e.getSource() == gameFrame.getGameMenuBar().getItem("stop")) {
 			stop();
 			return;
 		}
 		
-		if(e.getSource() == gameFrame.getButtonPanel().getButton("editor") || e.getSource() == gameFrame.getMenuItem("editor")) {
+		if(e.getSource() == gameFrame.getButtonPanel().getButton("editor") || e.getSource() == gameFrame.getGameMenuBar().getItem("editor")) {
 			this.editionFrame = new EditionFrame(this);
-			editionFrame.getCenterPanel().initGrid(30);
+			editionFrame.getEditionPanel().initGrid(32);
 			if(this.game != null) {
 				gameFrame.setEnable("send", true);
 			}
@@ -100,16 +101,16 @@ public class Controller implements ActionListener{
 			return;
 		}
 		
-		if(e.getSource() == gameFrame.getButtonPanel().getButton("send") || e.getSource() == gameFrame.getMenuItem("send")) {
+		if(e.getSource() == gameFrame.getButtonPanel().getButton("send") || e.getSource() == gameFrame.getGameMenuBar().getItem("send")) {
 			if(this.editionFrame != null && this.editionFrame.isVisible()) {
-				editionFrame.getCenterPanel().initGrid(game);
+				editionFrame.getEditionPanel().initGrid(game);
 				editionFrame.getButtonPanel().setSettings("size", game.getBoard().size()-2);
 			}
 			return;
 		}
 		
 
-		if(e.getSource() == gameFrame.getMenuItem("reset")){
+		if(e.getSource() == gameFrame.getGameMenuBar().getItem("reset")){
 			gameFrame.getButtonPanel().setSettings("size", 50);
 			gameFrame.getButtonPanel().setSettings("timer", 100);
 			gameFrame.getButtonPanel().setSettings("players", 3);
@@ -123,7 +124,7 @@ public class Controller implements ActionListener{
 				return;
 			}
 			if(e.getSource() == editionFrame.getButtonPanel().getButton("play")) {
-				if(!editionFrame.getCenterPanel().treasureIsInit()) {
+				if(!editionFrame.getEditionPanel().treasureIsInit()) {
 					JOptionPane.showMessageDialog(editionFrame, "You must place a treasure","No treasure",JOptionPane.ERROR_MESSAGE);
 					return;
 				}
@@ -150,6 +151,7 @@ public class Controller implements ActionListener{
 		if(gameFrame.getButtonPanel().getSettings("randomHunters") == 0) {
 			players = 0;
 			this.canAddHunter = true;
+			
 		}else {
 			this.canAddHunter = false;
 		}
@@ -159,15 +161,21 @@ public class Controller implements ActionListener{
 		if(this.game != null && size == this.game.getBoard().size()) {
 			this.game.randomBoard(players,mode);
 			this.gameFrame.getGamePanel().initGrid(game);
+			if(this.canAddHunter) {
+				gameFrame.getGamePanel().getRightPanel().add(new JLabel("<html>Click on a cell to add hunter.</html>"));
+			}
 			return;
 		}
 		
 		// If different size, new game
-		
 		this.game = new Game(size, players,mode);
 		this.gameFrame.getGamePanel().initGrid(game);
 		if(this.editionFrame != null && this.editionFrame.isVisible()) {
 			gameFrame.setEnable("send", true);
+		}
+		
+		if(this.canAddHunter) {
+			gameFrame.getGamePanel().getRightPanel().add(new JLabel("<html>Click on a cell to add hunter.</html>"));
 		}
 		
 		
@@ -270,7 +278,11 @@ public class Controller implements ActionListener{
 			gameFrame.getGamePanel().updateFloor(h.getPosition(), game.getBoard());
 		}
 		
-		gameFrame.getGamePanel().initDataPane(this.game);
+		gameFrame.getGamePanel().initDataPanel(this.game);
+		
+		if(this.canAddHunter) {
+			gameFrame.getGamePanel().getRightPanel().add(new JLabel("<html>Click on a cell to add hunter.</html>"));
+		}
 
 		gameFrame.setEnable("play", true);
 		gameFrame.setEnable("stop", false);
@@ -321,6 +333,12 @@ public class Controller implements ActionListener{
 
 		System.out.println("[Open]\topened");
 		int players = gameFrame.getButtonPanel().getSettings("players");
+		if(gameFrame.getButtonPanel().getSettings("randomHunters") == 0) {
+			players = 0;
+			this.canAddHunter = true;
+		}else {
+			this.canAddHunter = false;
+		}
 		File file = FileManager.selectFile(this.gameFrame,'o');
 		if(file == null) {
 			System.out.println("[Open]\tcanceled");
@@ -338,6 +356,9 @@ public class Controller implements ActionListener{
 		if(this.editionFrame != null && this.editionFrame.isVisible()) {
 			gameFrame.setEnable("send", true);
 		}
+		if(this.canAddHunter) {
+			gameFrame.getGamePanel().getRightPanel().add(new JLabel("<html>Click on a cell to add hunter.</html>"));
+		}
 		System.out.println("[Board]\tready");
 		return;
 	}
@@ -350,8 +371,8 @@ public class Controller implements ActionListener{
 		if(conf != 0) {
 			return;
 		}
-		int size = this.editionFrame.getButtonPanel().getSettings("size");
-		this.editionFrame.getCenterPanel().initGrid(size);
+		int size = this.editionFrame.getButtonPanel().getSettings("size")+2;
+		this.editionFrame.getEditionPanel().initGrid(size);
 	}
 	
 	/**
@@ -366,11 +387,14 @@ public class Controller implements ActionListener{
 		}else {
 			this.canAddHunter = false;
 		}
-		
-		this.game = new Game(this.editionFrame.getCenterPanel().getMatrix(), players);
+		this.current_hunter = 'A';
+		this.game = new Game(this.editionFrame.getEditionPanel().getMatrix(), players);
 		this.gameFrame.getGamePanel().initGrid(game);
 		this.gameFrame.getButtonPanel().setSettings("size", game.getBoard().size()-2);
 		this.gameFrame.setEnable("send", true);
+		if(this.canAddHunter) {
+			gameFrame.getGamePanel().getRightPanel().add(new JLabel("<html>Click on a cell to add hunter.</html>"));
+		}
 		
 	}
 	
@@ -396,7 +420,7 @@ public class Controller implements ActionListener{
 			game.getHunters().remove(new Hunter(floor.toString().charAt(1), null));
 			floor.leave();
 			gameFrame.getGamePanel().updateFloor(floor.getPosition(), this.game.getBoard());
-			gameFrame.getGamePanel().initDataPane(game);
+			gameFrame.getGamePanel().initDataPanel(game);
 			return;
 		}
 		if(game.getHunters().size() == 10) {
@@ -409,7 +433,7 @@ public class Controller implements ActionListener{
 		
 		gameFrame.getGamePanel().updateFloor(floor.getPosition(), this.game.getBoard());
 		this.current_hunter++;
-		gameFrame.getGamePanel().initDataPane(game);
+		gameFrame.getGamePanel().initDataPanel(game);
 	}
 	
 	

@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -31,7 +32,7 @@ import javax.swing.border.TitledBorder;
  * 		<li>A center panel</li>
  * </ul>
  * @see treasure_hunt.EditionFrame.EditionButtonsPanel
- * @see treasure_hunt.EditionFrame.CenterPanel
+ * @see treasure_hunt.EditionFrame.EditionPanel
  * 
  * @author François Poguet
  * @author Enzo Costantini
@@ -40,8 +41,8 @@ public class EditionFrame extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private EditionButtonsPanel buttonPane;
-	private CenterPanel centerPanel;
+	private EditionButtonsPanel editionButtonsPanel;
+	private EditionPanel editionPanel;
 		
 	/**
 	 * Default edition frame constructor
@@ -62,11 +63,11 @@ public class EditionFrame extends JFrame {
 		Container main = this.getContentPane();
 		main.setLayout(new BorderLayout());
 		
-		this.buttonPane = new EditionButtonsPanel(controller);
-		main.add(buttonPane,"North");
+		this.editionButtonsPanel = new EditionButtonsPanel(controller);
+		main.add(editionButtonsPanel,"North");
 		
-		this.centerPanel = new CenterPanel(this);
-		main.add(centerPanel,"Center");
+		this.editionPanel = new EditionPanel();
+		main.add(editionPanel,"Center");
 		
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -82,15 +83,15 @@ public class EditionFrame extends JFrame {
 	 * @return	The buttons panel
 	 */
 	public EditionButtonsPanel getButtonPanel() {
-		return buttonPane;
+		return editionButtonsPanel;
 	}
 
 	/**
 	 * Getter for the center panel
 	 * @return	The center panel
 	 */
-	public CenterPanel getCenterPanel() {
-		return centerPanel;
+	public EditionPanel getEditionPanel() {
+		return editionPanel;
 	}
 
 
@@ -149,7 +150,7 @@ public class EditionFrame extends JFrame {
 	 * @author François Poguet
 	 * @author Enzo Costantini
 	 */ 
-	public class CenterPanel extends JSplitPane {
+	public class EditionPanel extends JSplitPane {
 		
 		private static final long serialVersionUID = 1L;
 		private JPanel leftPane;
@@ -166,7 +167,7 @@ public class EditionFrame extends JFrame {
 		 * Default center panel constructor
 		 * @param frame	The main frame
 		 */
-		public CenterPanel(JFrame frame) {
+		public EditionPanel() {
 			super(JSplitPane.HORIZONTAL_SPLIT,new JPanel(),new JPanel());
 			this.setResizeWeight(0.8);
 			
@@ -196,19 +197,36 @@ public class EditionFrame extends JFrame {
 		
 		/**
 		 * Make the right panel
-		 * @param rightPane	The panel to use
+		 * @param rightPanel	The panel to use
 		 * @return	The panel modified
 		 */
-		public JPanel makeRightPane(JPanel rightPane) {
-			rightPane.setLayout(new GridLayout(3,1,0,0));
+		public JPanel makeRightPane(JPanel rightPanel) {
+			rightPanel.setLayout(new GridLayout(3,1,0,0));
 			Color colors[] = {Color.black,Color.yellow};
 			String names[] = {"Wall","Treasure"};
 			
+			JPanel titlePanel = new JPanel(new GridLayout(2,1));
 			
+			JLabel titleLabel = new JLabel("Edition mode");
+			titleLabel.setBorder(new CompoundBorder(titleLabel.getBorder(),new EmptyBorder(0,50,0,0)));
+			titleLabel.setFont(new Font(Font.SANS_SERIF, Font.CENTER_BASELINE, 30));
+			
+			titlePanel.add(titleLabel);
+			
+			JLabel helpLabel = new JLabel("<html>Select a color by clicking, and click on a cell to change his color.</html>");
+			helpLabel.setBorder(new CompoundBorder(titleLabel.getBorder(),new EmptyBorder(0,0,0,50)));
+			helpLabel.setFont(new Font(Font.SANS_SERIF, Font.CENTER_BASELINE, 15));
+			
+			helpLabel.setPreferredSize(new Dimension(100,100));
+			
+			titlePanel.add(helpLabel);
+			
+			rightPanel.add(titlePanel);
 			
 			int i = 0;
 			for(Color color : colors) {
 				JPanel colorPanel = new JPanel(new GridLayout(1,2));
+				
 				
 				
 				JLabel label = new JLabel("");
@@ -239,13 +257,13 @@ public class EditionFrame extends JFrame {
 				name.setHorizontalAlignment(JLabel.CENTER);
 				colorPanel.add(name);
 				
-				rightPane.add(colorPanel);
+				rightPanel.add(colorPanel);
 				i++;
 			}
 			
-			rightPane.revalidate();
+			rightPanel.revalidate();
 			
-			return rightPane;
+			return rightPanel;
 		}
 		
 		/**
