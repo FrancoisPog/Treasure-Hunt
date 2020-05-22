@@ -137,7 +137,7 @@ public class FileManager {
 				if(col >= size -1 && row>=size -1) {
 					break;
 				}
-//				
+				
 				if(col  % size == 0 && col != 0) {
 					col = 0;
 					row++;

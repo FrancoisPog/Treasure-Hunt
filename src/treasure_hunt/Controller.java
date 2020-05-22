@@ -146,12 +146,7 @@ public class Controller implements ActionListener{
 		}
 		
 		if(e.getSource() == gameFrame.getGameMenuBar().getItem("manual")) {
-			Desktop desktop = Desktop.getDesktop();
-			File file = new File("manual.pdf");
-			try {
-				desktop.open(file);
-			} catch (Exception e1) {
-			}
+			openManual();
 		}
 	}
 	/**
@@ -453,6 +448,21 @@ public class Controller implements ActionListener{
 		gameFrame.getGamePanel().updateFloor(floor.getPosition(), this.game.getBoard());
 		this.current_hunter++;
 		gameFrame.getGamePanel().initDataPanel(game);
+	}
+	
+	
+	/**
+	 * Open the manual with the default pdf reader
+	 */
+	public void openManual() {
+		Desktop desktop = Desktop.getDesktop();
+		File file = new File("res"+File.separator+"manual.pdf");
+		try {
+			desktop.open(file);
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(gameFrame, "An error has occured while the manual opening, we are really sorry...");
+		}
+
 	}
 	
 	

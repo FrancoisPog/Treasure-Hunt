@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -409,12 +410,13 @@ public class GameFrame extends JFrame {
 			this.leftPanel = (JPanel) this.getComponent(0);
 			this.rightPanel = (JPanel) this.getComponent(1);
 			
-
-			JLabel logo = new JLabel(new ImageIcon("logo1.png"));
+			
+			
+			JLabel logo = new JLabel(new ImageIcon("res"+File.separator+"logo1.png"));
 			logo.setBorder(new CompoundBorder(logo.getBorder(),new EmptyBorder(200,0,0,0)));
 			leftPanel.add(logo);
 			
-			JLabel logo2 = new JLabel(new ImageIcon("logo3.png"));
+			JLabel logo2 = new JLabel(new ImageIcon("res"+File.separator+"logo3.png"));
 			logo2.setBorder(new CompoundBorder(logo2.getBorder(),new EmptyBorder(00,0,00,0)));
 			logo2.setPreferredSize(new Dimension(1000, 100));
 			leftPanel.add(logo2);
@@ -591,6 +593,10 @@ public class GameFrame extends JFrame {
 			this.gridIsInit = init;
 		}
 		
+		/**
+		 * Display a message on the left panel
+		 * @param msg_str	The message to display
+		 */
 		public void addMessage(String msg_str) {
 			JLabel msg = new JLabel(msg_str);
 			msg.setFont(new Font(Font.MONOSPACED, Font.CENTER_BASELINE, 20));

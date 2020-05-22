@@ -55,6 +55,7 @@ public class EditionFrame extends JFrame {
 		this.setVisible(true);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setMinimumSize(new Dimension(1000,700));
+		//this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		
 		
@@ -165,11 +166,10 @@ public class EditionFrame extends JFrame {
 		
 		/**
 		 * Default center panel constructor
-		 * @param frame	The main frame
 		 */
 		public EditionPanel() {
 			super(JSplitPane.HORIZONTAL_SPLIT,new JPanel(),new JPanel());
-			this.setResizeWeight(0.8);
+			this.setResizeWeight(0.9);
 			
 		
 			this.leftPane = (JPanel) this.getComponent(0);
@@ -179,7 +179,7 @@ public class EditionFrame extends JFrame {
 			this.rightPane = makeRightPane(rightPane);
 			
 			rightPane.setSize(300, 0);
-			rightPane.setMinimumSize(new Dimension(300, 0));
+			rightPane.setMinimumSize(new Dimension(200, 0));
 			
 			
 			this.currentColor = Color.yellow;

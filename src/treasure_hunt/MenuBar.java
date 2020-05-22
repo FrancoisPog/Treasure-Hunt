@@ -11,6 +11,9 @@ public class MenuBar extends JMenuBar {
 	
 	protected Map<String,JMenuItem> items;
 	
+	/**
+	 * Default menu bar constructor
+	 */
 	public MenuBar() {
 		this.items = new HashMap<String,JMenuItem>();
 	}

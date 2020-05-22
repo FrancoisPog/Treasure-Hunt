@@ -15,6 +15,15 @@ import javax.swing.border.TitledBorder;
 
 public class ViewComponents {
 	
+	/**
+	 * Make a button
+	 * @param label		The button label
+	 * @param listener	The button listener
+	 * @param enable	The boolean to set if the button is enable
+	 * @param buttons	The list of buttons
+	 * @param name		The button name
+	 * @return			The button
+	 */
 	public static JButton makeButton(String label, ActionListener listener, boolean enable, Map<String,JButton> buttons, String name) {
 		JButton btn = new JButton(label);
 		btn.setEnabled(enable);
@@ -81,7 +90,17 @@ public class ViewComponents {
 		return btn;
 	}
 	
-	
+	/**
+	 * Make a menu item
+	 * @param label		The item label
+	 * @param parent	The parent menu
+	 * @param listener	The item listener
+	 * @param enable	The boolean to set if the item is enable
+	 * @param items		The items list
+	 * @param name		The item name
+	 * @param keyEvent1	Shortcut first button
+	 * @param keyEvent2	Shortcut second button
+	 */
 	public static void makeMenuItem(String label,JMenu parent, ActionListener listener, boolean enable,Map<String,JMenuItem> items, String name, int keyEvent1, int keyEvent2) {
 		JMenuItem item = new JMenuItem(label);
 		item.addActionListener(listener);

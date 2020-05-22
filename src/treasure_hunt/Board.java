@@ -56,6 +56,12 @@ public class Board implements Iterable<Cell> {
 	}
 	
 	
+	/**
+	 * Constructor creating a board from a jlabel matrix (editor to game)
+	 * @param labels		The JLabel matrix
+	 * @param hunters		The hunter set
+	 * @param nbPlayers		The number of player
+	 */
 	public Board(Matrix<JLabel> labels,TreeSet<Hunter> hunters, int nbPlayers) {
 		mat = new Matrix<Cell>(labels.size());
 		int size = labels.size();
