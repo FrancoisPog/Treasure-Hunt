@@ -363,6 +363,10 @@ public class GameFrame extends JFrame {
 				this.density.setSelectedIndex(value);
 				return ;
 			}
+			if(name.equals("randomHunters")) {
+				this.huntersRandom.setSelected((value == 0)?false:true);
+				return;
+			}
 			super.setSettings(name, value);
 		}
 

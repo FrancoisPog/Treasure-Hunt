@@ -118,6 +118,7 @@ public class Controller implements ActionListener{
 			gameFrame.getButtonPanel().setSettings("timer", 100);
 			gameFrame.getButtonPanel().setSettings("players", 3);
 			gameFrame.getButtonPanel().setSettings("density",2);
+			gameFrame.getButtonPanel().setSettings("randomHunters", 1);
 			return;
 		}
 		
