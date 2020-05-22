@@ -6,5 +6,9 @@
 *.log
 *.aux
 *.toc
+.project
+.classpath
+
+*.zip
 
 rapport/*
