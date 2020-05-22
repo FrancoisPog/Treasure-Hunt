@@ -1,8 +1,14 @@
 /bin/
 .settings/
-*.png
+.png
 *.tex
 *.lof
 *.log
 *.aux
 *.toc
+.project
+.classpath
+README
+*.zip
+
+rapport/*
